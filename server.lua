@@ -223,5 +223,5 @@ end)
 
 --This handles the version check
 local versioner = exports['bcc-versioner'].initiate()
-local repo = 'https://github.com/jakeyboi1/bcc-oil'
+local repo = 'https://github.com/BryceCanyonCounty/bcc-oil'
 versioner.checkRelease(GetCurrentResourceName(), repo)
