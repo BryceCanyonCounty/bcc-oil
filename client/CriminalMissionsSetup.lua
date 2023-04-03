@@ -124,6 +124,7 @@ end
 --Deadcheck event
 RegisterNetEvent('bcc-oil:roboilwagonhelper') --creates an event with that name
 AddEventHandler('bcc-oil:roboilwagonhelper', function() --makes the event have code to run
+  Wait(400) --gives the script some breathign room
   while true do --while true do loop wont break until broken
     Citizen.Wait(80) --waits 80ms prevents crashing
     local pdead = IsEntityDead(PlayerPedId()) --sets variable to if your dead
@@ -141,6 +142,7 @@ end)
 
 local roboilcodeadcheck = false --this is the var used to check if player dies during mission
 local fillcoords2 = nil --creates a variable used to store data
+local missionoverend3dtext = false --this var will be used to see if you finished lockpicking and if so stop showing the 3dtext
 function roboilco() --creates a function
   VORPcore.NotifyRightTip(Config.Language.RobOilCoBlip, 4000)
   Inmission = true --sets var true not allowing player to start another mission
@@ -173,10 +175,14 @@ function roboilco() --creates a function
     if IsControlJustReleased(0, 0x760A9C6F) then --if G is pressed then
       local result = exports['lockpick']:startLockpick() --starts the lockpick and sets result to equal the result will print true if done right false if failed
       if result then --if result true then (you did it right)
+        Wait(200) --waits 200ms gives code breathing room(these waits seemed to fix some nui callback errors. If you failed the lockpick then tried to steal a oil wagon it would give a nui error these seem to fix that)
+        missionoverend3dtext = true --sets var true which is used to disable the 3d text from showing
         Inmission = false --resets the var allowing player to start a new misison
         VORPcore.NotifyRightTip(Config.Language.RobberySuccess, 4000) --prints on screen
         TriggerServerEvent('bcc-oil:OilCoRobberyPayout', fillcoords2) break --triggers server event and passes the variable too it breaks loop
       else --else if you did not do it right
+        Wait(200) --waits 200ms gives code breathing room(these waits seemed to fix some nui callback errors. If you failed the lockpick then tried to steal a oil wagon it would give a nui error these seem to fix that)
+        missionoverend3dtext = true --sets var true which is used to disable the 3d text from showing
         Inmission = false --resets the var allowing player to start a new misison
         VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) break --prints on screen and breaks loop
       end
@@ -190,7 +196,11 @@ AddEventHandler('bcc-oil:roboilcohelper', function() --this makes the event have
     Citizen.Wait(5) --waits 80ms prevents crashing
     local pl = GetEntityCoords(PlayerPedId()) --gets players coords
     if GetDistanceBetweenCoords(pl.x, pl.y, pl.z, fillcoords2.lootlocation.x, fillcoords2.lootlocation.y, fillcoords2.lootlocation.z, true) < 15 then --if dist less than 15 then
-      DrawText3D(fillcoords2.lootlocation.x, fillcoords2.lootlocation.y, fillcoords2.lootlocation.z, Config.Language.PressGToLockPick) --draws text on coords
+      if not missionoverend3dtext then --if var is false then
+        DrawText3D(fillcoords2.lootlocation.x, fillcoords2.lootlocation.y, fillcoords2.lootlocation.z, Config.Language.PressGToLockPick) --draws text on coords
+      else --else its not false then
+        missionoverend3dtext = false break --resets var and breaks loop
+      end
     end
     if IsEntityDead(PlayerPedId()) == 1 then --if player is dead then
       Inmission = false --resets the var allowing player to start a new misison
