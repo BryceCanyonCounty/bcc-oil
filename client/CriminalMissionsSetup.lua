@@ -22,10 +22,10 @@ function roboilwagon() --creates a function named roboilwagon
   end
   mathr1 = math.random(1, #Config.OilWagonrobberyLocations) --Gets a random set of coords from OilWagontable.FillPoints
   fillcoords = Config.OilWagonrobberyLocations[mathr1] --gets a random set of coords from OilWagonTable.FillPoints
-  FreezeEntityPosition(robableoilwagon, true) --freezes the wagon in place
   robableoilwagon = CreateVehicle(robableoilwagon, fillcoords.wagonlocation.x, fillcoords.wagonlocation.y, fillcoords.wagonlocation.z, fillcoords.wagonlocation.h, true, true) --creates the oilwagon at the location and sets it too the variable so it can be used in a net event
   TriggerEvent('bcc-oil:roboilwagonhelper') --triggers the event that will check if you die during the misison
   Citizen.InvokeNative(0x23f74c2fda6e7c61, 953018525, robableoilwagon) --sets the blip that tracks the ped
+  FreezeEntityPosition(robableoilwagon, true) --freezes the wagon in place
   VORPcore.NotifyRightTip(Config.Language.RobOilWagonOpeningtext, 4000) --prints on screen
   local ul = GetEntityCoords(PlayerPedId()) --gets players location(not needed if alreadysetup)
   StartGpsMultiRoute(6, true, true) --sets the color and tells it to waypoint on foot and in vehicle
@@ -83,6 +83,7 @@ function roboilwagon() --creates a function named roboilwagon
           end
           DeleteEntity(robableoilwagon) --deletes the wagon
           VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) return --prints on screen and returns ending this function
+        else return --if its not true then it returns ending this thread
         end
       end)
     end
@@ -175,13 +176,11 @@ function roboilco() --creates a function
     if IsControlJustReleased(0, 0x760A9C6F) then --if G is pressed then
       local result = exports['lockpick']:startLockpick() --starts the lockpick and sets result to equal the result will print true if done right false if failed
       if result then --if result true then (you did it right)
-        Wait(200) --waits 200ms gives code breathing room(these waits seemed to fix some nui callback errors. If you failed the lockpick then tried to steal a oil wagon it would give a nui error these seem to fix that)
         missionoverend3dtext = true --sets var true which is used to disable the 3d text from showing
         Inmission = false --resets the var allowing player to start a new misison
         VORPcore.NotifyRightTip(Config.Language.RobberySuccess, 4000) --prints on screen
         TriggerServerEvent('bcc-oil:OilCoRobberyPayout', fillcoords2) break --triggers server event and passes the variable too it breaks loop
       else --else if you did not do it right
-        Wait(200) --waits 200ms gives code breathing room(these waits seemed to fix some nui callback errors. If you failed the lockpick then tried to steal a oil wagon it would give a nui error these seem to fix that)
         missionoverend3dtext = true --sets var true which is used to disable the 3d text from showing
         Inmission = false --resets the var allowing player to start a new misison
         VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) break --prints on screen and breaks loop
