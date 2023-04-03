@@ -12,7 +12,7 @@ createApp({ //creates an app
     }
   },
   mounted() { //this will run once the app.js is mounted fully ready too go
-    window.addEventListener('message', this.onMessage) //creates an event lister so it will listen too any nui events that run
+    window.addEventListener('message', this.onMessage); //creates an event lister so it will listen too any nui events that run
   },
   destroyed() { //this will just delete them once they run too keep it optimized
     window.removeEventListener('message') //deletes the message listener
