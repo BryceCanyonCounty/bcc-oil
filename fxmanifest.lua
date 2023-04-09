@@ -20,7 +20,8 @@ client_scripts {
     '/client/SupplyMissions.lua',
     '/client/MainWagonSpawn.lua',
     '/client/MenuSetups.lua',
-    '/client/CriminalMissionsSetup.lua'
+    '/client/CriminalMissionsSetup.lua',
+    '/client/functions.lua'
 }
 
 files {
@@ -32,3 +33,12 @@ files {
 ui_page 'ui/index.html'
 
 version '1.0.0'
+
+dependencies {
+    'vorp_core',
+    'vorp_inventory',
+    'vorp_utils',
+    'bcc-versioner',
+    'lockpick',
+    'vorp_progressbar'
+}
