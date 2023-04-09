@@ -16,10 +16,7 @@ RegisterNetEvent('bcc:oil:PlayerWagonSpawn') --creates a event
 AddEventHandler('bcc:oil:PlayerWagonSpawn', function(wagon) --makes the event have code to run and recieves wagon var from the server
   Inmission = true --sets the global var too true preventing a new mission from being started
   Wagon = wagon --global equals the variable from server
-  RequestModel(wagon) --requests the model(makes it actually spawn)
-  while not HasModelLoaded(wagon) do
-    Wait(10)
-  end
+  modelload(Wagon) --triggers the function to load the wagon
   VORPcore.NotifyRightTip(Config.Language.WagonSpawned, 4000) --prints on screen
   Createdwagon = CreateVehicle(wagon, sw.x, sw.y, sw.z, sw.h, true, true) --spawns the wagon
   Citizen.InvokeNative(0x77FF8D35EEC6BBC4, Createdwagon, 1, 0)
@@ -87,7 +84,6 @@ AddEventHandler('bcc-oil:WagonDeliveriesDeadCheck', function()
     if wdestroyed == 0 or cwexist == false or pdead == 1 then --if wagon is destroyed or doesnt exist then(doesnt exist is needed for when you complete the mission)
       Inmission = false --resets the var allowing a new mission to start
       Progressbardeadcheck = true --sets variable too true allowing other parts of the code to know you died
-      inprogress = false --resets the variale allowing player too do another mission
       WagonDestroyed = true --changes variable and breaks loop(variable change makes it so the mission can end when destroyed)
       Playerdead = true break
     end

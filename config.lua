@@ -94,6 +94,14 @@ Config.OilWagonrobberyLocations = {
 }
 
 ---Rob Oil Company Setup----
+Config.RobOilCoEnemyPeds = false --if true enemy peds will spawn when you are done lockpicking to fight you
+Config.RobOilCoEnemyPedsLocations = {
+    {x = 505.34, y = 700.74, z = 116.05},
+    {x = 503.61, y = 689.27, z = 117.48},
+    {x = 507.35, y = 682.53, z = 117.39},
+    {x = 512.52, y = 686.54, z = 117.4},
+}
+
 Config.RobOilCompany = {
     {
         lootlocation = {x = 493.83, y = 675.16, z = 117.39}, --locations where you will have to go to lockpick
@@ -180,5 +188,6 @@ Config.Language = {
     RobOilWagonSuccess = 'You sucessfully stole the wagon! Good Job Heres your pay!',
     RobOilCoBlip = 'Rob The Oil Company',
     RobberySuccess = 'You Robbed the oil company now flee!',
-    PressGToLockPick = 'Press "G" To LockPick'
+    PressGToLockPick = 'Press "G" To LockPick',
+    DefendAgainstAttackers = 'You are being attacked defend yourself!'
 }
