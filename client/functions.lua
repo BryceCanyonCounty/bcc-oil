@@ -76,7 +76,7 @@ function MutltiPedSpawnDeadCheck(pedstable, type) --catches this variable from w
         count[k] = roboilwagonpeds[k] --sets count to equal the amount of ped spawns
     end
     local x = #pedstable --sets the var to equal the number of tables in the table
-    while not Roboilwagondeadcheck do --while the variable is true do (while nothing has died do)
+    while not Roboilwagondeadcheck and not Roboilcodeadcheck do --while the variable is true do (while nothing has died do)
         Citizen.Wait(60) --waits 60ms prevents crashing
         for k, v in pairs(roboilwagonpeds) do --creates  for loop running once per table
             if IsEntityDead(v) then --if peds are dead then
@@ -92,7 +92,7 @@ function MutltiPedSpawnDeadCheck(pedstable, type) --catches this variable from w
             end
         end
     end
-    if Roboilwagondeadcheck then --if variable true(you or wagon are dead then)
+    if Roboilwagondeadcheck or Roboilcodeadcheck then --if variable true(you or wagon are dead then)
         for k, v in pairs(roboilwagonpeds) do --creates a for loop in the peds table
           DeletePed(v) --deletes all the peds
         end
