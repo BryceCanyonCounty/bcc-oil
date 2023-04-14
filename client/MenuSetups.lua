@@ -1,10 +1,5 @@
 --[[######################Nui callbacks####################################]]
 --this callback is for when the menu closes giving player control of mouse in game back
-local VORPcore = {} --Pulls vorp core
-TriggerEvent("getCore", function(core)
-  VORPcore = core
-end)
-
 Inmission = false
 RegisterNuiCallback('closemenu', function()
   SetNuiFocus(false, false)
