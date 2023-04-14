@@ -128,7 +128,8 @@ function roboilco() --creates a function
           VORPcore.NotifyRightTip(Config.Language.RobberySuccess, 4000) --prints on screen
           TriggerServerEvent('bcc-oil:OilCoRobberyPayout', fillcoords2) break --triggers server event and passes the variable too it breaks loop
         else --if the option is anything else
-          MutltiPedSpawnDeadCheck(Config.RobOilCoEnemyPedsLocations, 'oilcorob') break --trigger function to spawn enemy peds and break loop when done
+          MutltiPedSpawnDeadCheck(Config.RobOilCoEnemyPedsLocations, 'oilcorob')
+          Inmission = false break --trigger function to spawn enemy peds and break loop when done
         end
       else --else if you did not do it right
         if not Config.RobOilCoEnemyPeds then
@@ -136,7 +137,8 @@ function roboilco() --creates a function
           Inmission = false --resets the var allowing player to start a new misison
           VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) break --prints on screen and breaks loop
         else --if it is true then
-          MutltiPedSpawnDeadCheck(Config.RobOilCoEnemyPedsLocations, 'oilcorob') break --spawn all the enemy peds, and when its done break the loop
+          MutltiPedSpawnDeadCheck(Config.RobOilCoEnemyPedsLocations, 'oilcorob') 
+          Inmission = false break --spawn all the enemy peds, and when its done break the loop
         end
       end
     end
