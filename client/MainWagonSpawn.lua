@@ -1,9 +1,3 @@
---[##############################Pulling essentials#######################################]
-local VORPcore = {} --Pulls vorp core
-TriggerEvent("getCore", function(core)
-  VORPcore = core
-end)
-
 --[[##############################################################################################################################]]
 --------------------------------------------Handles Spawning of Wagons and dist from spawn check -----------------------------------
 ----------------------------------------------Also Handles setting peds to ignore player if within dist of oil co--------------------

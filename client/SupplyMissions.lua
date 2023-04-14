@@ -1,13 +1,3 @@
---------------------------------------- Pulling Essentials -------------------------------------------
-local VORPcore = {} --Pulls vorp core
-TriggerEvent("getCore", function(core)
-  VORPcore = core
-end)
-local VORPutils = {}
-TriggerEvent("getUtils", function(utils)
-  VORPutils = utils
-end)
-
 --Function for beggining the mission
 function supplymissionbeginstage() --function used to fill your wagon with the supplies
     local repeatamount = 0 --variable used in the repeat to make the code in the repeat run 3 times

@@ -1,14 +1,5 @@
 --------------------------------------- Pulling Essentials -------------------------------------------
-local VORPcore = {} --Pulls vorp core
-TriggerEvent("getCore", function(core)
-  VORPcore = core
-end)
 progressbar = exports.vorp_progressbar:initiate() --Allows use of progressbar in code
-local VORPutils = {}
-TriggerEvent("getUtils", function(utils)
-  VORPutils = utils
-end)
-
 
 --[[##################################################################################################################################]]
 ---------------------------------Oil Delivery Mission Setup------------------------------------------------------------------------------------

@@ -1,14 +1,3 @@
---[##############################Pulling essentials#######################################]
-local VORPcore = {} --Pulls vorp core
-TriggerEvent("getCore", function(core)
-  VORPcore = core
-end)
-local VORPutils = {}
-TriggerEvent("getUtils", function(utils)
-  VORPutils = utils
-end)
-
-
 --[[###################################Steal Oil Wagon Setup#############################################]]
 Robableoilwagon = 0 --this variable is used to store the created wagon in (this is needed as the wagon is deleted in a seperate function so that function has to access it)
 Roboilwagondeadcheck = false --this functions as a dead check so if true then break etc
@@ -133,20 +122,22 @@ function roboilco() --creates a function
     if IsControlJustReleased(0, 0x760A9C6F) then --if G is pressed then
       local result = exports['lockpick']:startLockpick() --starts the lockpick and sets result to equal the result will print true if done right false if failed
       if result then --if result true then (you did it right)
-        missionoverend3dtext = true --sets var true which is used to disable the 3d text from showing
-        Inmission = false --resets the var allowing player to start a new misison
-        VORPcore.NotifyRightTip(Config.Language.RobberySuccess, 4000) --prints on screen
-        TriggerServerEvent('bcc-oil:OilCoRobberyPayout', fillcoords2) --triggers server event and passes the variable too it breaks loop
-        if Config.RobOilCoEnemyPeds then --if config option is true then
+        if not Config.RobOilCoEnemyPeds then
+          missionoverend3dtext = true --sets var true which is used to disable the 3d text from showing
+          Inmission = false --resets the var allowing player to start a new misison
+          VORPcore.NotifyRightTip(Config.Language.RobberySuccess, 4000) --prints on screen
+          TriggerServerEvent('bcc-oil:OilCoRobberyPayout', fillcoords2) break --triggers server event and passes the variable too it breaks loop
+        else --if the option is anything else
           MutltiPedSpawnDeadCheck(Config.RobOilCoEnemyPedsLocations, 'oilcorob') break --trigger function to spawn enemy peds and break loop when done
-        else break end --else if the option is not true break loop
+        end
       else --else if you did not do it right
-        missionoverend3dtext = true --sets var true which is used to disable the 3d text from showing
-        Inmission = false --resets the var allowing player to start a new misison
-        VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) --prints on screen and breaks loop
-        if Config.RobOilCoEnemyPeds then --if the config option is true then
+        if not Config.RobOilCoEnemyPeds then
+          missionoverend3dtext = true --sets var true which is used to disable the 3d text from showing
+          Inmission = false --resets the var allowing player to start a new misison
+          VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) break --prints on screen and breaks loop
+        else --if it is true then
           MutltiPedSpawnDeadCheck(Config.RobOilCoEnemyPedsLocations, 'oilcorob') break --spawn all the enemy peds, and when its done break the loop
-        else break end --else if the option is not true then break loop
+        end
       end
     end
   end
@@ -167,7 +158,7 @@ AddEventHandler('bcc-oil:roboilcohelper', function() --this makes the event have
     if IsEntityDead(PlayerPedId()) == 1 then --if player is dead then
       Inmission = false --resets the var allowing player to start a new misison
       Roboilcodeadcheck = true --set var true
-      Wait(5000) --waits 5 seconds
+      Wait(10000) --waits 10 seconds
       Roboilcodeadcheck = false --resets var so this can run again
     end
   end

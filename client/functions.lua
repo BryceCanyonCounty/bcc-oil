@@ -1,7 +1,11 @@
 --Pulling Essentials
-local VORPcore = {} --Pulls vorp core
+VORPcore = {} --Pulls vorp core
 TriggerEvent("getCore", function(core)
   VORPcore = core
+end)
+VORPutils = {}
+TriggerEvent("getUtils", function(utils)
+  VORPutils = utils
 end)
 
 --Function used to handle distance checking
