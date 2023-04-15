@@ -8,6 +8,7 @@ Config.OilWagon = {price = 100, sellprice = 80} --Oil wagon model hash theres 2 
 Config.OilWagonFillTime = 10000 --time in ms it takes to fill the oil wagon aswell as unload when delivering oil
 Config.BasicOilDeliveryPay = 50 --This is the base pay rate for doing an oil mission (the payoutbonus in the Config.OilCompanyLevels will be added to this amount)
 Config.LevelIncreasePerDelivery = 1 --sets the amount your level increases per delivery mission
+Config.ManagerBlipHash = 'blip_mp_torch'
 
 -------------This is the levels, and what they pay-----------------------------------------
 --This level setup is for the entire oil company this will effect payout for basic jobs etc(You can add or remove levels as you please but there has to be atleast 1)
@@ -60,6 +61,7 @@ Config.CriminalPedModel = 'g_m_m_unicriminals_01' --model of the criminal ped
 Config.CriminalLevelIncrease = 1 --this is how much your level will increase per job completed(this is for all jobs)
 Config.OilCompanyLevelDecrease = 1 --this is how much your oilco level will decrease upon doing a criminal misison
 Config.StealOilWagonBasePay = 60 --this is the base pay for stealing an oil wagon
+Config.CrimBlipHash = 'blip_mp_torch'
 
 -----Level Setup-----
 Config.CriminalLevels = {
@@ -125,7 +127,7 @@ Config.RobOilCompany = {
 
 ---------------------------------- Translate Here! ---------------------------------------------
 Config.Language = {
-    ManagerBlip = 'Oil Company Manager',
+    ManagerBlip = 'Oil Company Manager', --Manager Blip name
     ManagerDrawText = 'Company Manager press "G" to open menu',
     OilManagerMainMenuName = 'Oil Company',
     BuyWagonMenuName = 'Buy Oil Wagon?',
@@ -169,7 +171,7 @@ Config.Language = {
     GetSuppliesFromWagon = 'Go get the supplies off the wagon',
     ReturnSupplyWagon = 'Go take your wagon back to the oil company',
     AlreadyInMission = 'You are already in a mission',
-    CriminalPedBlip = 'Criminal Hideout',
+    CriminalPedBlip = 'Criminal Hideout', --Criminal Blip Name
     CriminalDrawText = 'Press "G" To Open The Menu',
     NUISellOilWagon = 'Sell Oil Wagon for ',
     NUIBuyOilWagon = 'Buy Oil Wagon for ',
