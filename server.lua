@@ -93,7 +93,7 @@ Citizen.CreateThread(function()
     `enemy_trust`  int(100) NOT NULL DEFAULT 0,
     `oil_wagon` varchar(50) NOT NULL DEFAULT 'none',
     `delivery_wagon` varchar(50) NOT NULL DEFAULT 'none',
-    UNIQUE KEY `identifier` (`identifier`))
+    UNIQUE KEY `charidentifier` (`charidentifier`))
   ]])
 end)
 
