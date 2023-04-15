@@ -6,7 +6,7 @@
 Citizen.CreateThread(function()
   local model = GetHashKey(Config.ManagerPedModel) --sets the npc model
   if Config.ManagerBlip == true then --if blip in config = true then if false this will not run, and will not make a blip
-    local blip = VORPutils.Blips:SetBlip(Config.Language.ManagerBlip, 'blip_mp_torch', 0.8, OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z) --Creates a blip on the manager location set in config. Using vorp utils
+    local blip = VORPutils.Blips:SetBlip(Config.Language.ManagerBlip, Config.ManagerBlipHash, 0.8, OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z) --Creates a blip on the manager location set in config. Using vorp utils
   end
   modelload(model)
   local createdped = CreatePed(model, OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z - 1, OilWagonTable.ManagerSpawn.h, false, true, true, true) --creates ped the minus one makes it so its standing on the ground not floating first boolean is for network. Disabled so only 1 ped shows per player
@@ -34,7 +34,7 @@ end)
 Citizen.CreateThread(function()
   local model = GetHashKey(Config.CriminalPedModel) --gets the models hash key
   if Config.CriminalPedBlip then --if config setting true then if false it wont run
-    local blip = VORPutils.Blips:SetBlip(Config.Language.CriminalPedBlip, 'blip_mp_torch', 0.8, Config.CriminalPedSpawn.x, Config.CriminalPedSpawn.y, Config.CriminalPedSpawn.z) --Creates a blip on the manager location set in config. Using vorp utils
+    local blip = VORPutils.Blips:SetBlip(Config.Language.CriminalPedBlip, Config.CrimBlipHash, 0.8, Config.CriminalPedSpawn.x, Config.CriminalPedSpawn.y, Config.CriminalPedSpawn.z) --Creates a blip on the manager location set in config. Using vorp utils
   end
   modelload(model) --triggers the function to load the model
   local createdped = CreatePed(model, Config.CriminalPedSpawn.x, Config.CriminalPedSpawn.y, Config.CriminalPedSpawn.z - 1, Config.CriminalPedSpawn.h, false, true, true, true) --creates the ped at the location
