@@ -1,12 +1,18 @@
 --[[####################################################################################################################################]]
 ----------------------Handles the spawning of manager ped, setting draw3d text up, and opening menu------------------------------------------------------
 --[[####################################################################################################################################]]
-
+local npcs = {}
+local blips = {}
 --Manager Ped Spawn Setup 
 Citizen.CreateThread(function()
   local model = GetHashKey(Config.ManagerPedModel) --sets the npc model
   if Config.ManagerBlip == true then --if blip in config = true then if false this will not run, and will not make a blip
-    local blip = VORPutils.Blips:SetBlip(Config.Language.ManagerBlip, Config.ManagerBlipHash, 0.8, OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z) --Creates a blip on the manager location set in config. Using vorp utils
+    local blip = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z) -- This create a blip with a defualt blip hash we given
+    SetBlipSprite(blip, Config.ManagerBlipHash, 1) -- This sets the blip hash to the given in config.
+    SetBlipScale(blip, 0.8) --sets the blip scale
+    Citizen.InvokeNative(0x662D364ABF16DE2F, blip, joaat(Config.ManagerBlipColor)) --sets the blip color
+    Citizen.InvokeNative(0x9CB1A1623062F402, blip, Config.Language.ManagerBlip) -- Sets the blip Name
+    table.insert(blips, blip) --Store the blip in the blips table
   end
   modelload(model)
   local createdped = CreatePed(model, OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z - 1, OilWagonTable.ManagerSpawn.h, false, true, true, true) --creates ped the minus one makes it so its standing on the ground not floating first boolean is for network. Disabled so only 1 ped shows per player
@@ -34,7 +40,12 @@ end)
 Citizen.CreateThread(function()
   local model = GetHashKey(Config.CriminalPedModel) --gets the models hash key
   if Config.CriminalPedBlip then --if config setting true then if false it wont run
-    local blip = VORPutils.Blips:SetBlip(Config.Language.CriminalPedBlip, Config.CrimBlipHash, 0.8, Config.CriminalPedSpawn.x, Config.CriminalPedSpawn.y, Config.CriminalPedSpawn.z) --Creates a blip on the manager location set in config. Using vorp utils
+  local blip = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, Config.CriminalPedSpawn.x, Config.CriminalPedSpawn.y, Config.CriminalPedSpawn.z) -- This create a blip with a defualt blip hash we given
+  SetBlipSprite(blip, Config.CriminalBlipHash, 1) -- This sets the blip hash to the given in config.
+  SetBlipScale(blip, 0.8) --sets the blip scale
+  Citizen.InvokeNative(0x662D364ABF16DE2F, blip, joaat(Config.CriminalBlipColor)) --sets the blip color
+  Citizen.InvokeNative(0x9CB1A1623062F402, blip, Config.Language.CriminalPedBlip) -- Sets the blip Name
+  table.insert(blips, blip) --Store the blip in the blips table
   end
   modelload(model) --triggers the function to load the model
   local createdped = CreatePed(model, Config.CriminalPedSpawn.x, Config.CriminalPedSpawn.y, Config.CriminalPedSpawn.z - 1, Config.CriminalPedSpawn.h, false, true, true, true) --creates the ped at the location
@@ -52,5 +63,27 @@ Citizen.CreateThread(function()
         })
       end
     end
+  end
+end)
+
+-- Function to delete NPCs
+function DeleteNPCs()
+  for k, v in pairs(npcs) do
+      DeletePed(v)
+  end
+end
+
+-- Function to delete blips
+function DeleteBlips()
+  for k, v in pairs(blips) do
+      RemoveBlip(v)
+  end
+end
+
+-- Call the DeleteNPCs function when the resource stops
+AddEventHandler("onResourceStop", function(resource)
+  if resource == GetCurrentResourceName() then
+      DeleteNPCs()
+      DeleteBlips()
   end
 end)

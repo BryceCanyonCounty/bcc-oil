@@ -8,7 +8,16 @@ Config.OilWagon = {price = 100, sellprice = 80} --Oil wagon model hash theres 2 
 Config.OilWagonFillTime = 10000 --time in ms it takes to fill the oil wagon aswell as unload when delivering oil
 Config.BasicOilDeliveryPay = 50 --This is the base pay rate for doing an oil mission (the payoutbonus in the Config.OilCompanyLevels will be added to this amount)
 Config.LevelIncreasePerDelivery = 1 --sets the amount your level increases per delivery mission
-Config.ManagerBlipHash = 'blip_mp_torch'
+--------------------- config player's wagon blip---------------------------
+Config.OilWagonBilpHash = 1612913921 --Set Oil Wagon blip icon using blip hashes (https://redlookup.com/blips)
+Config.OilWagonBlipColor = 'BLIP_MODIFIER_MP_COLOR_32' --Set Supply wagon blip color. you can find the colors you can use in the end of this config file
+Config.SupplyWagonBilpHash = 1612913921 --Set Supply Wagon blip icon using blip hashes (https://redlookup.com/blips)
+Config.SupplyWagonBlipColor = 'BLIP_MODIFIER_MP_COLOR_32' --Set Supply wagon blip color. you can find the colors you can use in the end of this config file
+------------------------ config company manager blip and criminal blip-------------------------
+Config.ManagerBlipHash = 1000514759
+Config.ManagerBlipColor = 'BLIP_MODIFIER_MP_COLOR_2'
+Config.CriminalBlipHash = 1000514759
+Config.CriminalBlipColor = 'BLIP_MODIFIER_MP_COLOR_2'
 
 -------------This is the levels, and what they pay-----------------------------------------
 --This level setup is for the entire oil company this will effect payout for basic jobs etc(You can add or remove levels as you please but there has to be atleast 1)
@@ -191,5 +200,41 @@ Config.Language = {
     RobOilCoBlip = 'Rob The Oil Company',
     RobberySuccess = 'You Robbed the oil company now flee!',
     PressGToLockPick = 'Press "G" To LockPick',
-    DefendAgainstAttackers = 'You are being attacked defend yourself!'
+    DefendAgainstAttackers = 'You are being attacked defend yourself!',
+    SupplyWagonBlipName = 'Supply Wagon', -- suply wagon blip name
+    OilWagonBlipName = 'Oil Wagon' -- oil wagon blip name
 }
+
+--[[--------BLIP_COLORS----------
+LIGHT_BLUE    = 'BLIP_MODIFIER_MP_COLOR_1',
+DARK_RED      = 'BLIP_MODIFIER_MP_COLOR_2',
+PURPLE        = 'BLIP_MODIFIER_MP_COLOR_3',
+ORANGE        = 'BLIP_MODIFIER_MP_COLOR_4',
+TEAL          = 'BLIP_MODIFIER_MP_COLOR_5',
+LIGHT_YELLOW  = 'BLIP_MODIFIER_MP_COLOR_6',
+PINK          = 'BLIP_MODIFIER_MP_COLOR_7',
+GREEN         = 'BLIP_MODIFIER_MP_COLOR_8',
+DARK_TEAL     = 'BLIP_MODIFIER_MP_COLOR_9',
+RED           = 'BLIP_MODIFIER_MP_COLOR_10',
+LIGHT_GREEN   = 'BLIP_MODIFIER_MP_COLOR_11',
+TEAL2         = 'BLIP_MODIFIER_MP_COLOR_12',
+BLUE          = 'BLIP_MODIFIER_MP_COLOR_13',
+DARK_PUPLE    = 'BLIP_MODIFIER_MP_COLOR_14',
+DARK_PINK     = 'BLIP_MODIFIER_MP_COLOR_15',
+DARK_DARK_RED = 'BLIP_MODIFIER_MP_COLOR_16',
+GRAY          = 'BLIP_MODIFIER_MP_COLOR_17',
+PINKISH       = 'BLIP_MODIFIER_MP_COLOR_18',
+YELLOW_GREEN  = 'BLIP_MODIFIER_MP_COLOR_19',
+DARK_GREEN    = 'BLIP_MODIFIER_MP_COLOR_20',
+BRIGHT_BLUE   = 'BLIP_MODIFIER_MP_COLOR_21',
+BRIGHT_PURPLE = 'BLIP_MODIFIER_MP_COLOR_22',
+YELLOW_ORANGE = 'BLIP_MODIFIER_MP_COLOR_23',
+BLUE2         = 'BLIP_MODIFIER_MP_COLOR_24',
+TEAL3         = 'BLIP_MODIFIER_MP_COLOR_25',
+TAN           = 'BLIP_MODIFIER_MP_COLOR_26',
+OFF_WHITE     = 'BLIP_MODIFIER_MP_COLOR_27',
+LIGHT_YELLOW2 = 'BLIP_MODIFIER_MP_COLOR_28',
+LIGHT_PINK    = 'BLIP_MODIFIER_MP_COLOR_29',
+LIGHT_RED     = 'BLIP_MODIFIER_MP_COLOR_30',
+LIGHT_YELLOW3 = 'BLIP_MODIFIER_MP_COLOR_31',
+WHITE         = 'BLIP_MODIFIER_MP_COLOR_32']]
