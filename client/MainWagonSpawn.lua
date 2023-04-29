@@ -15,10 +15,18 @@ AddEventHandler('bcc:oil:PlayerWagonSpawn', function(wagon) --makes the event ha
   Createdwagon = CreateVehicle(wagon, sw.x, sw.y, sw.z, sw.h, true, true) --spawns the wagon
   Citizen.InvokeNative(0x77FF8D35EEC6BBC4, Createdwagon, 1, 0)
   TriggerEvent('bcc:oil:PlayerWagonDistFromSpawnCheck')
+  local wagonBlip = Citizen.InvokeNative(0x23F74C2FDA6E7C61, -1749618580, Createdwagon) -- Add wagon blip
+  SetBlipScale(wagonBlip, 0.8) --sets wagon blip scale
   if wagon == 'oilwagon02x' then --if variable = text then
+    SetBlipSprite(wagonBlip, Config.OilWagonBilpHash, 1) -- sets oil wagon blip icon
+    Citizen.InvokeNative(0x662D364ABF16DE2F, wagonBlip, joaat(Config.OilWagonBlipColor))  --Sets oil wagon blip color
+    Citizen.InvokeNative(0x9CB1A1623062F402, wagonBlip, Config.Language.OilWagonBlipName) -- Sets oil wagon blip name
     TriggerEvent('bcc-oil:WagonDeliveriesDeadCheck') --triggers dead check event from below(has to be triggered as an event triggering it as function would cause it not to run the function below)
     beginningstage() --triggers function
   elseif wagon == 'armysupplywagon' then --elseif variable = this then
+    SetBlipSprite(wagonBlip, Config.SupplyWagonBilpHash, 1) -- sets supply wagon blip icon
+    Citizen.InvokeNative(0x662D364ABF16DE2F, wagonBlip, joaat(Config.SupplyWagonBlipColor))  --Sets supply wagon blip color
+    Citizen.InvokeNative(0x9CB1A1623062F402, wagonBlip, Config.Language.SupplyWagonBlipName) -- Sets supply wagon blip name
     TriggerEvent('bcc-oil:WagonDeliveriesDeadCheck') --triggers the dead check event from below
     supplymissionbeginstage() --triggers function
   end
