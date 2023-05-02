@@ -1,14 +1,11 @@
 --------------------------------------- Pulling Essentials -------------------------------------------
 progressbar = exports.vorp_progressbar:initiate() --Allows use of progressbar in code
 
---[[##################################################################################################################################]]
----------------------------------Oil Delivery Mission Setup------------------------------------------------------------------------------------
---[[###################################################################################################################################]]
---Initial Fill Wagon Mission
-function beginningstage() --creates a funtion named beginningstage (triggered in PlayerWagonSpawn.lua)
-  --Notify and coord randomization setup
+----- Oil Delivery Setup -----
+function beginningstage()
   Wait(1000) --waits 1 seconds time for the palyerwagonspawn.lua print too go away
   VORPcore.NotifyRightTip(Config.Language.FillYourOilWagon, 4000) --prints on your screen
+  local pl = PlayerPedId()
   local mathr1 = math.random(1, #OilWagonTable.FillPoints) --Gets a random set of coords from OilWagontable.FillPoints
   local fillcoords = OilWagonTable.FillPoints[mathr1] --gets a random set of coords from OilWagonTable.FillPoints
   
@@ -29,34 +26,31 @@ function beginningstage() --creates a funtion named beginningstage (triggered in
   VORPutils.Gps:RemoveGps() --Removes the gps waypoint
 
   -------Progress bar / Fill Wagon Setup----------
-  TaskLeaveAnyVehicle(PlayerPedId(), 0, 0) --makes the player get off the wagon
+  TaskLeaveAnyVehicle(pl, 0, 0)
   VORPcore.NotifyRightTip(Config.Language.FillingOilwagon, 4000) --prints on screen
   Wait(3000) --waits 3 second for leaving wagon anim to finish
-  local wch = GetEntityHeading(Createdwagon) --gets wagons heading
-  Wait(300) --waits 200ms gives script time to get heading
-  SetEntityHeading(PlayerPedId(), wch) --sets players heading to align the anim
+  SetEntityHeading(pl, GetEntityHeading(Createdwagon))
   Wait(500) --waits 800 ms gives the script time to run it all
-  TaskStartScenarioInPlace(PlayerPedId(), GetHashKey('WORLD_CAMP_JACK_ES_BUCKET_POUR'), Config.OilWagonFillTime, true, false, false, false) --starts an anim that goes for the config time
+  TaskStartScenarioInPlace(pl, joaat('WORLD_CAMP_JACK_ES_BUCKET_POUR'), Config.OilWagonFillTime, true, false, false, false)
   progressbar.start(Config.Language.FillingOilwagon, Config.OilWagonFillTime, function() --sets up progress bar to run while anim is
   end, 'circle') --part of progress bar
   Wait(Config.OilWagonFillTime) --waits until the anim / progressbar above is over
   if Progressbardeadcheck == true then --this will run once after the progressbar is over and will check if the varible is true if then(this does mean that if you die mid progress bar it will not detect it until after it is over but it removes the necessity of setting player and wagon invincible therefore increasing immersion)
     Progressbardeadcheck = false --resest the variable so you can do a new mission
-    ClearPedTasksImmediately(PlayerPedId()) --clears tasks from player
+    ClearPedTasksImmediately(pl)
     VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) --printson screen
     DeleteEntity(Createdwagon) return --deletes wagon and return (deletewagon causes mission to fail in deadcheck, return ends the function here and does not allow it too continue(failing the mission))
   end
-  ClearPedTasksImmediately(PlayerPedId()) --clears anim from ped
-  TaskEnterVehicle(PlayerPedId(), Createdwagon, 4000, -1, 0) --sets player into driver seat of the wagon
+  ClearPedTasksImmediately(pl)
+  TaskEnterVehicle(pl, Createdwagon, 4000, -1, 0)
   deliveroil() --triggers function for next part of mission
 end
 
 -----------------------Deliver oil Mission&return wagon included here------------------------------
 function deliveroil()
-  --Initial Setup
-  FreezeEntityPosition(Createdwagon, false) --unfreezes
-  Wait(200) --waits 200 ms
-  VORPcore.NotifyRightTip(Config.Language.GoDeliver, 4000) --prints on screen
+  FreezeEntityPosition(Createdwagon, false)
+  Wait(200)
+  VORPcore.NotifyRightTip(Config.Language.GoDeliver, 4000)
 
   --Coord Randomization
   local mathr1 = math.random(1, #Config.OilDeliveryPoints) --Gets a random set of coords from config
@@ -68,7 +62,7 @@ function deliveroil()
   VORPutils.Gps:SetGps(fillcoords.DeliveryPoint.x, fillcoords.DeliveryPoint.y, fillcoords.DeliveryPoint.z) --Creates the gps waypoint
 
   --Spawning Ped Setup
-  local model = GetHashKey('rcsp_dutch3_males_01') --sets the model
+  local model = joaat('rcsp_dutch3_males_01')
   modelload(model) --triggers the function to load the model
   local createdped = CreatePed(model, fillcoords.NpcSpawn.x, fillcoords.NpcSpawn.y, fillcoords.NpcSpawn.z - 1, fillcoords.NpcSpawn.h, true, true, true, true) --spawns the ped as networked so everyone can see him
   Citizen.InvokeNative(0x283978A15512B2FE, createdped, true) -- sets ped into random outfit, stops it being invis
@@ -94,7 +88,7 @@ function deliveroil()
   distcheck(cw.x, cw.y, cw.z, 5, createdped)
 
   --Filling Up Setup
-  TaskStartScenarioInPlace(createdped, GetHashKey('WORLD_PLAYER_CHORES_BUCKET_PUT_DOWN_FULL'), Config.OilWagonFillTime, true, false, false, false) --triggers anim
+  TaskStartScenarioInPlace(createdped, joaat('WORLD_PLAYER_CHORES_BUCKET_PUT_DOWN_FULL'), Config.OilWagonFillTime, true, false, false, false)
   progressbar.start(Config.Language.UnloadingOil, Config.OilWagonFillTime, function() --creates a progress bar that shows
   end, 'circle') --part of progressbar
   Citizen.Wait(Config.OilWagonFillTime) --makes it wait the time to fill the wagon(so the progress bar can finish before the code continue)
@@ -148,7 +142,7 @@ function deliveroil()
   DeleteEntity(Createdwagon) --deletes the wagon
   VORPcore.NotifyRightTip(Config.Language.ThankYouHeresYourPayOil, 4000) --prints on screen
   TriggerServerEvent('bcc:oil:PayoutOilMission', Wagon) --triggers the server event to add the money to your character(event uses the level system to add money depending on level)
-  TriggerServerEvent('bcc:oil:WagonHasLeftSpawn') --triggers the server event to allow wagons to spawn again (if this is not here no wagons will be able to spawn even though the players wagon has been deleted)
+  TriggerServerEvent('bcc-oil:WagonInSpawnHandler', false)
   Inmission = false --sets var false allowing player to start a new mission
 end
 

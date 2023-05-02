@@ -1,9 +1,9 @@
---[[###################################Steal Oil Wagon Setup#############################################]]
+------- Oil Wagon Robbery Setup -----
 Robableoilwagon = 0 --this variable is used to store the created wagon in (this is needed as the wagon is deleted in a seperate function so that function has to access it)
 Roboilwagondeadcheck = false --this functions as a dead check so if true then break etc
 local fillcoords = nil --creates a variable used to pick a random table
 local mathr1 = 0 --this is used to select a random table from config
-function roboilwagon() --creates a function named roboilwagon
+RegisterNetEvent('bcc-oil:RobOilWagon', function()
   --variables
   Inmission = true --sets the variable too true(which will when true no allow the nui menu to be used to trigger a new function)
   
@@ -38,7 +38,7 @@ function roboilwagon() --creates a function named roboilwagon
 
   --Spawning enemy Peds
   MutltiPedSpawnDeadCheck(fillcoords.pedlocation, 'wagonrob') --triggers the function to spawn multiple peds with a deadcheck
-end
+end)
 
 function roboilwagonreturnwagon()
   --Init Setup
@@ -70,8 +70,8 @@ function roboilwagonreturnwagon()
   VORPcore.NotifyRightTip(Config.Language.RobOilWagonSuccess, 4000) --prints on screen
   TriggerServerEvent('bcc-oil:RobberyPayout') --triggers server event and passes variable (this is what pays you)
 end
+
 --Deadcheck event
-RegisterNetEvent('bcc-oil:roboilwagonhelper') --creates an event with that name
 AddEventHandler('bcc-oil:roboilwagonhelper', function() --makes the event have code to run
   Wait(400) --gives the script some breathign room
   while Inmission do --while true do loop wont break until broken
@@ -92,8 +92,7 @@ end)
 Roboilcodeadcheck = false --this is the var used to check if player dies during mission
 local fillcoords2 = nil --creates a variable used to store data
 local missionoverend3dtext = false --this var will be used to see if you finished lockpicking and if so stop showing the 3dtext
---Funcion Setup
-function roboilco() --creates a function
+RegisterNetEvent('bcc-oil:RobOilCo', function()
   --Begining Setup
   VORPcore.NotifyRightTip(Config.Language.RobOilCoBlip, 4000) --Prints on screen
   Inmission = true --sets var true not allowing player to start another mission
@@ -143,9 +142,8 @@ function roboilco() --creates a function
       end
     end
   end
-end
+end)
 
-RegisterNetEvent('bcc-oil:roboilcohelper') --this creates a event
 AddEventHandler('bcc-oil:roboilcohelper', function() --this makes the event have code to run
   while Inmission do --while true do loop wont stop until broken
     Citizen.Wait(5) --waits 80ms prevents crashing
@@ -157,7 +155,7 @@ AddEventHandler('bcc-oil:roboilcohelper', function() --this makes the event have
         missionoverend3dtext = false break --resets var and breaks loop
       end
     end
-    if IsEntityDead(PlayerPedId()) == 1 then --if player is dead then
+    if IsEntityDead(PlayerPedId()) then
       Inmission = false --resets the var allowing player to start a new misison
       Roboilcodeadcheck = true --set var true
       Wait(10000) --waits 10 seconds

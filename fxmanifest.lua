@@ -32,13 +32,13 @@ files {
 
 ui_page 'ui/index.html'
 
-version '1.0.0'
+version '1.1.0'
 
 dependencies {
     'vorp_core',
     'vorp_inventory',
     'vorp_utils',
-    'bcc-versioner',
+    'bcc-utils',
     'lockpick',
     'vorp_progressbar'
 }

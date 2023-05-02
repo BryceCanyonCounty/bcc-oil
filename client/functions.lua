@@ -37,7 +37,7 @@ end
 
 --Function for making player carry a box
 function PlayerCarryBox(props) --catches var from wherever it is called
-    SetEntityAsMissionEntity(prop,true,true) --sets entity as mission entity
+    SetEntityAsMissionEntity(props,true,true) --sets entity as mission entity
     RequestAnimDict("mech_carry_box") --loads the anim
     while not HasAnimDictLoaded("mech_carry_box") do --while the anim hasnt loaded do
         Citizen.Wait(100) --wait 0.1 second

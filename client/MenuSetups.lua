@@ -74,7 +74,7 @@ end)
 -----------Criminal Callbacks--------
 RegisterNuiCallback('RobOilWagon', function()
   if not Inmission then
-    roboilwagon()
+    TriggerServerEvent('bcc-oil:CrimCooldowns', 'wagonrob')
   else
     VORPcore.NotifyRightTip(Config.Language.AlreadyInMission, 4000)
   end
@@ -82,7 +82,7 @@ end)
 
 RegisterNuiCallback('RobOilCompany', function()
   if not Inmission then
-    roboilco()
+    TriggerServerEvent('bcc-oil:CrimCooldowns', 'corob')
   else
     VORPcore.NotifyRightTip(Config.Language.AlreadyInMission, 4000)
   end
