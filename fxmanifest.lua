@@ -38,7 +38,7 @@ dependencies {
     'vorp_core',
     'vorp_inventory',
     'vorp_utils',
-    'bcc-versioner',
+    'bcc-utils',
     'lockpick',
     'vorp_progressbar'
 }

@@ -16,6 +16,7 @@
 - Version Check To Help You Keep Up To Date On New Featrures!
 - Everything is easily customizable in the config.lua file!
 - Config Option for enemies to attack after robbing the oil company!
+- Global robbery cooldowns!
 
 ## How it works!
 - Creates a ped at the heartlands oil company. Which when close will prompt you too press "G" pressing g will open a menu this is the oil company manager ped
@@ -36,7 +37,7 @@
 - VORP Progressbars
 - lockpick (this is tested with outsiders edit so use that one otherwise we can not help you)
 - VORP Utils
-- bcc-versioner
+- bcc-utils
 
 ## Screenshots
 ![image](https://user-images.githubusercontent.com/10902965/229379780-278d10e8-7f8f-447e-a223-19bc98d25cb5.png)

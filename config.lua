@@ -70,7 +70,9 @@ Config.CriminalPedModel = 'g_m_m_unicriminals_01' --model of the criminal ped
 Config.CriminalLevelIncrease = 1 --this is how much your level will increase per job completed(this is for all jobs)
 Config.OilCompanyLevelDecrease = 1 --this is how much your oilco level will decrease upon doing a criminal misison
 Config.StealOilWagonBasePay = 60 --this is the base pay for stealing an oil wagon
-Config.CrimBlipHash = 'blip_mp_torch'
+Config.CrimBlipHash = 'blip_mp_torch' --Blip hash
+Config.RobOilWagonCooldown = 720000 --Amount of time in ms that has to pass before anyone can rob the oil wagon again
+Config.RobOilCoCooldown = 120000 --Time in ms before a player can rob the oil company again
 
 -----Level Setup-----
 Config.CriminalLevels = {
@@ -201,6 +203,7 @@ Config.Language = {
     RobberySuccess = 'You Robbed the oil company now flee!',
     PressGToLockPick = 'Press "G" To LockPick',
     DefendAgainstAttackers = 'You are being attacked defend yourself!',
+    Cooldown = 'Has Been Robbed Recently',
     SupplyWagonBlipName = 'Supply Wagon', -- suply wagon blip name
     OilWagonBlipName = 'Oil Wagon' -- oil wagon blip name
 }
