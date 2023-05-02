@@ -29,11 +29,11 @@ function supplymissionbeginstage() --function used to fill your wagon with the s
         --pulled from syn construction, carrying box setup
         VORPcore.NotifyRightTip(Config.Language.Grabbingsupplies, 3000) --prints on screen
         FreezeEntityPosition(PlayerPedId(), true) --freezes player
-        TaskStartScenarioInPlace(PlayerPedId(), GetHashKey('WORLD_HUMAN_FARMER_WEEDING'), 4000, true, false, false, false) --triggers anim
+        TaskStartScenarioInPlace(PlayerPedId(), joaat('WORLD_HUMAN_FARMER_WEEDING'), 4000, true, false, false, false)
         Wait(4000) --waits 4 seconds allowing anim to finish
         ClearPedTasksImmediately(PlayerPedId())
         FreezeEntityPosition(PlayerPedId(), false) --unfreezes player
-        local props = CreateObject(GetHashKey("p_crate03x"), 0, 0, 0, 1, 0, 1) --spawns the object at 0 0 0
+        local props = CreateObject(joaat("p_crate03x"), 0, 0, 0, 1, 0, 1)
         PlayerCarryBox(props) --triggers function to make player carry the box
         VORPcore.NotifyRightTip(Config.Language.Putsuppliesonwagon, 4000) --prints on screen
         
@@ -93,7 +93,7 @@ function deliversupplies()
         VORPcore.NotifyRightTip(Config.Language.DeliverSupplies, 4000) --prints on screen
         
         --Picking up/ Holding Supplies animation setup
-        local props = CreateObject(GetHashKey("p_crate03x"), 0, 0, 0, 1, 0, 1) --spawns the object at 0 0 0
+        local props = CreateObject(joaat("p_crate03x"), 0, 0, 0, 1, 0, 1)
         PlayerCarryBox(props) --triggers the function to make the player hold the box
 
         --Dist check setup for delivering the supples
@@ -142,7 +142,7 @@ function supplymissionend()
     --Mission end setup
     VORPcore.NotifyRightTip(Config.Language.ThankYouHeresYourPayOil, 4000) --prints on screen
     DeleteEntity(Createdwagon) --deletes wagon
-    TriggerServerEvent('bcc:oil:WagonHasLeftSpawn') --triggers the server event to allow wagons to spawn again (if this is not here no wagons will be able to spawn even though the players wagon has been deleted)
+    TriggerServerEvent('bcc-oil:WagonInSpawnHandler', false)
     TriggerServerEvent('bcc:oil:PayoutOilMission', Wagon) --triggers the server event to add the money to your character(event uses the level system to add money depending on level)
     Inmission = false --sets var false allowing player to start a new mission
 end
