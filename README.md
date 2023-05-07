@@ -17,6 +17,8 @@
 - Everything is easily customizable in the config.lua file!
 - Config Option for enemies to attack after robbing the oil company!
 - Global robbery cooldowns!
+- In depth Webhooking!
+- Sniff Oil at the oil company To Get High!
 
 ## How it works!
 - Creates a ped at the heartlands oil company. Which when close will prompt you too press "G" pressing g will open a menu this is the oil company manager ped
@@ -35,7 +37,7 @@
 - VORP Core
 - VORP Inventory
 - VORP Progressbars
-- lockpick (this is tested with outsiders edit so use that one otherwise we can not help you)
+- bcc-minigames
 - VORP Utils
 - bcc-utils
 
