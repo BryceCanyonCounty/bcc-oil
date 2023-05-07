@@ -39,6 +39,6 @@ dependencies {
     'vorp_inventory',
     'vorp_utils',
     'bcc-utils',
-    'lockpick',
+    'bcc-minigames',
     'vorp_progressbar'
 }

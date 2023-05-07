@@ -1,5 +1,7 @@
 Config = {}
 
+Config.WebhookLink = '' --insert your webhook link here (leave empty for no webhooks)
+
 ------------------------------------------ Oil Job Setup ---------------------------------------------------
 ---------Oil Part of the job -------------
 Config.ManagerBlip = true --If true will create a blip on the Manager, if false it will not
@@ -21,6 +23,12 @@ Config.CriminalBlipColor = 'BLIP_MODIFIER_MP_COLOR_2'
 
 -------------This is the levels, and what they pay-----------------------------------------
 --This level setup is for the entire oil company this will effect payout for basic jobs etc(You can add or remove levels as you please but there has to be atleast 1)
+Config.SniffOil = { --oil sniffing setup
+    enable = true, --if true players will be able to sniff oil and get high
+    Coords = {x = 485.47, y = 678.98, z = 117.31}, --coords you will have to go to to sniff oil
+    EffectTime = 30000, --the time the screen effect will last
+}
+
 Config.OilCompanyLevels = {
     {
         level = 10, --this is the level you have to be at or above to get the bonus
@@ -115,6 +123,13 @@ Config.RobOilCoEnemyPedsLocations = {
     {x = 512.52, y = 686.54, z = 117.4},
 }
 
+Config.LockPick = {
+    MaxAttemptsPerLock = 3,
+    lockpickitem = 'lockpick',
+    difficulty = 10,
+    hintdelay = 500,
+}
+
 Config.RobOilCompany = {
     {
         lootlocation = {x = 493.83, y = 675.16, z = 117.39}, --locations where you will have to go to lockpick
@@ -204,6 +219,19 @@ Config.Language = {
     PressGToLockPick = 'Press "G" To LockPick',
     DefendAgainstAttackers = 'You are being attacked defend yourself!',
     Cooldown = 'Has Been Robbed Recently',
+    SniffOil = 'Press "G" to sniff oil!',
+    RobberyTitle = 'Robbery!',
+    BoughtTitle = 'Wagon Bought',
+    bought_desc = 'Player bought a supply wagon character static id: ',
+    bought_desc2 = 'Player bought a oil wagon character static id: ',
+    SoldTitle = 'Wagon Sold',
+    sold_desc = 'Player sold a oil wagon Character Static Id: ',
+    sold_desc2 = 'Player sold a supply wagon Character Static Id: ',
+    DeliveryMissionTitle = 'Delivery Started',
+    Delivery_desc = 'Player has begun delivering oil, players character static id: ',
+    Delivery_desc2 = 'Player has begun delivering supplies, players character static id: ',
+    Robbery_desc = 'Player has begun robbing the oil company, player character static id: ',
+    Robbery_desc2 = 'Player has begun stealing an oil wagon, player character static id: ',
     SupplyWagonBlipName = 'Supply Wagon', -- suply wagon blip name
     OilWagonBlipName = 'Oil Wagon' -- oil wagon blip name
 }
