@@ -3,7 +3,7 @@ progressbar = exports.vorp_progressbar:initiate() --Allows use of progressbar in
 
 ----- Oil Delivery Setup -----
 function beginningstage()
-  Wait(1000) --waits 1 seconds time for the palyerwagonspawn.lua print too go away
+  Wait(1000)
   VORPcore.NotifyRightTip(Config.Language.FillYourOilWagon, 4000) --prints on your screen
   local pl = PlayerPedId()
   local mathr1 = math.random(1, #OilWagonTable.FillPoints) --Gets a random set of coords from OilWagontable.FillPoints
@@ -35,7 +35,7 @@ function beginningstage()
   progressbar.start(Config.Language.FillingOilwagon, Config.OilWagonFillTime, function() --sets up progress bar to run while anim is
   end, 'circle') --part of progress bar
   Wait(Config.OilWagonFillTime) --waits until the anim / progressbar above is over
-  if Progressbardeadcheck == true then --this will run once after the progressbar is over and will check if the varible is true if then(this does mean that if you die mid progress bar it will not detect it until after it is over but it removes the necessity of setting player and wagon invincible therefore increasing immersion)
+  if Progressbardeadcheck then
     Progressbardeadcheck = false --resest the variable so you can do a new mission
     ClearPedTasksImmediately(pl)
     VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) --printson screen
@@ -145,6 +145,28 @@ function deliveroil()
   TriggerServerEvent('bcc-oil:WagonInSpawnHandler', false)
   Inmission = false --sets var false allowing player to start a new mission
 end
+
+---------- Sniffing Oil Setup ---------------
+Citizen.CreateThread(function()
+  if Config.SniffOil.enable then
+    while true do
+      Wait(5)
+      local pl = PlayerPedId()
+      local plc = GetEntityCoords(pl)
+      local dist = GetDistanceBetweenCoords(plc.x, plc.y, plc.z, Config.SniffOil.Coords.x, Config.SniffOil.Coords.y, Config.SniffOil.Coords.z, true)
+      if dist < 3 then
+        BccUtils.Misc.DrawText3D(Config.SniffOil.Coords.x, Config.SniffOil.Coords.y, Config.SniffOil.Coords.z, Config.Language.SniffOil)
+        if IsControlJustReleased(0, 0x760A9C6F) then
+          AnimpostfxPlay('MP_BountyLagrasSwamp')
+          Wait(Config.SniffOil.EffectTime)
+          AnimpostfxStopAll()
+        end
+      elseif dist > 200 then
+        Wait(2000)
+      end
+    end
+  end
+end)
 
 ----------------------------Oil Mission Tables----------------------
 OilWagonTable = {} --creates the table

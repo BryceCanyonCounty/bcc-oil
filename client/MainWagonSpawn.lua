@@ -1,7 +1,6 @@
 ------ Handles spawning the wagons -----
-Createdwagon = 0 --creates a variable only accessible by this file set to 0 (will be used to spawn the wagon, and dist check it)is global so all of client can pull it once spawned
-local sw = OilWagonTable.WagonSpawnCoords --sets variable to smaller one I am lazy lmao
-Wagon = 0 --creates a global variable which is used in other parts of the code
+Createdwagon, Wagon = 0, 0
+local sw = OilWagonTable.WagonSpawnCoords
 RegisterNetEvent('bcc:oil:PlayerWagonSpawn', function(wagon)
   Inmission = true --sets the global var too true preventing a new mission from being started
   Wagon = wagon --global equals the variable from server
@@ -29,16 +28,14 @@ end)
 
 ---------------Creates a client event to check distance the wagon is from spawn coords/if it is disable wagons from spawning/if it isnt allow wagons to spawn again ----------------------
 AddEventHandler('bcc:oil:PlayerWagonDistFromSpawnCheck', function()
-  local isnear = false --creates catch variable
-  local isntnear = false --creates catch variable
-  while true do --creates a while true do loop
-    Citizen.Wait(1000) --Waits 1 second(prevents crashing, and performance loss)
+  local isnear, isntnear = false, false
+  while true do
+    Wait(1000)
     if WagonDestroyed == false and Playerdead == false then
-      local wagoncoords = GetEntityCoords(Createdwagon) --gets wagons coords
-      local wce = DoesEntityExist(Createdwagon) --checks if the entity exists still
-      if wce then --if entity exists then
+      local wagoncoords = GetEntityCoords(Createdwagon)
+      if DoesEntityExist(Createdwagon) then
         if GetDistanceBetweenCoords(sw.x, sw.y, sw.z, wagoncoords.x, wagoncoords.y, wagoncoords.z, false) > 20 then --if dist greater than 20 then
-          if isntnear == false then --if isnt near = false then(if this hasnt run or elseif below changed it back to false)
+          if not isntnear then
             isntnear = true --sets variable to true so that this wont run again unless changed
             isnear = false --sets isnear to false so the elseif can run
             TriggerServerEvent('bcc-oil:WagonInSpawnHandler', false)
@@ -57,23 +54,18 @@ AddEventHandler('bcc:oil:PlayerWagonDistFromSpawnCheck', function()
       WagonDestroyed = false --you have to reset to false other wise it will insta fail and the player will have to leave and rejoin server before being able to start  new mission
       Playerdead = false --same as above variable
       TriggerServerEvent('bcc-oil:WagonInSpawnHandler', false)
-      Citizen.Wait(Config.OilWagonFillTime + 5000) --waits the set time in config(this is necessary otherwise if you do not die while in a progressbar say you die on your way to deliver the progressbar variable still gets set true and will insta fail as soon as you fill the wagon with oil)
+      Wait(Config.OilWagonFillTime + 5000)
       Progressbardeadcheck = false break --sets variable to false then breaks loop
     end
   end
 end)
 
 --------Creates a client event that will be used throughout the whole of both wagon missions too see if you or the wagon is dead and if so change variable to true to stop the missions----
-Playerdead = false --global variable to be used between all client scripts. Used as a catch so if it is set to true end mission
-WagonDestroyed = false --same as above variable
-Progressbardeadcheck = false --variable used for deadchecking in progressbar areas of code(this variable wont be reset by this file unlike the other 2 allowing it too be the catch for anything not in a loop (if the other 2 variables are used outside of a loop it wont work as they reset to fast this variable is to be reset anywhere it is used in other files))
+Playerdead, WagonDestroyed, Progressbardeadcheck = false, false, false
 AddEventHandler('bcc-oil:WagonDeliveriesDeadCheck', function()
-  while true do --creates a loop that will run until broken
-    Citizen.Wait(60) --waits 60ms reduces lag by increased time
-    local pdead = IsEntityDead(PlayerPedId()) --checks if player is dead false if alive 1 if dead
-    local wdestroyed = GetEntityHealth(Createdwagon) --checks the wagons hp spawn hp is 1000, if it is destroyed hp is 0
-    local cwexist = DoesEntityExist(Createdwagon) --checks if entity exists if so prints 1 if not prints false
-    if wdestroyed == 0 or cwexist == false or pdead == 1 then --if wagon is destroyed or doesnt exist then(doesnt exist is needed for when you complete the mission)
+  while true do
+    Wait(100)
+    if GetEntityHealth(Createdwagon) == 0 or DoesEntityExist(Createdwagon) == false or IsEntityDead(PlayerPedId()) == 1 then
       Inmission = false --resets the var allowing a new mission to start
       Progressbardeadcheck = true --sets variable too true allowing other parts of the code to know you died
       WagonDestroyed = true --changes variable and breaks loop(variable change makes it so the mission can end when destroyed)

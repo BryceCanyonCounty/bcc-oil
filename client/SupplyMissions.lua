@@ -1,6 +1,6 @@
 --Function for beggining the mission
 function supplymissionbeginstage() --function used to fill your wagon with the supplies
-    local repeatamount = 0 --variable used in the repeat to make the code in the repeat run 3 times
+    local repeatamount, pl = 0, PlayerPedId()
     repeat --repeat until repeatamount == 3 (this basically allows this code to run 3 times similar to if you made a function of this code and called it 3 times, just does it in less code)
         repeatamount = repeatamount + 1 --repeat amount = repeatamount + 1 so everytime this is ran it will add one
         VORPcore.NotifyRightTip(Config.Language.SupplyWagonMisisonBegin, 4000) --prints on your screen
@@ -16,7 +16,7 @@ function supplymissionbeginstage() --function used to fill your wagon with the s
         
         --Distance Check Setup for picking up boxes
         FreezeEntityPosition(Createdwagon, true) --freezes wagon in  place
-        distcheck(fillcoords.location.x, fillcoords.location.y, fillcoords.location.z, 3, PlayerPedId())
+        distcheck(fillcoords.location.x, fillcoords.location.y, fillcoords.location.z, 3, pl)
         if Playerdead or WagonDestroyed then --if variable true then
             RemoveBlip(blip1) --removes blip
             VORPutils.Gps:RemoveGps() --Removes the gps waypoint
@@ -28,24 +28,24 @@ function supplymissionbeginstage() --function used to fill your wagon with the s
 
         --pulled from syn construction, carrying box setup
         VORPcore.NotifyRightTip(Config.Language.Grabbingsupplies, 3000) --prints on screen
-        FreezeEntityPosition(PlayerPedId(), true) --freezes player
-        TaskStartScenarioInPlace(PlayerPedId(), joaat('WORLD_HUMAN_FARMER_WEEDING'), 4000, true, false, false, false)
+        FreezeEntityPosition(pl, true)
+        TaskStartScenarioInPlace(pl, joaat('WORLD_HUMAN_FARMER_WEEDING'), 4000, true, false, false, false)
         Wait(4000) --waits 4 seconds allowing anim to finish
-        ClearPedTasksImmediately(PlayerPedId())
-        FreezeEntityPosition(PlayerPedId(), false) --unfreezes player
+        ClearPedTasksImmediately(pl)
+        FreezeEntityPosition(pl, false)
         local props = CreateObject(joaat("p_crate03x"), 0, 0, 0, 1, 0, 1)
         PlayerCarryBox(props) --triggers function to make player carry the box
         VORPcore.NotifyRightTip(Config.Language.Putsuppliesonwagon, 4000) --prints on screen
         
         --Dist Check Setup for player to wagon loading boxes onto wagon
         local wc = GetEntityCoords(Createdwagon) --gets the wagons coords
-        distcheck(wc.x, wc.y, wc.z, 3, PlayerPedId())
-        ClearPedTasksImmediately(PlayerPedId()) --clears your anim
+        distcheck(wc.x, wc.y, wc.z, 3, pl)
+        ClearPedTasksImmediately(pl)
         DeleteEntity(props) --delete object
         if Playerdead or WagonDestroyed then --if variable true then
             repeatamount = 3 --sets repeat amount to 3 so the repeat wont run again if you die
             DeleteEntity(props) --delete object
-            ClearPedTasksImmediately(PlayerPedId()) --clears your anim
+            ClearPedTasksImmediately(pl)
             VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) return --prints on screen then returns ending function here failing mission
         end
     until repeatamount == 3 --if variable == 3 then it will not repeat again if less than 3 it will repeat
@@ -54,7 +54,7 @@ function supplymissionbeginstage() --function used to fill your wagon with the s
 end
 
 function deliversupplies()
-    local repeatamount = 0 --sets repeat amount too 0
+    local repeatamount, pl = 0, PlayerPedId()
 
     --Coords Randomization
     local mathr1 = math.random(1, #Config.SupplyDeliveryLocations) --Gets a random set of coords from table
@@ -83,7 +83,7 @@ function deliversupplies()
 
         --Dist Check Player to pick up supplies from wagon
         local wc = GetEntityCoords(Createdwagon)
-        distcheck(wc.x, wc.y, wc.z, 3, PlayerPedId())
+        distcheck(wc.x, wc.y, wc.z, 3, pl)
         if Playerdead or WagonDestroyed then --if deadcheck true then
             repeatamount = 3 --sets variable too 3
             RemoveBlip(blip1) --removes blip
@@ -97,9 +97,9 @@ function deliversupplies()
         PlayerCarryBox(props) --triggers the function to make the player hold the box
 
         --Dist check setup for delivering the supples
-        distcheck(fillcoords.x, fillcoords.y, fillcoords.z, 2, PlayerPedId())
+        distcheck(fillcoords.x, fillcoords.y, fillcoords.z, 2, pl)
         DeleteEntity(props) --deletes the prop(box)
-        ClearPedTasksImmediately(PlayerPedId()) --clears players animations
+        ClearPedTasksImmediately(pl)
         RemoveBlip(blip1) --removes blip
     until repeatamount == 3 --repeats until the variable = 3 then it wont repeat again
     if Playerdead or WagonDestroyed then --if variable true then
