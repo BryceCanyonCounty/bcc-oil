@@ -32,7 +32,7 @@ files {
 
 ui_page 'ui/index.html'
 
-version '1.1.0'
+version '1.2.0'
 
 dependencies {
     'vorp_core',
