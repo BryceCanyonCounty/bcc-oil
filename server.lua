@@ -13,18 +13,18 @@ RegisterServerEvent('bcc:oil:PayoutOilMission', function(Wagon)
   local _source = source
   local Character = VORPcore.getUser(_source).getUsedCharacter
   local param = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier, ['levelincrease'] = Config.LevelIncreasePerDelivery }
-  exports.oxmysql:execute('UPDATE oil SET `manager_trust`=manager_trust+@levelincrease WHERE charidentifier=@charidentifier AND identifier=@identifier', param) --increase your level in database table manager_trust by what is set in the config
+  exports.oxmysql:execute('UPDATE oil SET `manager_trust`=manager_trust+@levelincrease WHERE charidentifier=@charidentifier AND identifier=@identifier', param)
   exports.oxmysql:execute("SELECT manager_trust FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param, function(result)
-    for k, v in pairs(Config.OilCompanyLevels) do --for loop in the table in config
+    for k, v in pairs(Config.OilCompanyLevels) do
       if result[1].manager_trust >= v.level and result[1].manager_trust < v.nextlevel then
-        if Wagon == 'oilwagon02x' then --if the variable then
-          Character.addCurrency(0, Config.BasicOilDeliveryPay + v.payoutbonus) break -- Add money basepay + paybonus and break loop so it only adds the money once
-        elseif Wagon == 'armysupplywagon' then --if the variable then
-          Character.addCurrency(0, Config.SupplyDeliveryBasePay + v.payoutbonus) break --base pay plus paybonus break loop
+        if Wagon == 'oilwagon02x' then
+          Character.addCurrency(0, Config.BasicOilDeliveryPay + v.payoutbonus) break
+        elseif Wagon == 'armysupplywagon' then
+          Character.addCurrency(0, Config.SupplyDeliveryBasePay + v.payoutbonus) break
         end
       elseif result[1].manager_trust < v.level then
-        if Wagon == 'oilwagon02x' then --if variable then
-          Character.addCurrency(0, Config.BasicOilDeliveryPay) break --gives you the set base pay then breaks loop
+        if Wagon == 'oilwagon02x' then
+          Character.addCurrency(0, Config.BasicOilDeliveryPay) break
         elseif Wagon == 'armysupplywagon' then
           Character.addCurrency(0, Config.SupplyDeliveryBasePay) break
         end
@@ -35,21 +35,21 @@ end)
 
 -------- Robbery Payout Handler --------
 RegisterServerEvent('bcc-oil:RobberyPayout', function()
-  local _source = source --gets players source
-  local Character = VORPcore.getUser(_source).getUsedCharacter --checks the char used
+  local _source = source
+  local Character = VORPcore.getUser(_source).getUsedCharacter
   local param = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier, ['levelincrease'] = Config.LevelIncreasePerDelivery, ['managelevdecrease'] = Config.OilCompanyLevelDecrease }
-  exports.oxmysql:execute("SELECT manager_trust FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param, function(result) --selects the trust value in db
-    if result[1].manager_trust > 0 then --if trust is greater than 0 then
-      exports.oxmysql:execute('UPDATE oil SET `manager_trust`=manager_trust-@managelevdecrease WHERE charidentifier=@charidentifier AND identifier=@identifier', param) --removes manager trust levels
+  exports.oxmysql:execute("SELECT manager_trust FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param, function(result)
+    if result[1].manager_trust > 0 then
+      exports.oxmysql:execute('UPDATE oil SET `manager_trust`=manager_trust-@managelevdecrease WHERE charidentifier=@charidentifier AND identifier=@identifier', param)
     end
   end)
-  exports.oxmysql:execute('UPDATE oil SET `enemy_trust`=enemy_trust+@levelincrease WHERE charidentifier=@charidentifier AND identifier=@identifier', param) --increase your level in database table manager_trust by what is set in the config
-  exports.oxmysql:execute("SELECT enemy_trust FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param, function(result) --selects enemy trust from db and creates a funciton to run
-    for k, v in pairs(Config.CriminalLevels) do --for loop in the table in config
+  exports.oxmysql:execute('UPDATE oil SET `enemy_trust`=enemy_trust+@levelincrease WHERE charidentifier=@charidentifier AND identifier=@identifier', param)
+  exports.oxmysql:execute("SELECT enemy_trust FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param, function(result)
+    for k, v in pairs(Config.CriminalLevels) do
       if result[1].enemy_trust >= v.level and result[1].enemy_trust < v.nextlevel then
-        Character.addCurrency(0, Config.StealOilWagonBasePay + v.payoutbonus) break --pays base pay + bonus pay breaks loop
+        Character.addCurrency(0, Config.StealOilWagonBasePay + v.payoutbonus) break
       elseif result[1].enemy_trust < v.level then
-        Character.addCurrency(0, Config.StealOilWagonBasePay) break --just pays base pay and breaks loop
+        Character.addCurrency(0, Config.StealOilWagonBasePay) break
       end
     end
   end)
@@ -58,26 +58,27 @@ end)
 --Cooldown Event
 local wagonrobcooldown, oilcorobcooldown = false, false
 RegisterServerEvent('bcc-oil:CrimCooldowns', function(missiontype)
-  local Character = VORPcore.getUser(source).getUsedCharacter
+  local _source = source
+  local Character = VORPcore.getUser(_source).getUsedCharacter
   if missiontype == 'wagonrob' then
     if not wagonrobcooldown then
-      TriggerClientEvent('bcc-oil:RobOilWagon', source)
+      TriggerClientEvent('bcc-oil:RobOilWagon', _source)
       discord:sendMessage(Config.Language.RobberyTitle, Config.Language.Robbery_desc2 .. tostring(Character.charIdentifier))
       wagonrobcooldown = true
       Wait(Config.RobOilWagonCooldown)
       wagonrobcooldown = false
     else
-      VORPcore.NotifyRightTip(source, Config.Language.Cooldown, 4000)
+      VORPcore.NotifyRightTip(_source, Config.Language.Cooldown, 4000)
     end
   elseif missiontype == 'corob' then
     if not oilcorobcooldown then
-      TriggerClientEvent('bcc-oil:RobOilCo', source)
+      TriggerClientEvent('bcc-oil:RobOilCo', _source)
       discord:sendMessage(Config.Language.RobberyTitle, Config.Language.Robbery_desc .. tostring(Character.charIdentifier))
       oilcorobcooldown = true
       Wait(Config.RobOilCoCooldown)
       oilcorobcooldown = false
     else
-      VORPcore.NotifyRightTip(source, Config.Language.Cooldown, 4000)
+      VORPcore.NotifyRightTip(_source, Config.Language.Cooldown, 4000)
     end
   end
 end)
@@ -85,18 +86,17 @@ end)
 RegisterServerEvent('bcc-oil:OilCoRobberyPayout', function(fillcoords2)
   local _source = source
   local Character = VORPcore.getUser(_source).getUsedCharacter
-  if fillcoords2.rewards.itemspayout then --if option is true then
-    Character.addCurrency(0, fillcoords2.rewards.cashpayout) --adds money
-    for k, v in pairs(fillcoords2.rewards.items) do --creates a for loop set in the rewards.items table(this will run this code once per table)
+  if fillcoords2.rewards.itemspayout then
+    Character.addCurrency(0, fillcoords2.rewards.cashpayout)
+    for k, v in pairs(fillcoords2.rewards.items) do
       VORPInv.addItem(_source, v.item, v.count)
     end
-  else --else the option is not true then
-    Character.addCurrency(0, fillcoords2.rewards.cashpayout) --just adds cash
+  else
+    Character.addCurrency(0, fillcoords2.rewards.cashpayout)
   end
 end)
 
 ------Database Area------
----------Creates DataBase -----------
 CreateThread(function()
   exports.oxmysql:execute([[CREATE TABLE if NOT EXISTS `oil` (
     `identifier` varchar(50) NOT NULL,
@@ -117,7 +117,7 @@ RegisterServerEvent('bcc:oil:DBCheck', function()
   --------The if you exist in db code was pulled from vorp_banking and modified ----------------
   exports.oxmysql:execute("SELECT identifier, charidentifier FROM oil WHERE identifier = @Playeridentifier AND charidentifier = @CharIdentifier", { ["@Playeridentifier"] = Character.identifier, ["CharIdentifier"] = Character.charIdentifier }, function(result)
     if not result[1] then
-      exports.oxmysql:execute("INSERT INTO oil ( `charidentifier`,`identifier` ) VALUES ( @charidentifier,@identifier )", param) --If player is not in db this will create him in the db
+      exports.oxmysql:execute("INSERT INTO oil ( `charidentifier`,`identifier` ) VALUES ( @charidentifier,@identifier )", param)
     end
   end)
 end)
@@ -125,8 +125,8 @@ end)
 ------------------------------------- Handles the buying, selling, and spawning of wagons ---------------------------------------------
 local wagoninspawn = false
 RegisterServerEvent('bcc:oil:WagonManagement', function(type, action)
-  local _source = source --sets _source to source. Unsure why but the notifies would not work without doing this
-  local Character = VORPcore.getUser(_source).getUsedCharacter --checks the char used
+  local _source = source
+  local Character = VORPcore.getUser(_source).getUsedCharacter
   --------- If wagon type set in menusetup is oilwagon then-----------
   if type == 'oilwagon' then
     local param = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier, ['oilwagon'] = 'oilwagon02x' }

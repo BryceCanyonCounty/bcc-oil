@@ -1,115 +1,105 @@
 ------- Oil Wagon Robbery Setup -----
 Robableoilwagon, Roboilwagondeadcheck = 0, false
-local fillcoords, mathr1 = nil, 0
+local fillcoords = nil
 RegisterNetEvent('bcc-oil:RobOilWagon', function()
   --variables
-  Inmission = true --sets the variable too true(which will when true no allow the nui menu to be used to trigger a new function)
-  
-  --Loading Wagon Model
-  Robableoilwagon = 'oilwagon02x' --sets the variable to the string wagon hash
-  modelload(Robableoilwagon) --triggers the function to load the model
+  Inmission = true
+
+  Robableoilwagon = joaat('oilwagon02x')
+  modelload(Robableoilwagon)
 
   --Coord Randomization
-  mathr1 = math.random(1, #Config.OilWagonrobberyLocations) --Gets a random set of coords from OilWagontable.FillPoints
-  fillcoords = Config.OilWagonrobberyLocations[mathr1] --gets a random set of coords from OilWagonTable.FillPoints
+  fillcoords = CoordRandom(Config.OilWagonrobberyLocations)
   
   --Wagon Spawn
-  Robableoilwagon = CreateVehicle(Robableoilwagon, fillcoords.wagonlocation.x, fillcoords.wagonlocation.y, fillcoords.wagonlocation.z, fillcoords.wagonlocation.h, true, true) --creates the oilwagon at the location and sets it too the variable so it can be used in a net event
-  TriggerEvent('bcc-oil:roboilwagonhelper') --triggers the event that will check if you die during the misison
-  Citizen.InvokeNative(0x23f74c2fda6e7c61, 953018525, Robableoilwagon) --sets the blip that tracks the ped
-  FreezeEntityPosition(Robableoilwagon, true) --freezes the wagon in place
-  VORPcore.NotifyRightTip(Config.Language.RobOilWagonOpeningtext, 4000) --prints on screen
+  Robableoilwagon = CreateVehicle(Robableoilwagon, fillcoords.wagonlocation.x, fillcoords.wagonlocation.y, fillcoords.wagonlocation.z, fillcoords.wagonlocation.h, true, true)
+  TriggerEvent('bcc-oil:roboilwagonhelper')
+  Citizen.InvokeNative(0x23f74c2fda6e7c61, 953018525, Robableoilwagon)
+  FreezeEntityPosition(Robableoilwagon, true)
+  VORPcore.NotifyRightTip(Config.Language.RobOilWagonOpeningtext, 4000)
   
   --Waypoint Setup
-  VORPutils.Gps:SetGps(fillcoords.wagonlocation.x, fillcoords.wagonlocation.y, fillcoords.wagonlocation.z) --Creates the gps waypoint
+  VORPutils.Gps:SetGps(fillcoords.wagonlocation.x, fillcoords.wagonlocation.y, fillcoords.wagonlocation.z)
 
   --Distance Check Setup
   local cw = GetEntityCoords(Robableoilwagon)
   distcheck(cw.x, cw.y, cw.z, 30, PlayerPedId())
-  if Roboilwagondeadcheck then --if variable true then (if your dead or wagon destroyed)
-    VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) --prints on screen
-    DeleteEntity(Robableoilwagon) --deletes the wagon
-    VORPutils.Gps:RemoveGps() return --clears your gps and returns ending the function here
+  ClearGpsMultiRoute()
+  if Roboilwagondeadcheck then
+    VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000)
+    DeleteEntity(Robableoilwagon) return
   end
-  VORPutils.Gps:RemoveGps() --clears your gps
-  VORPcore.NotifyRightTip(Config.Language.RobOilWagonKillGaurds, 4000) --prints on screen
+  VORPcore.NotifyRightTip(Config.Language.RobOilWagonKillGaurds, 4000)
 
   --Spawning enemy Peds
-  MutltiPedSpawnDeadCheck(fillcoords.pedlocation, 'wagonrob') --triggers the function to spawn multiple peds with a deadcheck
+  MutltiPedSpawnDeadCheck(fillcoords.pedlocation, 'wagonrob')
 end)
 
 function roboilwagonreturnwagon()
   --Init Setup
-  FreezeEntityPosition(Robableoilwagon, false) --unfreezes the wagon
-  VORPcore.NotifyRightTip(Config.Language.RobOilWagonReturnWagon, 4000) --prints on screen
+  FreezeEntityPosition(Robableoilwagon, false)
+  VORPcore.NotifyRightTip(Config.Language.RobOilWagonReturnWagon, 4000)
   
   --Blip and Waypoint Setup
-  local blip1 = Citizen.InvokeNative(0x554D9D53F696D002, -1282792512, fillcoords.returnlocation.x, fillcoords.returnlocation.y, fillcoords.returnlocation.z, 5) --creates blip using natives
-  Citizen.InvokeNative(0x9CB1A1623062F402, blip1, Config.Language.RobOilWagonReturnBlip) --names blip
-  VORPutils.Gps:SetGps(fillcoords.returnlocation.x, fillcoords.returnlocation.y, fillcoords.returnlocation.z) --Creates the gps waypoint
+  local blip1 = BlipWaypoin(fillcoords.returnlocation.x, fillcoords.returnlocation.y, fillcoords.returnlocation.z, Config.Language.RobOilWagonReturnBlip)
 
   --Distance Check Setup for returning the wagon
   distcheck(fillcoords.returnlocation.x, fillcoords.returnlocation.y, fillcoords.returnlocation.z, 10, Robableoilwagon)
-  if Roboilwagondeadcheck then --if varibale true then (if you die or wagon broke)
-    VORPutils.Gps:RemoveGps() --clears your gps and returns ending the function here
-    RemoveBlip(blip1) --removes blip
-    VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) --prints on screen
-    DeleteEntity(Robableoilwagon) return --deletes the wagon then returns ending the function here not allowing the code below to run
+  ClearGpsMultiRoute()
+  if Roboilwagondeadcheck then
+    RemoveBlip(blip1)
+    VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000)
+    DeleteEntity(Robableoilwagon) return
   end
 
   --End of mission setup
-  Inmission = false --sets variable too false allowing you too do another misison
-  FreezeEntityPosition(Robableoilwagon, true) --freezes the wagon
-  RemoveBlip(blip1) --removes blip
-  VORPutils.Gps:RemoveGps() --clears your gps and returns ending the function here
-  TaskLeaveAnyVehicle(PlayerPedId(), 0, 0) --makes the player get off the wagon
-  Wait(4000) --waits 4 seconds
-  DeleteEntity(Robableoilwagon) --deletes the wagon
-  VORPcore.NotifyRightTip(Config.Language.RobOilWagonSuccess, 4000) --prints on screen
-  TriggerServerEvent('bcc-oil:RobberyPayout') --triggers server event and passes variable (this is what pays you)
+  Inmission = false
+  FreezeEntityPosition(Robableoilwagon, true)
+  RemoveBlip(blip1)
+  TaskLeaveAnyVehicle(PlayerPedId(), 0, 0)
+  Wait(4000)
+  DeleteEntity(Robableoilwagon)
+  VORPcore.NotifyRightTip(Config.Language.RobOilWagonSuccess, 4000)
+  TriggerServerEvent('bcc-oil:RobberyPayout')
 end
 
 --Deadcheck event
-AddEventHandler('bcc-oil:roboilwagonhelper', function() --makes the event have code to run
-  Wait(400) --gives the script some breathign room
+AddEventHandler('bcc-oil:roboilwagonhelper', function()
+  Wait(400)
   while Inmission do
-    Citizen.Wait(100)
+    Wait(100)
     if IsEntityDead(PlayerPedId()) == 1 or GetEntityHealth(Robableoilwagon) == 0 or DoesEntityExist(Robableoilwagon) == false then
-      Roboilwagondeadcheck = true --sets var to true
-      Inmission = false --sets var too false allowing you to do another mission
-      Wait(3000) --waits 3 seconds
-      Roboilwagondeadcheck = false break --resets variable and breaks loop
+      Roboilwagondeadcheck = true
+      Inmission = false
+      Wait(3000)
+      Roboilwagondeadcheck = false break
     end
   end
 end)
 
 --Rob Oil Company Variables Setup
-Roboilcodeadcheck = false --this is the var used to check if player dies during mission
+Roboilcodeadcheck = false
 local fillcoords2, missionoverend3dtext = nil, false
 RegisterNetEvent('bcc-oil:RobOilCo', function()
   --Begining Setup
-  VORPcore.NotifyRightTip(Config.Language.RobOilCoBlip, 4000) --Prints on screen
-  Inmission = true --sets var true not allowing player to start another mission
-  TriggerEvent('bcc-oil:roboilcohelper') --triggers the deadcheck event(has to be an event since they run async unlike functions)
+  VORPcore.NotifyRightTip(Config.Language.RobOilCoBlip, 4000)
+  Inmission = true
+  TriggerEvent('bcc-oil:roboilcohelper')
   
   --Coord Randomization
-  local mathr12 = math.random(1, #Config.RobOilCompany) --Gets a random set of coords from OilWagontable.FillPoints
-  fillcoords2 = Config.RobOilCompany[mathr12] --gets a random set of coords from OilWagonTable.FillPoints
+  fillcoords2 = CoordRandom(Config.RobOilCompany)
   
   --Blip and Waypoint Setup
-  local blip1 = Citizen.InvokeNative(0x554D9D53F696D002, -1282792512, fillcoords2.lootlocation.x, fillcoords2.lootlocation.y, fillcoords2.lootlocation.z, 5) --creates blip using natives
-  Citizen.InvokeNative(0x9CB1A1623062F402, blip1, Config.Language.RobOilCoBlip) --names blip
-  VORPutils.Gps:SetGps(fillcoords2.lootlocation.x, fillcoords2.lootlocation.y, fillcoords2.lootlocation.z) --Creates the gps waypoint
+  local blip1 = BlipWaypoin(fillcoords2.lootlocation.x, fillcoords2.lootlocation.y, fillcoords2.lootlocation.z, Config.Language.RobOilCoBlip)
   
   --Distance Check Setup for close to lockpick Location
   distcheck(fillcoords2.lootlocation.x, fillcoords2.lootlocation.y, fillcoords2.lootlocation.z, 5, PlayerPedId())
-  if Roboilcodeadcheck then --if var is true then
-    RemoveBlip(blip1) --removes blip
-    VORPutils.Gps:RemoveGps() --clears your gps and returns ending the function here
-    VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) return --prints on screen and returns ending the function here preventing code below from running
+  ClearGpsMultiRoute()
+  if Roboilcodeadcheck then
+    RemoveBlip(blip1)
+    VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) return
   end
-  RemoveBlip(blip1) --removes the blip
-  VORPutils.Gps:RemoveGps() --clears your gps and returns ending the function here
+  RemoveBlip(blip1)
   local cfg = {
     focus = true, -- Should minigame take nui focus
     cursor = true, -- Should minigame have cursor  (required for lockpick)

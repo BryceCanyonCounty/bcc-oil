@@ -4,46 +4,41 @@ progressbar = exports.vorp_progressbar:initiate() --Allows use of progressbar in
 ----- Oil Delivery Setup -----
 function beginningstage()
   Wait(1000)
-  VORPcore.NotifyRightTip(Config.Language.FillYourOilWagon, 4000) --prints on your screen
-  local pl = PlayerPedId()
-  local mathr1 = math.random(1, #OilWagonTable.FillPoints) --Gets a random set of coords from OilWagontable.FillPoints
-  local fillcoords = OilWagonTable.FillPoints[mathr1] --gets a random set of coords from OilWagonTable.FillPoints
+  VORPcore.NotifyRightTip(Config.Language.FillYourOilWagon, 4000)
+  local fillcoords = CoordRandom(OilWagonTable.FillPoints)
   
   --Blip and Waypoint setup
-  local blip1 = Citizen.InvokeNative(0x554D9D53F696D002, -1282792512, fillcoords.fillpoint.x, fillcoords.fillpoint.y, fillcoords.fillpoint.z, 5) --creates blip using natives
-  Citizen.InvokeNative(0x9CB1A1623062F402, blip1, Config.Language.FillBlipName) --names blip
-  VORPutils.Gps:SetGps(fillcoords.fillpoint.x, fillcoords.fillpoint.y, fillcoords.fillpoint.z) --Creates the gps waypoint
+  local blip1 = BlipWaypoin(fillcoords.fillpoint.x, fillcoords.fillpoint.y, fillcoords.fillpoint.z, Config.Language.FillBlipName)
   
   -------------Dist Check for fill Setup-----------------
-  distcheck(fillcoords.fillpoint.x, fillcoords.fillpoint.y, fillcoords.fillpoint.z, 3, Createdwagon) --triggers the dist check function and passes this data too it
-  if Playerdead or WagonDestroyed then --if variable is true(you are dead or wagon destroyed) then
-    RemoveBlip(blip1) --removes the blip
-    VORPutils.Gps:RemoveGps() --Removes the gps waypoint
-    VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) return --prints on screen then return(return ends the function preventing code below from running essentially creatin a dead check)
+  distcheck(fillcoords.fillpoint.x, fillcoords.fillpoint.y, fillcoords.fillpoint.z, 3, Createdwagon)
+  ClearGpsMultiRoute()
+  if Playerdead or WagonDestroyed then
+    RemoveBlip(blip1)
+    VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) return
   end
-  FreezeEntityPosition(Createdwagon, true) --freezes the wagon
-  RemoveBlip(blip1) --removes blip
-  VORPutils.Gps:RemoveGps() --Removes the gps waypoint
+  FreezeEntityPosition(Createdwagon, true)
+  RemoveBlip(blip1)
 
   -------Progress bar / Fill Wagon Setup----------
-  TaskLeaveAnyVehicle(pl, 0, 0)
-  VORPcore.NotifyRightTip(Config.Language.FillingOilwagon, 4000) --prints on screen
-  Wait(3000) --waits 3 second for leaving wagon anim to finish
-  SetEntityHeading(pl, GetEntityHeading(Createdwagon))
-  Wait(500) --waits 800 ms gives the script time to run it all
-  TaskStartScenarioInPlace(pl, joaat('WORLD_CAMP_JACK_ES_BUCKET_POUR'), Config.OilWagonFillTime, true, false, false, false)
-  progressbar.start(Config.Language.FillingOilwagon, Config.OilWagonFillTime, function() --sets up progress bar to run while anim is
-  end, 'circle') --part of progress bar
-  Wait(Config.OilWagonFillTime) --waits until the anim / progressbar above is over
+  TaskLeaveAnyVehicle(PlayerPedId(), 0, 0)
+  VORPcore.NotifyRightTip(Config.Language.FillingOilwagon, 4000)
+  Wait(3000)
+  SetEntityHeading(PlayerPedId(), GetEntityHeading(Createdwagon))
+  Wait(500)
+  TaskStartScenarioInPlace(PlayerPedId(), joaat('WORLD_CAMP_JACK_ES_BUCKET_POUR'), Config.OilWagonFillTime, true, false, false, false)
+  progressbar.start(Config.Language.FillingOilwagon, Config.OilWagonFillTime, function()
+  end, 'circle')
+  Wait(Config.OilWagonFillTime)
   if Progressbardeadcheck then
-    Progressbardeadcheck = false --resest the variable so you can do a new mission
-    ClearPedTasksImmediately(pl)
-    VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) --printson screen
-    DeleteEntity(Createdwagon) return --deletes wagon and return (deletewagon causes mission to fail in deadcheck, return ends the function here and does not allow it too continue(failing the mission))
+    Progressbardeadcheck = false
+    ClearPedTasksImmediately(PlayerPedId())
+    VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000)
+    DeleteEntity(Createdwagon) return
   end
-  ClearPedTasksImmediately(pl)
-  TaskEnterVehicle(pl, Createdwagon, 4000, -1, 0)
-  deliveroil() --triggers function for next part of mission
+  ClearPedTasksImmediately(PlayerPedId())
+  TaskEnterVehicle(PlayerPedId(), Createdwagon, 4000, -1, 0)
+  deliveroil()
 end
 
 -----------------------Deliver oil Mission&return wagon included here------------------------------
@@ -53,101 +48,94 @@ function deliveroil()
   VORPcore.NotifyRightTip(Config.Language.GoDeliver, 4000)
 
   --Coord Randomization
-  local mathr1 = math.random(1, #Config.OilDeliveryPoints) --Gets a random set of coords from config
-  local fillcoords = Config.OilDeliveryPoints[mathr1] --gets a random set of coords from config
+  local fillcoords = CoordRandom(Config.OilDeliveryPoints)
   
   --Blip and Waypoint Setup
-  local blip2 = Citizen.InvokeNative(0x554D9D53F696D002, -1282792512, fillcoords.DeliveryPoint.x, fillcoords.DeliveryPoint.y, fillcoords.DeliveryPoint.z, 5) --creates a blip using natives
-  Citizen.InvokeNative(0x9CB1A1623062F402, blip2, Config.Language.DeliverBlipName) --names the blip
-  VORPutils.Gps:SetGps(fillcoords.DeliveryPoint.x, fillcoords.DeliveryPoint.y, fillcoords.DeliveryPoint.z) --Creates the gps waypoint
+  local blip2 = BlipWaypoin(fillcoords.DeliveryPoint.x, fillcoords.DeliveryPoint.y, fillcoords.DeliveryPoint.z, Config.Language.DeliverBlipName)
 
   --Spawning Ped Setup
   local model = joaat('rcsp_dutch3_males_01')
-  modelload(model) --triggers the function to load the model
-  local createdped = CreatePed(model, fillcoords.NpcSpawn.x, fillcoords.NpcSpawn.y, fillcoords.NpcSpawn.z - 1, fillcoords.NpcSpawn.h, true, true, true, true) --spawns the ped as networked so everyone can see him
-  Citizen.InvokeNative(0x283978A15512B2FE, createdped, true) -- sets ped into random outfit, stops it being invis
-  SetEntityInvincible(createdped, true) --sets ped invincible to prevent bugs
-  FreezeEntityPosition(createdped, true) --freezes the ped in place (will only unfreeze once wagon is detected as close by the loop below, this is done to create more immersion instead of the ped just spawning when you get there)
+  modelload(model)
+  local createdped = CreatePed(model, fillcoords.NpcSpawn.x, fillcoords.NpcSpawn.y, fillcoords.NpcSpawn.z - 1, fillcoords.NpcSpawn.h, true, true, true, true)
+  Citizen.InvokeNative(0x283978A15512B2FE, createdped, true)
+  SetEntityInvincible(createdped, true)
+  FreezeEntityPosition(createdped, true)
   
   --Distance Check Setup wagon to delivery point
   distcheck(fillcoords.DeliveryPoint.x, fillcoords.DeliveryPoint.y, fillcoords.DeliveryPoint.z, 3, Createdwagon)
-  if Playerdead or WagonDestroyed then --if either var is true then
-    DeletePed(createdped) --deletes ped
-    RemoveBlip(blip2) --removes blip
-    ClearGpsMultiRoute() --clears gps
-    VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) return --prints on screen then returns(return breaks loop here ending the mission/function)
+  ClearGpsMultiRoute()
+  if Playerdead or WagonDestroyed then
+    DeletePed(createdped)
+    RemoveBlip(blip2)
+    VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) return
   end
-  FreezeEntityPosition(createdped, false) --unfreezes the ped so he can then move properly in the code below
-  FreezeEntityPosition(Createdwagon, true) --freezes the wagon in place
-  RemoveBlip(blip2) --removes the blip
-  VORPutils.Gps:RemoveGps() --Removes the gps waypoint
+  FreezeEntityPosition(createdped, false)
+  FreezeEntityPosition(Createdwagon, true)
+  RemoveBlip(blip2)
 
   --Distance Check Setup Ped To Wagon
-  TaskGoToEntity(createdped, Createdwagon, -1, 1.0, 5.0, 1073741824, 1) --(pulled from legacy_medic) makes the ped walk until it is within a distance of 2
-  local cw = GetEntityCoords(Createdwagon) --gets the wagons coords
+  TaskGoToEntity(createdped, Createdwagon, -1, 1.0, 5.0, 1073741824, 1) --(pulled from legacy_medic)
+  local cw = GetEntityCoords(Createdwagon)
   distcheck(cw.x, cw.y, cw.z, 5, createdped)
 
   --Filling Up Setup
   TaskStartScenarioInPlace(createdped, joaat('WORLD_PLAYER_CHORES_BUCKET_PUT_DOWN_FULL'), Config.OilWagonFillTime, true, false, false, false)
-  progressbar.start(Config.Language.UnloadingOil, Config.OilWagonFillTime, function() --creates a progress bar that shows
-  end, 'circle') --part of progressbar
-  Citizen.Wait(Config.OilWagonFillTime) --makes it wait the time to fill the wagon(so the progress bar can finish before the code continue)
-  if Progressbardeadcheck then --if you or wagon die then (this will run once after the progress bar so if you die during progress bar it will still continue until this runs)
-    VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) --prints on screen
-    Progressbardeadcheck = false --resets variable so you can do a new mission
-    ClearPedTasksImmediately(createdped) --clears the peds tasks
-    DeletePed(createdped) --deletes the ped
-    DeleteEntity(Createdwagon) return --deletes wagon in the dead check function(return will end the function here preventing the code below from running(creating a mission fail))
+  progressbar.start(Config.Language.UnloadingOil, Config.OilWagonFillTime, function()
+  end, 'circle')
+  Wait(Config.OilWagonFillTime)
+  if Progressbardeadcheck then
+    VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000)
+    Progressbardeadcheck = false
+    ClearPedTasksImmediately(createdped)
+    DeletePed(createdped)
+    DeleteEntity(Createdwagon) return
   end
-  ClearPedTasksImmediately(createdped) --clears anim from ped
-  FreezeEntityPosition(Createdwagon, false) --Unfreezes The Wagon
-  VORPcore.NotifyRightTip(Config.Language.OilDelivered, 4000) --prints on screen
+  ClearPedTasksImmediately(createdped)
+  FreezeEntityPosition(Createdwagon, false)
+  VORPcore.NotifyRightTip(Config.Language.OilDelivered, 4000)
   VORPcore.NotifyRightTip(Config.Language.ReturnOilWagon, 4000)
   
   --------------------This will handle the despawning of the ped, and the return wagon mission---------------------------
   --Waypoint and Blip Setup
-  local oilbl = Citizen.InvokeNative(0x554D9D53F696D002, -1282792512, OilWagonTable.WagonSpawnCoords.x, OilWagonTable.WagonSpawnCoords.y, OilWagonTable.WagonSpawnCoords.z, 5) --creates a blip using natives
-  Citizen.InvokeNative(0x9CB1A1623062F402, blip2, Config.Language.ReturnBlip) --names the blip
-  VORPutils.Gps:SetGps(OilWagonTable.WagonSpawnCoords.x, OilWagonTable.WagonSpawnCoords.y, OilWagonTable.WagonSpawnCoords.z) --Creates the gps waypoint
+  local oilbl = BlipWaypoin(OilWagonTable.WagonSpawnCoords.x, OilWagonTable.WagonSpawnCoords.y, OilWagonTable.WagonSpawnCoords.z, Config.Language.ReturnBlip)
 
   --Distance Check setup for deleting ped
   local pedcoord = GetEntityCoords(createdped)
   distcheck(pedcoord.x, pedcoord.y, pedcoord.z, 70, Createdwagon)
-  if Playerdead or WagonDestroyed then --if true then
-    RemoveBlip(oilbl) --deletes blip
-    VORPutils.Gps:RemoveGps() --Removes the gps waypoint
-    VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) return --prints on screen return ends function here acting as misison fail
+  if Playerdead or WagonDestroyed then
+    RemoveBlip(oilbl)
+    ClearGpsMultiRoute()
+    VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) return
   end
 
 
   --Dist Check for returning wagon
   distcheck(OilWagonTable.WagonSpawnCoords.x, OilWagonTable.WagonSpawnCoords.y, OilWagonTable.WagonSpawnCoords.z, 5, Createdwagon)
+  ClearGpsMultiRoute()
   if Playerdead or WagonDestroyed then
     RemoveBlip(oilbl)
-    VORPutils.Gps:RemoveGps() --Removes the gps waypoint
     VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) return
   end
-  TaskLeaveAnyVehicle(PlayerPedId(), 0, 0) --makes the player get off the wagon
-  FreezeEntityPosition(Createdwagon, true) --freezes it in place so you can not move it(breaks loop so the code below the loop can run)
-  RemoveBlip(oilbl) --removes the blip
-  ClearGpsMultiRoute() --clears the gps waypoint and breaks loop so code below can run
-  VORPcore.NotifyRightTip(Config.Language.CollectOilDeliveryPay, 4000) --will print on screen
+  TaskLeaveAnyVehicle(PlayerPedId(), 0, 0)
+  FreezeEntityPosition(Createdwagon, true)
+  RemoveBlip(oilbl)
+  VORPcore.NotifyRightTip(Config.Language.CollectOilDeliveryPay, 4000)
   
   --Distance Check for Player To Manager Ped
   distcheck(OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z, 3, PlayerPedId())
-  if Playerdead or WagonDestroyed then --if variable true then
+  if Playerdead or WagonDestroyed then
     DeleteEntity(Createdwagon)
-    VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) return --prints on screen, then returns ending function here and failing misison
+    VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) return
   end
-  DeleteEntity(Createdwagon) --deletes the wagon
-  VORPcore.NotifyRightTip(Config.Language.ThankYouHeresYourPayOil, 4000) --prints on screen
-  TriggerServerEvent('bcc:oil:PayoutOilMission', Wagon) --triggers the server event to add the money to your character(event uses the level system to add money depending on level)
+  DeleteEntity(Createdwagon)
+  VORPcore.NotifyRightTip(Config.Language.ThankYouHeresYourPayOil, 4000)
+  TriggerServerEvent('bcc:oil:PayoutOilMission', Wagon)
   TriggerServerEvent('bcc-oil:WagonInSpawnHandler', false)
-  Inmission = false --sets var false allowing player to start a new mission
+  Inmission = false
 end
 
 ---------- Sniffing Oil Setup ---------------
-Citizen.CreateThread(function()
+CreateThread(function()
   if Config.SniffOil.enable then
     while true do
       Wait(5)

@@ -38,50 +38,59 @@ function PlayerCarryBox(props) --catches var from wherever it is called
 end
 
 --Function to load model
-function modelload(model) --recieves the models hash from whereever this function is called
-    RequestModel(model) -- requests the model to load into the game
-    if not HasModelLoaded(model) then --checks if its loaded
-      RequestModel(model) --if it hasnt loaded then request it to load again
-    end
+function modelload(model)
+    RequestModel(model)
     while not HasModelLoaded(model) do
       Wait(100)
     end
 end
 
 --function for spawning multiple peds and checking if they are dead
-function MutltiPedSpawnDeadCheck(pedstable, type) --catches this variable from wherever it is called
-    local model = 'a_m_m_huntertravelers_cool_01' --sets variable to the string the peds hash
-    modelload(model) --triggers the function to load the model
+function MutltiPedSpawnDeadCheck(pedstable, type)
+    local model = joaat('a_m_m_huntertravelers_cool_01')
+    modelload(model)
     local count, roboilwagonpeds = {}, {}
-    for k, v in pairs(pedstable) do --creates a for loop which runs once per table
-        roboilwagonpeds[k] = CreatePed(model, v.x, v.y, v.z, true, true, true, true) --creates the peds and stores them in the table as the [k] key
-        Citizen.InvokeNative(0x283978A15512B2FE, roboilwagonpeds[k], true) --creates a blip on each of the npcs
-        TaskCombatPed(roboilwagonpeds[k], PlayerPedId()) --makes each npc fight the player
-        Citizen.InvokeNative(0x23f74c2fda6e7c61, 953018525, roboilwagonpeds[k]) --sets the blip that tracks the ped
-        count[k] = roboilwagonpeds[k] --sets count to equal the amount of ped spawns
+    for k, v in pairs(pedstable) do
+        roboilwagonpeds[k] = CreatePed(model, v.x, v.y, v.z, true, true, true, true)
+        Citizen.InvokeNative(0x283978A15512B2FE, roboilwagonpeds[k], true)
+        TaskCombatPed(roboilwagonpeds[k], PlayerPedId())
+        Citizen.InvokeNative(0x23f74c2fda6e7c61, 953018525, roboilwagonpeds[k])
+        count[k] = roboilwagonpeds[k]
     end
-    local x = #pedstable --sets the var to equal the number of tables in the table
-    while not Roboilwagondeadcheck and not Roboilcodeadcheck do --while the variable is true do (while nothing has died do)
+    local x = #pedstable
+    while not Roboilwagondeadcheck and not Roboilcodeadcheck do
         Wait(60)
-        for k, v in pairs(roboilwagonpeds) do --creates  for loop running once per table
-            if IsEntityDead(v) then --if peds are dead then
-                if count[k] ~= nil then --if variable not nil then
-                    x = x - 1 --x = x - 1
-                    count[k] = nil --sets count too nil
-                    if x == 0 then --if x = 0 then(all peds are dead)
-                        if type == 'wagonrob' then --if the type is this then
-                            roboilwagonreturnwagon() break --triggers function and breaks loop
-                        elseif type == 'oilcorob' then break end --if the type is this then break end
+        for k, v in pairs(roboilwagonpeds) do
+            if IsEntityDead(v) then
+                if count[k] ~= nil then
+                    x = x - 1
+                    count[k] = nil
+                    if x == 0 then
+                        if type == 'wagonrob' then
+                            roboilwagonreturnwagon() break
+                        elseif type == 'oilcorob' then break end
                     end
                 end
             end
         end
     end
-    if Roboilwagondeadcheck or Roboilcodeadcheck then --if variable true(you or wagon are dead then)
-        for k, v in pairs(roboilwagonpeds) do --creates a for loop in the peds table
-          DeletePed(v) --deletes all the peds
+    if Roboilwagondeadcheck or Roboilcodeadcheck then
+        for k, v in pairs(roboilwagonpeds) do
+          DeletePed(v)
         end
-        DeleteEntity(Robableoilwagon) --deletes the wagon
-        VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) return --prints on screen and returns ending this function
+        DeleteEntity(Robableoilwagon)
+        VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) return
     end
+end
+
+function BlipWaypoin(x, y, z, blipname) --func to make blip and waypoint and return the blip
+    local blip = Citizen.InvokeNative(0x554D9D53F696D002, -1282792512, x, y, z, 5)
+    Citizen.InvokeNative(0x9CB1A1623062F402, blip, blipname)
+    VORPutils.Gps:SetGps(x, y, z)
+    return blip
+end
+
+function CoordRandom(coordstable) --funct to pick random coords from table
+    local mathr1 = math.random(1, #coordstable)
+    return coordstable[mathr1]
 end
