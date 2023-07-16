@@ -10,12 +10,11 @@ end)
 BccUtils = exports['bcc-utils'].initiate()
 MiniGame = exports['bcc-minigames'].initiate()
 
---Function used to handle distance checking
-function distcheck(x, y, z, dist, entity) --receives these variables from whereever it is triggered
-    while true do --while loop will not stop until broken
+function distcheck(x, y, z, dist, entity) --Function used to handle distance checking
+    while true do
         if Playerdead or WagonDestroyed or Roboilwagondeadcheck or Roboilcodeadcheck then break end
         Wait(100)
-        local ec = GetEntityCoords(entity) --gets the entities coords
+        local ec = GetEntityCoords(entity)
         local dist2 = GetDistanceBetweenCoords(ec.x, ec.y, ec.z, x, y, z, true)
         if dist2 < dist then
             break
@@ -25,28 +24,25 @@ function distcheck(x, y, z, dist, entity) --receives these variables from wheree
     end
 end
 
---Function for making player carry a box
-function PlayerCarryBox(props) --catches var from wherever it is called
-    SetEntityAsMissionEntity(props,true,true) --sets entity as mission entity
-    RequestAnimDict("mech_carry_box") --loads the anim
-    while not HasAnimDictLoaded("mech_carry_box") do --while the anim hasnt loaded do
+function PlayerCarryBox(props) --Function for making player carry a box
+    SetEntityAsMissionEntity(props, true, true)
+    RequestAnimDict("mech_carry_box")
+    while not HasAnimDictLoaded("mech_carry_box") do
         Wait(100)
     end
     local pl = PlayerPedId()
-    Citizen.InvokeNative(0xEA47FE3719165B94, pl ,"mech_carry_box", "idle", 1.0, 8.0, -1, 31, 0, 0, 0, 0) --plays animation
-    Citizen.InvokeNative(0x6B9BBD38AB0796DF, props, pl ,GetEntityBoneIndexByName(pl,"SKEL_R_Finger12"), 0.20, 0.028, -0.15, 100.0, 205.0, 20.0, true, true, false, true, 1, true) --puts object in your hand
+    Citizen.InvokeNative(0xEA47FE3719165B94, pl ,"mech_carry_box", "idle", 1.0, 8.0, -1, 31, 0, 0, 0, 0)
+    Citizen.InvokeNative(0x6B9BBD38AB0796DF, props, pl ,GetEntityBoneIndexByName(pl,"SKEL_R_Finger12"), 0.20, 0.028, -0.15, 100.0, 205.0, 20.0, true, true, false, true, 1, true)
 end
 
---Function to load model
-function modelload(model)
+function modelload(model) --Function to load model
     RequestModel(model)
     while not HasModelLoaded(model) do
       Wait(100)
     end
 end
 
---function for spawning multiple peds and checking if they are dead
-function MutltiPedSpawnDeadCheck(pedstable, type)
+function MutltiPedSpawnDeadCheck(pedstable, type) --function for spawning multiple peds and checking if they are dead
     local model = joaat('a_m_m_huntertravelers_cool_01')
     modelload(model)
     local count, roboilwagonpeds = {}, {}

@@ -22,11 +22,11 @@ CreateThread(function()
       BccUtils.Misc.DrawText3D(OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z, Config.Language.ManagerDrawText)
       if IsControlJustReleased(0, 0x760A9C6F) then
         SetNuiFocus(true, true)
-        SendNUIMessage({ --this sends an nui message to the app.js file
-          type = 'open', --it passes the variable type
-          config = Config --passes the config table to the js
+        SendNUIMessage({
+          type = 'open',
+          config = Config
         })
-        TriggerServerEvent('bcc:oil:DBCheck') --triggers the server event to make sure you exist in the database
+        TriggerServerEvent('bcc:oil:DBCheck')
       end
     elseif dist > 200 then
       Wait(2000)

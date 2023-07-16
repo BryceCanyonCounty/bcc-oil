@@ -1,19 +1,19 @@
-<!DOCTYPE html> <!-- Specifies the document type being used-->
-<html> <!--Creates an html code-->
-    <head> <!--Sets the header (this is only being used to pull the css file for the rest of the code)-->
-        <link rel="stylesheet" href="style.css"> <!--Pulls the css file for styling the code-->
-    </head> <!--Closes the header-->
-    <body> <!--Opens a body-->
-        <div id="app"> <!--Creates a div(which is just random basically not defined like header head body etc) and sets its id to app(this is used in the app.js too specify what part of the html file it is meant to work with)-->
-            <div class="managermenu" v-if="showing2"> <!--creates a class that will only show when showing2 in the app.js equals true otherwise this wont be shown allowing us too hide menus until we want them too show up-->
-                <img src="assets/menu_background.png" alt="Oil Manager Menu" height="600" width="430" class="mainmenuimg"> <!--Loads the image on screen-->
-                <button class="menubutton1" @click="openManagerOilMenu()">{{ config.Language.NUIOilMenu }}</button> <!--Creates a button that when clicked will trigger the oilManagerOilMenu method in app.js-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div id="app">
+            <div class="managermenu" v-if="showing2">
+                <img src="assets/menu_background.png" alt="Oil Manager Menu" height="600" width="430" class="mainmenuimg">
+                <button class="menubutton1" @click="openManagerOilMenu()">{{ config.Language.NUIOilMenu }}</button>
                 <button class="menubutton2" @click="openManagerSupplyMenu">{{ config.Language.NUISupplyMenu }} </button>
                 <button class="exitbutton" @click="onExitMenu()">{{ config.Language.NUIExitMenu }}</button>
             </div>
             <div class="OilMenu" v-if="showing">
                 <img src="assets/menu_background.png" alt="Oil Manager Menu" height="600" width="430" class="mainmenuimg2">
-                <button class="menubutton3" @click="buyoilwagon()">{{ config.Language.NUIBuyOilWagon }}<span id="buyoilwagon">{{ config.OilWagon.price }}</span> ?</button> <!--Creates a button that when clicked will run buyoilwagon method in app.js also used {{}} too display a number set in the app.js file-->
+                <button class="menubutton3" @click="buyoilwagon()">{{ config.Language.NUIBuyOilWagon }}<span id="buyoilwagon">{{ config.OilWagon.price }}</span> ?</button>
                 <button class="menubutton4" @click="selloilwagon()">{{ config.Language.NUISellOilWagon }}<span id="selloilwagon">{{ config.OilWagon.sellprice }}</span> ?</button>
                 <button class="menubutton5" @click="oildeliverymission()">{{ config.Language.NUIDeliverMission }}</button>
                 <button class="exitbutton" @click="onExitMenu()">{{ config.Language.NUIExitMenu }}</button>

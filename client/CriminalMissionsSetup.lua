@@ -2,7 +2,6 @@
 Robableoilwagon, Roboilwagondeadcheck = 0, false
 local fillcoords = nil
 RegisterNetEvent('bcc-oil:RobOilWagon', function()
-  --variables
   Inmission = true
 
   Robableoilwagon = joaat('oilwagon02x')
@@ -10,14 +9,14 @@ RegisterNetEvent('bcc-oil:RobOilWagon', function()
 
   --Coord Randomization
   fillcoords = CoordRandom(Config.OilWagonrobberyLocations)
-  
+
   --Wagon Spawn
   Robableoilwagon = CreateVehicle(Robableoilwagon, fillcoords.wagonlocation.x, fillcoords.wagonlocation.y, fillcoords.wagonlocation.z, fillcoords.wagonlocation.h, true, true)
   TriggerEvent('bcc-oil:roboilwagonhelper')
   Citizen.InvokeNative(0x23f74c2fda6e7c61, 953018525, Robableoilwagon)
   FreezeEntityPosition(Robableoilwagon, true)
   VORPcore.NotifyRightTip(Config.Language.RobOilWagonOpeningtext, 4000)
-  
+
   --Waypoint Setup
   VORPutils.Gps:SetGps(fillcoords.wagonlocation.x, fillcoords.wagonlocation.y, fillcoords.wagonlocation.z)
 
@@ -68,7 +67,7 @@ AddEventHandler('bcc-oil:roboilwagonhelper', function()
   Wait(400)
   while Inmission do
     Wait(100)
-    if IsEntityDead(PlayerPedId()) == 1 or GetEntityHealth(Robableoilwagon) == 0 or DoesEntityExist(Robableoilwagon) == false then
+    if IsEntityDead(PlayerPedId()) or GetEntityHealth(Robableoilwagon) == 0 or not DoesEntityExist(Robableoilwagon) then
       Roboilwagondeadcheck = true
       Inmission = false
       Wait(3000)
@@ -81,17 +80,16 @@ end)
 Roboilcodeadcheck = false
 local fillcoords2, missionoverend3dtext = nil, false
 RegisterNetEvent('bcc-oil:RobOilCo', function()
-  --Begining Setup
   VORPcore.NotifyRightTip(Config.Language.RobOilCoBlip, 4000)
   Inmission = true
   TriggerEvent('bcc-oil:roboilcohelper')
-  
+
   --Coord Randomization
   fillcoords2 = CoordRandom(Config.RobOilCompany)
-  
+
   --Blip and Waypoint Setup
   local blip1 = BlipWaypoin(fillcoords2.lootlocation.x, fillcoords2.lootlocation.y, fillcoords2.lootlocation.z, Config.Language.RobOilCoBlip)
-  
+
   --Distance Check Setup for close to lockpick Location
   distcheck(fillcoords2.lootlocation.x, fillcoords2.lootlocation.y, fillcoords2.lootlocation.z, 5, PlayerPedId())
   ClearGpsMultiRoute()
@@ -123,26 +121,26 @@ RegisterNetEvent('bcc-oil:RobOilCo', function()
     local pl = GetEntityCoords(PlayerPedId())
     local dist = GetDistanceBetweenCoords(fillcoords2.lootlocation.x, fillcoords2.lootlocation.y, fillcoords2.lootlocation.z, pl.x, pl.y, pl.z, true)
     if dist < 3 then
-      if IsControlJustReleased(0, 0x760A9C6F) then --if G is pressed then
+      if IsControlJustReleased(0, 0x760A9C6F) then
         MiniGame.Start('lockpick', cfg, function(result)
           if result.unlocked then
             if not Config.RobOilCoEnemyPeds then
               missionoverend3dtext = true --sets var true which is used to disable the 3d text from showing
-              Inmission = false --resets the var allowing player to start a new misison
-              VORPcore.NotifyRightTip(Config.Language.RobberySuccess, 4000) --prints on screen
-              TriggerServerEvent('bcc-oil:OilCoRobberyPayout', fillcoords2) --triggers server event and passes the variable too it breaks loop
-            else --if the option is anything else
+              Inmission = false
+              VORPcore.NotifyRightTip(Config.Language.RobberySuccess, 4000)
+              TriggerServerEvent('bcc-oil:OilCoRobberyPayout', fillcoords2)
+            else
               MutltiPedSpawnDeadCheck(Config.RobOilCoEnemyPedsLocations, 'oilcorob')
-              Inmission = false --trigger function to spawn enemy peds and break loop when done
+              Inmission = false
             end
-          else --else if you did not do it right
+          else
             if not Config.RobOilCoEnemyPeds then
               missionoverend3dtext = true --sets var true which is used to disable the 3d text from showing
-              Inmission = false --resets the var allowing player to start a new misison
-              VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) --prints on screen and breaks loop
-            else --if it is true then
-              MutltiPedSpawnDeadCheck(Config.RobOilCoEnemyPedsLocations, 'oilcorob') 
-              Inmission = false --spawn all the enemy peds, and when its done break the loop
+              Inmission = false
+              VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000)
+            else
+              MutltiPedSpawnDeadCheck(Config.RobOilCoEnemyPedsLocations, 'oilcorob')
+              Inmission = false
             end
           end
         end) break
@@ -153,25 +151,25 @@ RegisterNetEvent('bcc-oil:RobOilCo', function()
   end
 end)
 
-AddEventHandler('bcc-oil:roboilcohelper', function() --this makes the event have code to run
+AddEventHandler('bcc-oil:roboilcohelper', function()
   while Inmission do
     Wait(5)
-    local pl = GetEntityCoords(PlayerPedId()) --gets players coords
+    local pl = GetEntityCoords(PlayerPedId())
     local dist = GetDistanceBetweenCoords(pl.x, pl.y, pl.z, fillcoords2.lootlocation.x, fillcoords2.lootlocation.y, fillcoords2.lootlocation.z, true)
     if dist < 15 then
-      if not missionoverend3dtext then --if var is false then
-        BccUtils.Misc.DrawText3D(fillcoords2.lootlocation.x, fillcoords2.lootlocation.y, fillcoords2.lootlocation.z, Config.Language.PressGToLockPick) --draws text on coords
-      else --else its not false then
-        missionoverend3dtext = false break --resets var and breaks loop
+      if not missionoverend3dtext then
+        BccUtils.Misc.DrawText3D(fillcoords2.lootlocation.x, fillcoords2.lootlocation.y, fillcoords2.lootlocation.z, Config.Language.PressGToLockPick)
+      else
+        missionoverend3dtext = false break
       end
     elseif dist > 200 then
       Wait(2000)
     end
     if IsEntityDead(PlayerPedId()) then
-      Inmission = false --resets the var allowing player to start a new misison
-      Roboilcodeadcheck = true --set var true
-      Wait(10000) --waits 10 seconds
-      Roboilcodeadcheck = false --resets var so this can run again
+      Inmission = false
+      Roboilcodeadcheck = true
+      Wait(10000)
+      Roboilcodeadcheck = false
     end
   end
 end)

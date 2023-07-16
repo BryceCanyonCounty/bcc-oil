@@ -7,20 +7,18 @@ end)
 
 --This callback is for purchasing an oil wagon
 RegisterNuiCallback('BuyOilWagon', function()
-  if not Inmission then --variable is false then
-    local type = 'oilwagon' --sets variable to oilwagon
-    local action = 'buy' --sets variable to buy
-    TriggerServerEvent('bcc:oil:WagonManagement', type, action) --triggers server event and passes the variables to it
-  else --else do this
-    VORPcore.NotifyRightTip(Config.Language.AlreadyInMission, 4000) --prints on screen
+  if not Inmission then
+    local type, action = 'oilwagon', 'buy'
+    TriggerServerEvent('bcc:oil:WagonManagement', type, action)
+  else
+    VORPcore.NotifyRightTip(Config.Language.AlreadyInMission, 4000)
   end
 end)
 
 --This callback is for selling an oil wagon
 RegisterNuiCallback('SellOilWagon', function()
   if not Inmission then
-    local type = 'oilwagon'
-    local action = 'sell'
+    local type, action = 'oilwagon', 'sell'
     TriggerServerEvent('bcc:oil:WagonManagement', type, action)
   else
     VORPcore.NotifyRightTip(Config.Language.AlreadyInMission, 4000)
@@ -30,8 +28,7 @@ end)
 --this callback is for starting an oil delivery mission
 RegisterNuiCallback('OilDeliveryMission', function()
   if not Inmission then
-    local type = 'oilwagon'
-    local action = 'spawn'
+    local type, action = 'oilwagon', 'spawn'
     TriggerServerEvent('bcc:oil:WagonManagement', type, action)
   else
     VORPcore.NotifyRightTip(Config.Language.AlreadyInMission, 4000)
@@ -41,8 +38,7 @@ end)
 --this callback is for buying a supply wagon
 RegisterNuiCallback('BuySupplyWagon', function()
   if not Inmission then
-    local type = 'supplywagon'
-    local action = 'buy'
+    local type, action = 'supplywagon', 'buy'
     TriggerServerEvent('bcc:oil:WagonManagement', type, action)
   else
     VORPcore.NotifyRightTip(Config.Language.AlreadyInMission, 4000)
@@ -52,8 +48,7 @@ end)
 --this callback is for selling a supply wagon
 RegisterNuiCallback('SellSupplyWagon', function()
   if not Inmission then
-    local type = 'supplywagon'
-    local action = 'sell'
+    local type, action = 'supplywagon', 'sell'
     TriggerServerEvent('bcc:oil:WagonManagement', type, action)
   else
     VORPcore.NotifyRightTip(Config.Language.AlreadyInMission, 4000)
@@ -63,8 +58,7 @@ end)
 --this callback is for starting a supply delivery mission
 RegisterNuiCallback('SupplyDelivery', function()
   if not Inmission then
-    local type = 'supplywagon'
-    local action ='spawn'
+    local type, action = 'supplywagon', 'spawn'
     TriggerServerEvent('bcc:oil:WagonManagement', type, action)
   else
     VORPcore.NotifyRightTip(Config.Language.AlreadyInMission, 4000)

@@ -1,26 +1,27 @@
 @font-face {
-    font-family: "RDRLino-Regular";
-    src: url(assets/RDRLino-Regular.ttf);
+  font-family: "RDRLino-Regular";
+  src: url(assets/RDRLino-Regular.ttf);
 }
-html {
-    overflow: hidden;
+
+* {
+  overflow: hidden;
+  font-family: 'RDRLino-Regular', serif;
+  font-size: 4vh;
 }
 
 .mainmenuimg {
   opacity: 95%;
   overflow: hidden;
-  border-radius: 3%;
+  border-radius: 3vh;
 }
 
 #app .menubutton1 {
-    font-family: 'RDRLino-Regular', serif;
-    position: absolute;
+  position: absolute;
   top: 40%;
   left: 40.7%;
   background: none;
   border: none;
-  font-size: 50px;
-  width: 350px;
+  width: 30vh;
 }
 
 #app .menubutton1:hover {
@@ -28,40 +29,36 @@ html {
 }
 
 #app .menubutton2 {
-    font-family: 'RDRLino-Regular', serif;
-    position: absolute;
+  position: absolute;
   top: 60%;
-  font-size: 50px;
   left: 40.7%;
   background: none;
   border: none;
-  width: 350px;
+  width: 32vh;
 }
 
 #app .menubutton2:hover {
-    color: red;
+  color: red;
 }
 
 #app {
-    position: relative;
+  position: relative;
   text-align: center;
 }
 
 .mainmenuimg2 {
-    opacity: 95%;
-    overflow: hidden;
-    border-radius: 3%;
+  opacity: 95%;
+  overflow: hidden;
+  border-radius: 3vh;
 }
 
 #app .menubutton3 {
-    font-family: 'RDRLino-Regular', serif;
-    position: absolute;
+  position: absolute;
   top: 30%;
   left: 39.3%;
   background: none;
   border: none;
-  font-size: 40px;
-  width: 400px;
+  width: 40vh;
 }
 
 #app .menubutton3:hover {
@@ -69,59 +66,51 @@ html {
 }
 
 #app .menubutton4 {
-    font-family: 'RDRLino-Regular', serif;
-    position: absolute;
+  position: absolute;
   top: 47%;
   left: 40.2%;
   background: none;
   border: none;
-  font-size: 40px;
-  width: 380px;
+  width: 37vh;
 }
 
 #app .menubutton4:hover {
-    color: red;
+  color: red;
 }
 
 #app .menubutton5 {
-    font-family: 'RDRLino-Regular', serif;
-    position: absolute;
+  position: absolute;
   top: 65%;
   left: 39.7%;
   background: none;
   border: none;
-  font-size: 40px;
-  width: 380px;
+  width: 37vh;
 }
 
 #app .menubutton5:hover {
-    color: red;
+  color: red;
 }
 
 #app .exitbutton {
-    font-family: 'RDRLino-Regular', serif;
-    position: absolute;
+  position: absolute;
   top: 80%;
-  font-size: 50px;
   left: 40.7%;
   background: none;
   border: none;
-  width: 350px;
+  width: 30vh;
 }
 
 #app .exitbutton:hover {
-    color: red;
+  color: red;
 }
 
 #app .menubutton6 {
-  font-family: 'RDRLino-Regular', serif;
   position: absolute;
   top: 25%;
   left: 39.7%;
   background: none;
   border: none;
-  font-size: 40px;
-  width: 380px;
+  width: 38vh;
 }
 
 #app .menubutton6:hover {
@@ -129,14 +118,12 @@ html {
 }
 
 #app .menubutton7 {
-  font-family: 'RDRLino-Regular', serif;
   position: absolute;
   top: 58%;
   left: 39.7%;
   background: none;
   border: none;
-  font-size: 40px;
-  width: 380px;
+  width: 35vh;
 }
 
 #app .menubutton7:hover {

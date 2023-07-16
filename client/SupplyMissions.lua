@@ -7,10 +7,10 @@ function supplymissionbeginstage()
 
         --Coord Randomization
         local fillcoords = CoordRandom(SupplyMission.SupplyMisisonPickupLocation)
-        
+
         --Blip and Waypoint Setup
         local blip1 = BlipWaypoin(fillcoords.location.x, fillcoords.location.y, fillcoords.location.z, Config.Language.Pickupsupplyblip)
-        
+
         --Distance Check Setup for picking up boxes
         FreezeEntityPosition(Createdwagon, true)
         distcheck(fillcoords.location.x, fillcoords.location.y, fillcoords.location.z, 3, pl)
@@ -32,7 +32,7 @@ function supplymissionbeginstage()
         local props = CreateObject(joaat("p_crate03x"), 0, 0, 0, 1, 0, 1)
         PlayerCarryBox(props)
         VORPcore.NotifyRightTip(Config.Language.Putsuppliesonwagon, 4000)
-        
+
         --Dist Check Setup for player to wagon loading boxes onto wagon
         local wc = GetEntityCoords(Createdwagon)
         distcheck(wc.x, wc.y, wc.z, 3, pl)
@@ -55,11 +55,11 @@ function deliversupplies()
     --Coords Randomization
     local fillcoords = CoordRandom(Config.SupplyDeliveryLocations)
     VORPcore.NotifyRightTip(Config.Language.DeliverSupplies, 4000)
-    
+
     --Mission Start
     repeat
         repeatamount = repeatamount + 1
-        
+
         --Blip and Waypoint Setup
         local blip1 = BlipWaypoin(fillcoords.x, fillcoords.y, fillcoords.z, Config.Language.DeliverSupplies)
 
@@ -84,7 +84,7 @@ function deliversupplies()
             VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) return
         end
         VORPcore.NotifyRightTip(Config.Language.DeliverSupplies, 4000)
-        
+
         --Picking up/ Holding Supplies animation setup
         local props = CreateObject(joaat("p_crate03x"), 0, 0, 0, 1, 0, 1)
         PlayerCarryBox(props)
@@ -106,10 +106,10 @@ end
 
 function supplymissionend()
     VORPcore.NotifyRightTip(Config.Language.ReturnSupplyWagon, 4000)
-    
+
     --Blip and Waypoint Setup
     local blip1 = BlipWaypoin(OilWagonTable.WagonSpawnCoords.x, OilWagonTable.WagonSpawnCoords.y, OilWagonTable.WagonSpawnCoords.z, Config.Language.ManagerBlip)
-    
+
     --Dist check setup wagon to return spot
     distcheck(OilWagonTable.WagonSpawnCoords.x, OilWagonTable.WagonSpawnCoords.y, OilWagonTable.WagonSpawnCoords.z, 5, Createdwagon)
     ClearGpsMultiRoute()
@@ -121,7 +121,7 @@ function supplymissionend()
     FreezeEntityPosition(Createdwagon, true)
     RemoveBlip(blip1)
     VORPcore.NotifyRightTip(Config.Language.CollectOilDeliveryPay, 4000)
-    
+
     --Distance check player to manager setup
     distcheck(OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z, 3, PlayerPedId())
     if Playerdead or WagonDestroyed then

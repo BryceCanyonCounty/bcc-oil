@@ -28,24 +28,20 @@ end)
 
 ---------------Creates a client event to check distance the wagon is from spawn coords/if it is disable wagons from spawning/if it isnt allow wagons to spawn again ----------------------
 AddEventHandler('bcc:oil:PlayerWagonDistFromSpawnCheck', function()
-  local isnear, isntnear = false, false
+  local isnear = false
   while true do
     Wait(1000)
-    if WagonDestroyed == false and Playerdead == false then
+    if not WagonDestroyed and not Playerdead then
       local wagoncoords = GetEntityCoords(Createdwagon)
       if DoesEntityExist(Createdwagon) then
         if GetDistanceBetweenCoords(sw.x, sw.y, sw.z, wagoncoords.x, wagoncoords.y, wagoncoords.z, false) > 20 then
-          if not isntnear then
-            isntnear = true
-            isnear = false
+          if not isnear then
+            isnear = true
             TriggerServerEvent('bcc-oil:WagonInSpawnHandler', false)
           end
         else
-          if not isnear then
-            isnear = true
-            isntnear = false
-            TriggerServerEvent('bcc-oil:WagonInSpawnHandler', true)
-          end
+          isnear = false
+          TriggerServerEvent('bcc-oil:WagonInSpawnHandler', true)
         end
       end
     else
@@ -65,7 +61,7 @@ Playerdead, WagonDestroyed, Progressbardeadcheck = false, false, false
 AddEventHandler('bcc-oil:WagonDeliveriesDeadCheck', function()
   while true do
     Wait(100)
-    if GetEntityHealth(Createdwagon) == 0 or DoesEntityExist(Createdwagon) == false or IsEntityDead(PlayerPedId()) == 1 then
+    if GetEntityHealth(Createdwagon) == 0 or not DoesEntityExist(Createdwagon) or IsEntityDead(PlayerPedId()) then
       Inmission = false
       Progressbardeadcheck = true
       WagonDestroyed = true
