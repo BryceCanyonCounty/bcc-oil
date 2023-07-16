@@ -51,3 +51,4 @@
 - Credit too bytesized for his NUI Tutorial Could not have made the Nui menu without it
 - You can edit the code obviously we just ask that you release any edits for free.
 - Hope you enjoy!
+- Need more help join the bcc discord heres the invite link: https://discord.gg/VrZEEpBgZJ
