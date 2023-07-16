@@ -6,10 +6,10 @@ function beginningstage()
   Wait(1000)
   VORPcore.NotifyRightTip(Config.Language.FillYourOilWagon, 4000)
   local fillcoords = CoordRandom(OilWagonTable.FillPoints)
-  
+
   --Blip and Waypoint setup
   local blip1 = BlipWaypoin(fillcoords.fillpoint.x, fillcoords.fillpoint.y, fillcoords.fillpoint.z, Config.Language.FillBlipName)
-  
+
   -------------Dist Check for fill Setup-----------------
   distcheck(fillcoords.fillpoint.x, fillcoords.fillpoint.y, fillcoords.fillpoint.z, 3, Createdwagon)
   ClearGpsMultiRoute()
@@ -139,8 +139,7 @@ CreateThread(function()
   if Config.SniffOil.enable then
     while true do
       Wait(5)
-      local pl = PlayerPedId()
-      local plc = GetEntityCoords(pl)
+      local plc = GetEntityCoords(PlayerPedId())
       local dist = GetDistanceBetweenCoords(plc.x, plc.y, plc.z, Config.SniffOil.Coords.x, Config.SniffOil.Coords.y, Config.SniffOil.Coords.z, true)
       if dist < 3 then
         BccUtils.Misc.DrawText3D(Config.SniffOil.Coords.x, Config.SniffOil.Coords.y, Config.SniffOil.Coords.z, Config.Language.SniffOil)

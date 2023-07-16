@@ -130,40 +130,40 @@ RegisterServerEvent('bcc:oil:WagonManagement', function(type, action)
   --------- If wagon type set in menusetup is oilwagon then-----------
   if type == 'oilwagon' then
     local param = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier, ['oilwagon'] = 'oilwagon02x' }
-    exports.oxmysql:execute("SELECT oil_wagon FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param, function(result) --gets oil_wagon from the players database
+    exports.oxmysql:execute("SELECT oil_wagon FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param, function(result)
       ---------If action from menusetup is buy then
       if action == 'buy' then
-        if result[1].oil_wagon == 'none' then --since the default value is none if you dont own a wagon then
-          if Character.money >= Config.OilWagon.price then --checks if you have more money than needed if so then
+        if result[1].oil_wagon == 'none' then
+          if Character.money >= Config.OilWagon.price then
             Character.removeCurrency(0, Config.OilWagon.price)
             discord:sendMessage(Config.Language.BoughtTitle, Config.Language.bought_desc2 .. tostring(Character.charIdentifier))
-            exports.oxmysql:execute("UPDATE oil SET `oil_wagon`=@oilwagon WHERE charidentifier=@charidentifier AND identifier=@identifier", param) --adds the oil wagon to the players database row
-            VORPcore.NotifyRightTip(_source, Config.Language.OilWagonBought, 4000) --prints on screen
+            exports.oxmysql:execute("UPDATE oil SET `oil_wagon`=@oilwagon WHERE charidentifier=@charidentifier AND identifier=@identifier", param)
+            VORPcore.NotifyRightTip(_source, Config.Language.OilWagonBought, 4000)
           else
-            VORPcore.NotifyRightTip(_source, Config.Language.NotEnoughCash, 4000) --else you do not have enough money prints on screen
+            VORPcore.NotifyRightTip(_source, Config.Language.NotEnoughCash, 4000)
           end
-        else --if its anything besides none (you own a wagon) then
-          VORPcore.NotifyRightTip(_source, Config.Language.OilWagonAlreadyBought, 4000) --only prints on screen
+        else
+          VORPcore.NotifyRightTip(_source, Config.Language.OilWagonAlreadyBought, 4000)
         end
         ---------Elseif action from menusetup is sell then ---------------------
       elseif action == 'sell' then
-        if result[1].oil_wagon == 'none' then --will return none if you do not own a wagon. then
-          VORPcore.NotifyRightTip(_source, Config.Language.NoWagontoSell, 4000) --prints on screen
-        elseif result[1].oil_wagon == 'oilwagon02x' then --if you do own the oil wagon then
+        if result[1].oil_wagon == 'none' then
+          VORPcore.NotifyRightTip(_source, Config.Language.NoWagontoSell, 4000)
+        elseif result[1].oil_wagon == 'oilwagon02x' then
           local param2 = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier, ['oilwagon'] = 'none' }
-          exports.oxmysql:execute("UPDATE oil SET `oil_wagon`=@oilwagon WHERE charidentifier=@charidentifier AND identifier=@identifier", param2) --will change the oil_wagon column of the player back to default vale of none
+          exports.oxmysql:execute("UPDATE oil SET `oil_wagon`=@oilwagon WHERE charidentifier=@charidentifier AND identifier=@identifier", param2)
           Character.addCurrency(0, Config.OilWagon.sellprice)
           discord:sendMessage(Config.Language.SoldTitle, Config.Language.sold_desc .. tostring(Character.charIdentifier))
-          VORPcore.NotifyRightTip(_source, Config.Language.WagonSold, 4000) --prints on screen
+          VORPcore.NotifyRightTip(_source, Config.Language.WagonSold, 4000)
         end
         -------------Elseif action from menusetup is spawn then ----------------------
       elseif action == 'spawn' then
-        if wagoninspawn == false then --checks if the wagoninspawn variable is false
-          if result[1].oil_wagon == 'none' then --will return none if you do not own a wagon. then
-            VORPcore.NotifyRightTip(_source, Config.Language.NoWagonOwned, 4000) --prints on screen
-          elseif result[1].oil_wagon == 'oilwagon02x' then --if you do own the oil wagon then
+        if not wagoninspawn then
+          if result[1].oil_wagon == 'none' then
+            VORPcore.NotifyRightTip(_source, Config.Language.NoWagonOwned, 4000)
+          elseif result[1].oil_wagon == 'oilwagon02x' then
             discord:sendMessage(Config.Language.DeliveryMissionTitle, Config.Language.Delivery_desc .. tostring(Character.charIdentifier))
-            wagoninspawn = true --Sets variable to true so that no more wagons can spawn until the bcc:oil:WagonHasLeftSpawn event has ran and reset it
+            wagoninspawn = true
             TriggerClientEvent('bcc:oil:PlayerWagonSpawn', _source, 'oilwagon02x')
           end
         else
@@ -176,35 +176,35 @@ RegisterServerEvent('bcc:oil:WagonManagement', function(type, action)
     exports.oxmysql:execute("SELECT delivery_wagon FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param, function(result) --gets oil_wagon from the players database
       ---------If action from menusetup is buy then
       if action == 'buy' then
-        if result[1].delivery_wagon == 'none' then --since the default value is none if you dont own a wagon then
-          if Character.money >= Config.SupplyWagon.price then --checks if you have more money than needed if so then
+        if result[1].delivery_wagon == 'none' then
+          if Character.money >= Config.SupplyWagon.price then
             Character.removeCurrency(0, Config.SupplyWagon.price)
             discord:sendMessage(Config.Language.BoughtTitle, Config.Language.bought_desc .. tostring(Character.charIdentifier))
-            exports.oxmysql:execute("UPDATE oil SET `delivery_wagon`=@oilwagon WHERE charidentifier=@charidentifier AND identifier=@identifier", param) --adds the oil wagon to the players database row
-            VORPcore.NotifyRightTip(_source, Config.Language.SupplyWagonBought, 4000) --prints on screen
+            exports.oxmysql:execute("UPDATE oil SET `delivery_wagon`=@oilwagon WHERE charidentifier=@charidentifier AND identifier=@identifier", param)
+            VORPcore.NotifyRightTip(_source, Config.Language.SupplyWagonBought, 4000)
           else
-            VORPcore.NotifyRightTip(_source, Config.Language.NotEnoughCash, 4000) --else you do not have enough money prints on screen
+            VORPcore.NotifyRightTip(_source, Config.Language.NotEnoughCash, 4000)
           end
-        else --if its anything besides none (you own a wagon) then
-          VORPcore.NotifyRightTip(_source, Config.Language.SupplyWagonAlreadyBought, 4000) --only prints on screen
+        else
+          VORPcore.NotifyRightTip(_source, Config.Language.SupplyWagonAlreadyBought, 4000)
         end
         ---------Elseif action from menusetup is sell then ---------------------
       elseif action == 'sell' then
-        if result[1].delivery_wagon == 'none' then --will return none if you do not own a wagon. then
-          VORPcore.NotifyRightTip(_source, Config.Language.NoWagontoSell, 4000) --prints on screen
-        elseif result[1].delivery_wagon == 'armysupplywagon' then --if you do own the oil wagon then
+        if result[1].delivery_wagon == 'none' then
+          VORPcore.NotifyRightTip(_source, Config.Language.NoWagontoSell, 4000)
+        elseif result[1].delivery_wagon == 'armysupplywagon' then
           local param2 = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier, ['oilwagon'] = 'none' }
-          exports.oxmysql:execute("UPDATE oil SET `delivery_wagon`=@oilwagon WHERE charidentifier=@charidentifier AND identifier=@identifier", param2) --will change the oil_wagon column of the player back to default vale of none
+          exports.oxmysql:execute("UPDATE oil SET `delivery_wagon`=@oilwagon WHERE charidentifier=@charidentifier AND identifier=@identifier", param2)
           Character.addCurrency(0, Config.SupplyWagon.sellprice)
           discord:sendMessage(Config.Language.SoldTitle, Config.Language.sold_desc2 .. tostring(Character.charIdentifier))
           VORPcore.NotifyRightTip(_source, Config.Language.WagonSold, 4000)
         end
         -------------Elseif action from menusetup is spawn then ----------------------
       elseif action == 'spawn' then
-        if wagoninspawn == false then --checks if the wagoninspawn variable is false
-          if result[1].delivery_wagon == 'none' then --will return none if you do not own a wagon. then
-            VORPcore.NotifyRightTip(_source, Config.Language.NoWagonOwned, 4000) --prints on screen
-          elseif result[1].delivery_wagon == 'armysupplywagon' then --if you do own the oil wagon then
+        if not wagoninspawn then
+          if result[1].delivery_wagon == 'none' then
+            VORPcore.NotifyRightTip(_source, Config.Language.NoWagonOwned, 4000)
+          elseif result[1].delivery_wagon == 'armysupplywagon' then
             wagoninspawn = true
             discord:sendMessage(Config.Language.DeliveryMissionTitle, Config.Language.Delivery_desc2 .. tostring(Character.charIdentifier))
             TriggerClientEvent('bcc:oil:PlayerWagonSpawn', _source, 'armysupplywagon')
