@@ -1,14 +1,19 @@
 ------ Handles spawning of main peds ------
 local npcs, blips = {}, {}
+
+local createBlip = function(x, y, z, color, blipHash, blipName)
+  local blip = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, x, y, z)
+  SetBlipSprite(blip, blipHash, 1)
+  SetBlipScale(blip, 0.8)
+  Citizen.InvokeNative(0x662D364ABF16DE2F, blip, joaat(color))
+  Citizen.InvokeNative(0x9CB1A1623062F402, blip, blipName)
+  table.insert(blips, blip)
+end
+
 CreateThread(function()
   local model = joaat(Config.ManagerPedModel)
   if Config.ManagerBlip then
-    local blip = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z)
-    SetBlipSprite(blip, Config.ManagerBlipHash, 1)
-    SetBlipScale(blip, 0.8)
-    Citizen.InvokeNative(0x662D364ABF16DE2F, blip, joaat(Config.ManagerBlipColor))
-    Citizen.InvokeNative(0x9CB1A1623062F402, blip, Config.Language.ManagerBlip)
-    table.insert(blips, blip)
+    createBlip(OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z, Config.ManagerBlipColor, Config.ManagerBlipHash, Config.Language.ManagerBlip)
   end
   modelload(model)
   local createdped = CreatePed(model, OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z - 1, OilWagonTable.ManagerSpawn.h, false, true, true, true)
@@ -38,12 +43,7 @@ end)
 CreateThread(function()
   local model = joaat(Config.CriminalPedModel)
   if Config.CriminalPedBlip then
-    local blip = Citizen.InvokeNative(0x554D9D53F696D002, 1664425300, Config.CriminalPedSpawn.x, Config.CriminalPedSpawn.y, Config.CriminalPedSpawn.z)
-    SetBlipSprite(blip, Config.CriminalBlipHash, 1)
-    SetBlipScale(blip, 0.8)
-    Citizen.InvokeNative(0x662D364ABF16DE2F, blip, joaat(Config.CriminalBlipColor))
-    Citizen.InvokeNative(0x9CB1A1623062F402, blip, Config.Language.CriminalPedBlip)
-    table.insert(blips, blip)
+    createBlip(Config.CriminalPedSpawn.x, Config.CriminalPedSpawn.y, Config.CriminalPedSpawn.z, Config.CriminalBlipColor, Config.CriminalBlipHash, Config.Language.CriminalPedBlip)
   end
   modelload(model)
   local createdped = CreatePed(model, Config.CriminalPedSpawn.x, Config.CriminalPedSpawn.y, Config.CriminalPedSpawn.z - 1, Config.CriminalPedSpawn.h, false, true, true, true)

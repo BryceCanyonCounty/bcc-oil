@@ -6,11 +6,12 @@ lua54 'yes'
 author 'Jake2k4'
 
 server_scripts {
-    'server.lua',
+    '@oxmysql/lib/MySQL.lua',
+    'server.lua'
 }
 
 shared_scripts {
-    'config.lua',
+    'config.lua'
 }
 
 
@@ -27,7 +28,7 @@ client_scripts {
 files {
     'ui/*',
     'ui/assets/*',
-    'ui/vendor/*',
+    'ui/vendor/*'
 }
 
 ui_page 'ui/index.html'

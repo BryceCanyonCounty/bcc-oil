@@ -13,8 +13,9 @@ RegisterServerEvent('bcc:oil:PayoutOilMission', function(Wagon)
   local _source = source
   local Character = VORPcore.getUser(_source).getUsedCharacter
   local param = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier, ['levelincrease'] = Config.LevelIncreasePerDelivery }
-  exports.oxmysql:execute('UPDATE oil SET `manager_trust`=manager_trust+@levelincrease WHERE charidentifier=@charidentifier AND identifier=@identifier', param)
-  exports.oxmysql:execute("SELECT manager_trust FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param, function(result)
+  MySQL.query.await('UPDATE oil SET `manager_trust`=manager_trust+@levelincrease WHERE charidentifier=@charidentifier AND identifier=@identifier', param)
+  local result = MySQL.query.await("SELECT manager_trust FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param)
+  if #result > 0 then
     for k, v in pairs(Config.OilCompanyLevels) do
       if result[1].manager_trust >= v.level and result[1].manager_trust < v.nextlevel then
         if Wagon == 'oilwagon02x' then
@@ -30,7 +31,7 @@ RegisterServerEvent('bcc:oil:PayoutOilMission', function(Wagon)
         end
       end
     end
-  end)
+  end
 end)
 
 -------- Robbery Payout Handler --------
@@ -38,13 +39,15 @@ RegisterServerEvent('bcc-oil:RobberyPayout', function()
   local _source = source
   local Character = VORPcore.getUser(_source).getUsedCharacter
   local param = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier, ['levelincrease'] = Config.LevelIncreasePerDelivery, ['managelevdecrease'] = Config.OilCompanyLevelDecrease }
-  exports.oxmysql:execute("SELECT manager_trust FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param, function(result)
+  local result = MySQL.query.await("SELECT manager_trust FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param)
+  if #result > 0 then
     if result[1].manager_trust > 0 then
       exports.oxmysql:execute('UPDATE oil SET `manager_trust`=manager_trust-@managelevdecrease WHERE charidentifier=@charidentifier AND identifier=@identifier', param)
     end
-  end)
-  exports.oxmysql:execute('UPDATE oil SET `enemy_trust`=enemy_trust+@levelincrease WHERE charidentifier=@charidentifier AND identifier=@identifier', param)
-  exports.oxmysql:execute("SELECT enemy_trust FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param, function(result)
+  end
+  MySQL.query.await('UPDATE oil SET `enemy_trust`=enemy_trust+@levelincrease WHERE charidentifier=@charidentifier AND identifier=@identifier', param)
+  local result2 = MySQL.query.await("SELECT enemy_trust FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param)
+  if #result2 > 0 then
     for k, v in pairs(Config.CriminalLevels) do
       if result[1].enemy_trust >= v.level and result[1].enemy_trust < v.nextlevel then
         Character.addCurrency(0, Config.StealOilWagonBasePay + v.payoutbonus) break
@@ -52,7 +55,7 @@ RegisterServerEvent('bcc-oil:RobberyPayout', function()
         Character.addCurrency(0, Config.StealOilWagonBasePay) break
       end
     end
-  end)
+  end
 end)
 
 --Cooldown Event
@@ -96,30 +99,16 @@ RegisterServerEvent('bcc-oil:OilCoRobberyPayout', function(fillcoords2)
   end
 end)
 
-------Database Area------
-CreateThread(function()
-  exports.oxmysql:execute([[CREATE TABLE if NOT EXISTS `oil` (
-    `identifier` varchar(50) NOT NULL,
-    `charidentifier` int(11) NOT NULL,
-    `manager_trust` int(100) NOT NULL DEFAULT 0,
-    `enemy_trust`  int(100) NOT NULL DEFAULT 0,
-    `oil_wagon` varchar(50) NOT NULL DEFAULT 'none',
-    `delivery_wagon` varchar(50) NOT NULL DEFAULT 'none',
-    UNIQUE KEY `charidentifier` (`charidentifier`))
-  ]])
-end)
-
 ------- Checks if player exists in db if not it adds ------
 RegisterServerEvent('bcc:oil:DBCheck', function()
   local _source = source
   local Character = VORPcore.getUser(_source).getUsedCharacter
   local param = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier }
   --------The if you exist in db code was pulled from vorp_banking and modified ----------------
-  exports.oxmysql:execute("SELECT identifier, charidentifier FROM oil WHERE identifier = @Playeridentifier AND charidentifier = @CharIdentifier", { ["@Playeridentifier"] = Character.identifier, ["CharIdentifier"] = Character.charIdentifier }, function(result)
-    if not result[1] then
-      exports.oxmysql:execute("INSERT INTO oil ( `charidentifier`,`identifier` ) VALUES ( @charidentifier,@identifier )", param)
-    end
-  end)
+  local result = MySQL.query.await("SELECT identifier, charidentifier FROM oil WHERE identifier = @identifier AND charidentifier = @charidentifier", param)
+  if #result <= 0 then
+    exports.oxmysql:execute("INSERT INTO oil ( `charidentifier`,`identifier` ) VALUES ( @charidentifier,@identifier )", param)
+  end
 end)
 
 ------------------------------------- Handles the buying, selling, and spawning of wagons ---------------------------------------------
@@ -130,8 +119,8 @@ RegisterServerEvent('bcc:oil:WagonManagement', function(type, action)
   --------- If wagon type set in menusetup is oilwagon then-----------
   if type == 'oilwagon' then
     local param = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier, ['oilwagon'] = 'oilwagon02x' }
-    exports.oxmysql:execute("SELECT oil_wagon FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param, function(result)
-      ---------If action from menusetup is buy then
+    local result = MySQL.query.await("SELECT oil_wagon FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param)
+    if #result > 0 then
       if action == 'buy' then
         if result[1].oil_wagon == 'none' then
           if Character.money >= Config.OilWagon.price then
@@ -170,10 +159,11 @@ RegisterServerEvent('bcc:oil:WagonManagement', function(type, action)
           VORPcore.NotifyRightTip(_source, Config.Language.WagonInSpawnLocation, 4000)
         end
       end
-    end)
+    end
   elseif type == 'supplywagon' then
     local param = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier, ['oilwagon'] = 'armysupplywagon' }
-    exports.oxmysql:execute("SELECT delivery_wagon FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param, function(result) --gets oil_wagon from the players database
+    local result = MySQL.query.await("SELECT delivery_wagon FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param)
+    if #result > 0 then
       ---------If action from menusetup is buy then
       if action == 'buy' then
         if result[1].delivery_wagon == 'none' then
@@ -213,7 +203,7 @@ RegisterServerEvent('bcc:oil:WagonManagement', function(type, action)
           VORPcore.NotifyRightTip(_source, Config.Language.WagonInSpawnLocation, 4000)
         end
       end
-    end)
+    end
   end
 end)
 
