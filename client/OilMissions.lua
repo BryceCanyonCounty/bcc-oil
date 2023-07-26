@@ -158,7 +158,7 @@ end)
 ----------------------------Oil Mission Tables----------------------
 OilWagonTable = {} --creates the table
 OilWagonTable.ManagerSpawn = {x = 498.05, y = 672.98, z = 121.04, h = 73.92} --This is where the manager npc will spawn(Do not change!!)
-OilWagonTable.WagonSpawnCoords = {x = 509.52, y = 694.24, z = 115.8, h = 263.92} --this is the x y z and heaing where the wagons will spawn
+OilWagonTable.WagonSpawnCoords = Config.OilandSupplyWagonSpawn --this is the x y z and heaing where the wagons will spawn
 
 --This is the table that the initial wagon fill spot will be
 OilWagonTable.FillPoints = {

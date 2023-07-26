@@ -4,6 +4,7 @@ Config.WebhookLink = '' --insert your webhook link here (leave empty for no webh
 
 ------------------------------------------ Oil Job Setup ---------------------------------------------------
 ---------Oil Part of the job -------------
+Config.OilandSupplyWagonSpawn = {x = 526.83, y = 703.01, z = 117.0, h = 263.92} --Coords your oil and supply wagons will spawn at
 Config.ManagerBlip = true --If true will create a blip on the Manager, if false it will not
 Config.ManagerPedModel = 'u_m_m_cktmanager_01' -- This is the model the manager will spawn as
 Config.OilWagon = {price = 100, sellprice = 80} --Oil wagon model hash theres 2 but there the same(making this easily changeable incase you do want to change the model)
