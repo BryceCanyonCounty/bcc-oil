@@ -11,14 +11,14 @@ RegisterNetEvent('bcc-oil:RobOilWagon', function()
   fillcoords = CoordRandom(Config.OilWagonrobberyLocations)
 
   --Wagon Spawn
-  Robableoilwagon = CreateVehicle(Robableoilwagon, fillcoords.wagonlocation.x, fillcoords.wagonlocation.y, fillcoords.wagonlocation.z, fillcoords.wagonlocation.h, true, true)
+  Robableoilwagon = CreateVehicle(Robableoilwagon, fillcoords.wagonLocation, fillcoords.wagonHeading, true, true)
   TriggerEvent('bcc-oil:roboilwagonhelper')
   Citizen.InvokeNative(0x23f74c2fda6e7c61, 953018525, Robableoilwagon)
   FreezeEntityPosition(Robableoilwagon, true)
   VORPcore.NotifyRightTip(Config.Language.RobOilWagonOpeningtext, 4000)
 
   --Waypoint Setup
-  VORPutils.Gps:SetGps(fillcoords.wagonlocation.x, fillcoords.wagonlocation.y, fillcoords.wagonlocation.z)
+  VORPutils.Gps:SetGps(fillcoords.wagonLocation)
 
   --Distance Check Setup
   local cw = GetEntityCoords(Robableoilwagon)
