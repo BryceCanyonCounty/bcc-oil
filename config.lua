@@ -105,11 +105,12 @@ Config.CriminalLevels = {
 ----Steal Oil Wagon Setup-----
 Config.OilWagonrobberyLocations = {
     {
-        wagonlocation = {x = 380.75, y = -13.83, z = 108.57, h = 359.53},
+        wagonLocation = vector3(381.15, -21.5, 109.09),
+        wagonHeading = 360,
         pedlocation = {
-            {x = 383.81, y = -13.83, z = 108.5},
-            {x = 383.94, y = -11.17, z = 108.29},
-            {x = 382.98, y = -7.21, z = 107.84},
+            {x = 384.9, y = -23.37, z = 109.06},
+            {x = 383.09, y = -19.78, z = 108.91},
+            {x = 381.08, y = -13.82, z = 108.57},
         },
         returnlocation = {x = 1479.15, y = 804.79, z = 100.28},
     },
