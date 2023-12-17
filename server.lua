@@ -36,26 +36,33 @@ end)
 
 -------- Robbery Payout Handler --------
 RegisterServerEvent('bcc-oil:RobberyPayout', function()
-  local _source = source
-  local Character = VORPcore.getUser(_source).getUsedCharacter
-  local param = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier, ['levelincrease'] = Config.LevelIncreasePerDelivery, ['managelevdecrease'] = Config.OilCompanyLevelDecrease }
-  local result = MySQL.query.await("SELECT manager_trust FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param)
-  if #result > 0 then
-    if result[1].manager_trust > 0 then
-      exports.oxmysql:execute('UPDATE oil SET `manager_trust`=manager_trust-@managelevdecrease WHERE charidentifier=@charidentifier AND identifier=@identifier', param)
+    local _source = source
+    local Character = VORPcore.getUser(_source).getUsedCharacter
+    local result = MySQL.query.await('SELECT manager_trust, enemy_trust FROM oil WHERE charidentifier = ? AND identifier = ?',
+        { Character.charIdentifier, Character.identifier })
+
+    if result then
+        local managerTrust = result[1].manager_trust
+        local enemyTrust = result[1].enemy_trust
+        local levelDecrease = Config.OilCompanyLevelDecrease
+        local newManagerTrust = managerTrust
+        if managerTrust >= levelDecrease then
+            newManagerTrust = managerTrust - levelDecrease
+        end
+        local newEnemyTrust = enemyTrust + Config.LevelIncreasePerDelivery
+        MySQL.query.await('UPDATE oil SET manager_trust = ?, enemy_trust = ? WHERE charidentifier = ? AND identifier = ?',
+            { newManagerTrust, newEnemyTrust, Character.charIdentifier, Character.identifier })
+
+        for _, v in pairs(Config.CriminalLevels) do
+            if enemyTrust >= v.level and enemyTrust < v.nextlevel then
+                Character.addCurrency(0, Config.StealOilWagonBasePay + v.payoutbonus)
+                break
+            elseif enemyTrust < v.level then
+                Character.addCurrency(0, Config.StealOilWagonBasePay)
+                break
+            end
+        end
     end
-  end
-  MySQL.query.await('UPDATE oil SET `enemy_trust`=enemy_trust+@levelincrease WHERE charidentifier=@charidentifier AND identifier=@identifier', param)
-  local result2 = MySQL.query.await("SELECT enemy_trust FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param)
-  if #result2 > 0 then
-    for k, v in pairs(Config.CriminalLevels) do
-      if result[1].enemy_trust >= v.level and result[1].enemy_trust < v.nextlevel then
-        Character.addCurrency(0, Config.StealOilWagonBasePay + v.payoutbonus) break
-      elseif result[1].enemy_trust < v.level then
-        Character.addCurrency(0, Config.StealOilWagonBasePay) break
-      end
-    end
-  end
 end)
 
 --Cooldown Event
