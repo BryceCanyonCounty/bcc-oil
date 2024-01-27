@@ -1,3 +1,5 @@
+local T = Translation.Langs[Config.Lang]
+
 --Pulling Essentials
 VORPcore = {} --Pulls vorp core
 TriggerEvent("getCore", function(core)
@@ -75,7 +77,7 @@ function MutltiPedSpawnDeadCheck(pedstable, type) --function for spawning multip
           DeletePed(v)
         end
         DeleteEntity(Robableoilwagon)
-        VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) return
+        VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
     end
 end
 

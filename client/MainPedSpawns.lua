@@ -1,3 +1,5 @@
+local T = Translation.Langs[Config.Lang]
+
 ------ Handles spawning of main peds ------
 local npcs, blips = {}, {}
 
@@ -13,7 +15,7 @@ end
 CreateThread(function()
   local model = joaat(Config.ManagerPedModel)
   if Config.ManagerBlip then
-    createBlip(OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z, Config.ManagerBlipColor, Config.ManagerBlipHash, Config.Language.ManagerBlip)
+    createBlip(OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z, Config.ManagerBlipColor, Config.ManagerBlipHash, T.ManagerBlip)
   end
   modelload(model)
   local createdped = CreatePed(model, OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z - 1, OilWagonTable.ManagerSpawn.h, false, true, true, true)
@@ -24,7 +26,7 @@ CreateThread(function()
     local playercoord = GetEntityCoords(PlayerPedId())
     local dist = GetDistanceBetweenCoords(playercoord.x, playercoord.y, playercoord.z, OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z, true)
     if dist < 5 then
-      BccUtils.Misc.DrawText3D(OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z, Config.Language.ManagerDrawText)
+      BccUtils.Misc.DrawText3D(OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z, T.ManagerDrawText)
       if IsControlJustReleased(0, 0x760A9C6F) then
         SetNuiFocus(true, true)
         SendNUIMessage({
@@ -43,7 +45,7 @@ end)
 CreateThread(function()
   local model = joaat(Config.CriminalPedModel)
   if Config.CriminalPedBlip then
-    createBlip(Config.CriminalPedSpawn.x, Config.CriminalPedSpawn.y, Config.CriminalPedSpawn.z, Config.CriminalBlipColor, Config.CriminalBlipHash, Config.Language.CriminalPedBlip)
+    createBlip(Config.CriminalPedSpawn.x, Config.CriminalPedSpawn.y, Config.CriminalPedSpawn.z, Config.CriminalBlipColor, Config.CriminalBlipHash, T.CriminalPedBlip)
   end
   modelload(model)
   local createdped = CreatePed(model, Config.CriminalPedSpawn.x, Config.CriminalPedSpawn.y, Config.CriminalPedSpawn.z - 1, Config.CriminalPedSpawn.h, false, true, true, true)
@@ -54,7 +56,7 @@ CreateThread(function()
     local pl = GetEntityCoords(PlayerPedId())
     local dist = GetDistanceBetweenCoords(pl.x, pl.y, pl.z, Config.CriminalPedSpawn.x, Config.CriminalPedSpawn.y, Config.CriminalPedSpawn.z, true)
     if dist < 5 then
-      BccUtils.Misc.DrawText3D(Config.CriminalPedSpawn.x, Config.CriminalPedSpawn.y, Config.CriminalPedSpawn.z, Config.Language.CriminalDrawText) --draws text on the manager
+      BccUtils.Misc.DrawText3D(Config.CriminalPedSpawn.x, Config.CriminalPedSpawn.y, Config.CriminalPedSpawn.z, T.CriminalDrawText) --draws text on the manager
       if IsControlJustReleased(0, 0x760A9C6F) then --if g is pressed then
         SetNuiFocus(true, true) --sets nui focus gives you mouse control
         SendNUIMessage({ --sends a nui message triggering the js script

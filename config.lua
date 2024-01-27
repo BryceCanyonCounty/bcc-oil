@@ -2,6 +2,8 @@ Config = {}
 
 Config.WebhookLink = '' --insert your webhook link here (leave empty for no webhooks)
 
+Config.Lang = "English"
+
 ------------------------------------------ Oil Job Setup ---------------------------------------------------
 ---------Oil Part of the job -------------
 Config.OilandSupplyWagonSpawn = {x = 526.83, y = 703.01, z = 117.0, h = 263.92} --Coords your oil and supply wagons will spawn at
@@ -150,92 +152,6 @@ Config.RobOilCompany = {
             },
         },
     }, --you can add more locations to this, the script will randomly choose one table each robbery too add more just copy paste table change what you need
-}
-
-
----------------------------------- Translate Here! ---------------------------------------------
-Config.Language = {
-    ManagerBlip = 'Oil Company Manager', --Manager Blip name
-    ManagerDrawText = 'Company Manager press "G" to open menu',
-    OilManagerMainMenuName = 'Oil Company',
-    BuyWagonMenuName = 'Buy Oil Wagon?',
-    OilWagonBought = 'You purchased an Oil Wagon!',
-    OilWagonAlreadyBought = 'You already own an Oil Wagon!',
-    SellOilWagon = 'Sell Your Oil Wagon?',
-    NotEnoughCash = 'You do not have enough money!',
-    WagonSold = 'Wagon Sold',
-    NoWagontoSell = 'You do not have a wagon to sell',
-    WagonSpawned = 'Your Wagon has been delivered! Look for the blip',
-    SpawnOilWagon = 'Call Your Oil Wagon?',
-    NoWagonOwned = 'You do not own a wagon',
-    WagonInSpawnLocation = 'Can not spawn, another wagon is too close to the spawn!',
-    Supplymenuname = 'Supply Menu',
-    OilMenuName = 'Oil Menu',
-    BuySupplyWagon = 'Buy Supply Wagon?',
-    SupplyWagonBought = 'You bought a supply wagon!',
-    SupplyWagonAlreadyBought = 'You already own a supply wagon!',
-    SellSupplyWagon = 'Sell your supply wagon?',
-    SpawnSupplyWagon = 'Call your supply wagon?',
-    FillYourOilWagon = 'Go to the mark to fill your wagon with oil!',
-    FillBlipName = 'Fill Your Oil Wagon Here',
-    FillingOilwagon = 'Filling Oil Wagon',
-    GoDeliver = 'Go To the location, and deliver the oil. It has been marked on your map',
-    DeliverBlipName = 'Delivery Location',
-    OilDelivered = 'Oil Delivered!',
-    UnloadingOil = 'Transfering oil',
-    ReturnOilWagon = 'Go to the Oil Company, and return your wagon to storage!',
-    ReturnBlip = 'Return Point',
-    CollectOilDeliveryPay = 'Go to the company manager and collect your pay!',
-    ThankYouHeresYourPayOil = 'Thank you! Here is your reward for a job well done!',
-    CooldownActive = 'You have recently done a job for me wait a while',
-    Missionfailed = 'Mission Failed',
-    SupplyWagonMisisonBegin = 'Go to the marker on your map and collect the supplies',
-    Pickupsupplyblip = 'Pick Up supplies here',
-    Fillingsupplywagon = 'Fill supply wagon',
-    Grabbingsupplies = 'Grabbing Supplies',
-    Putsuppliesonwagon = 'Now Take the supplies to your wagon',
-    DeliverSupplies = "Go to the marker and deliver the supplies",
-    Suppliesdelivered = 'Supplies delivered, go back to the oil manager to recieve your pay',
-    GetSuppliesFromWagon = 'Go get the supplies off the wagon',
-    ReturnSupplyWagon = 'Go take your wagon back to the oil company',
-    AlreadyInMission = 'You are already in a mission',
-    CriminalPedBlip = 'Criminal Hideout', --Criminal Blip Name
-    CriminalDrawText = 'Press "G" To Open The Menu',
-    NUISellOilWagon = 'Sell Oil Wagon for ',
-    NUIBuyOilWagon = 'Buy Oil Wagon for ',
-    NUIDeliverMission = 'Delivery Mission?',
-    NUIBuySupplyWagon = 'Buy Supply Wagon for ',
-    NUISellSupplyWagon = 'Sell Supply Wagon for ',
-    NUIExitMenu = 'Exit Menu',
-    NUIRobOilCompany = 'Rob The Oil Company',
-    NUIRobOilWagon = 'Steal a Oil Wagon',
-    NUIOilMenu = 'Oil Menu',
-    NUISupplyMenu = 'Supply Menu',
-    RobOilWagonOpeningtext = 'I have marked the location of the wagon, go too it and steal it!',
-    RobOilWagonKillGaurds = 'Kill the gaurds!!',
-    RobOilWagonReturnWagon = 'Now Take the wagon to the drop off location!',
-    RobOilWagonReturnBlip = 'Drop Off Location',
-    RobOilWagonSuccess = 'You sucessfully stole the wagon! Good Job Heres your pay!',
-    RobOilCoBlip = 'Rob The Oil Company',
-    RobberySuccess = 'You Robbed the oil company now flee!',
-    PressGToLockPick = 'Press "G" To LockPick',
-    DefendAgainstAttackers = 'You are being attacked defend yourself!',
-    Cooldown = 'Has Been Robbed Recently',
-    SniffOil = 'Press "G" to sniff oil!',
-    RobberyTitle = 'Robbery!',
-    BoughtTitle = 'Wagon Bought',
-    bought_desc = 'Player bought a supply wagon character static id: ',
-    bought_desc2 = 'Player bought a oil wagon character static id: ',
-    SoldTitle = 'Wagon Sold',
-    sold_desc = 'Player sold a oil wagon Character Static Id: ',
-    sold_desc2 = 'Player sold a supply wagon Character Static Id: ',
-    DeliveryMissionTitle = 'Delivery Started',
-    Delivery_desc = 'Player has begun delivering oil, players character static id: ',
-    Delivery_desc2 = 'Player has begun delivering supplies, players character static id: ',
-    Robbery_desc = 'Player has begun robbing the oil company, player character static id: ',
-    Robbery_desc2 = 'Player has begun stealing an oil wagon, player character static id: ',
-    SupplyWagonBlipName = 'Supply Wagon', -- suply wagon blip name
-    OilWagonBlipName = 'Oil Wagon' -- oil wagon blip name
 }
 
 --[[--------BLIP_COLORS----------

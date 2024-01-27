@@ -1,3 +1,5 @@
+local T = Translation.Langs[Config.Lang]
+
 -----------------------------------------Pulling Essentials-------------------------------------------------------------------------
 local VORPcore = {}
 TriggerEvent("getCore", function(core)
@@ -73,22 +75,22 @@ RegisterServerEvent('bcc-oil:CrimCooldowns', function(missiontype)
   if missiontype == 'wagonrob' then
     if not wagonrobcooldown then
       TriggerClientEvent('bcc-oil:RobOilWagon', _source)
-      discord:sendMessage(Config.Language.RobberyTitle, Config.Language.Robbery_desc2 .. tostring(Character.charIdentifier))
+      discord:sendMessage(T.RobberyTitle, T.Robbery_desc2 .. tostring(Character.charIdentifier))
       wagonrobcooldown = true
       Wait(Config.RobOilWagonCooldown)
       wagonrobcooldown = false
     else
-      VORPcore.NotifyRightTip(_source, Config.Language.Cooldown, 4000)
+      VORPcore.NotifyRightTip(_source, T.Cooldown, 4000)
     end
   elseif missiontype == 'corob' then
     if not oilcorobcooldown then
       TriggerClientEvent('bcc-oil:RobOilCo', _source)
-      discord:sendMessage(Config.Language.RobberyTitle, Config.Language.Robbery_desc .. tostring(Character.charIdentifier))
+      discord:sendMessage(T.RobberyTitle, T.Robbery_desc .. tostring(Character.charIdentifier))
       oilcorobcooldown = true
       Wait(Config.RobOilCoCooldown)
       oilcorobcooldown = false
     else
-      VORPcore.NotifyRightTip(_source, Config.Language.Cooldown, 4000)
+      VORPcore.NotifyRightTip(_source, T.Cooldown, 4000)
     end
   end
 end)
@@ -132,38 +134,38 @@ RegisterServerEvent('bcc:oil:WagonManagement', function(type, action)
         if result[1].oil_wagon == 'none' then
           if Character.money >= Config.OilWagon.price then
             Character.removeCurrency(0, Config.OilWagon.price)
-            discord:sendMessage(Config.Language.BoughtTitle, Config.Language.bought_desc2 .. tostring(Character.charIdentifier))
+            discord:sendMessage(T.BoughtTitle, T.bought_desc2 .. tostring(Character.charIdentifier))
             exports.oxmysql:execute("UPDATE oil SET `oil_wagon`=@oilwagon WHERE charidentifier=@charidentifier AND identifier=@identifier", param)
-            VORPcore.NotifyRightTip(_source, Config.Language.OilWagonBought, 4000)
+            VORPcore.NotifyRightTip(_source, T.OilWagonBought, 4000)
           else
-            VORPcore.NotifyRightTip(_source, Config.Language.NotEnoughCash, 4000)
+            VORPcore.NotifyRightTip(_source, T.NotEnoughCash, 4000)
           end
         else
-          VORPcore.NotifyRightTip(_source, Config.Language.OilWagonAlreadyBought, 4000)
+          VORPcore.NotifyRightTip(_source, T.OilWagonAlreadyBought, 4000)
         end
         ---------Elseif action from menusetup is sell then ---------------------
       elseif action == 'sell' then
         if result[1].oil_wagon == 'none' then
-          VORPcore.NotifyRightTip(_source, Config.Language.NoWagontoSell, 4000)
+          VORPcore.NotifyRightTip(_source, T.NoWagontoSell, 4000)
         elseif result[1].oil_wagon == 'oilwagon02x' then
           local param2 = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier, ['oilwagon'] = 'none' }
           exports.oxmysql:execute("UPDATE oil SET `oil_wagon`=@oilwagon WHERE charidentifier=@charidentifier AND identifier=@identifier", param2)
           Character.addCurrency(0, Config.OilWagon.sellprice)
-          discord:sendMessage(Config.Language.SoldTitle, Config.Language.sold_desc .. tostring(Character.charIdentifier))
-          VORPcore.NotifyRightTip(_source, Config.Language.WagonSold, 4000)
+          discord:sendMessage(T.SoldTitle, T.sold_desc .. tostring(Character.charIdentifier))
+          VORPcore.NotifyRightTip(_source, T.WagonSold, 4000)
         end
         -------------Elseif action from menusetup is spawn then ----------------------
       elseif action == 'spawn' then
         if not wagoninspawn then
           if result[1].oil_wagon == 'none' then
-            VORPcore.NotifyRightTip(_source, Config.Language.NoWagonOwned, 4000)
+            VORPcore.NotifyRightTip(_source, T.NoWagonOwned, 4000)
           elseif result[1].oil_wagon == 'oilwagon02x' then
-            discord:sendMessage(Config.Language.DeliveryMissionTitle, Config.Language.Delivery_desc .. tostring(Character.charIdentifier))
+            discord:sendMessage(T.DeliveryMissionTitle, T.Delivery_desc .. tostring(Character.charIdentifier))
             wagoninspawn = true
             TriggerClientEvent('bcc:oil:PlayerWagonSpawn', _source, 'oilwagon02x')
           end
         else
-          VORPcore.NotifyRightTip(_source, Config.Language.WagonInSpawnLocation, 4000)
+          VORPcore.NotifyRightTip(_source, T.WagonInSpawnLocation, 4000)
         end
       end
     end
@@ -176,38 +178,38 @@ RegisterServerEvent('bcc:oil:WagonManagement', function(type, action)
         if result[1].delivery_wagon == 'none' then
           if Character.money >= Config.SupplyWagon.price then
             Character.removeCurrency(0, Config.SupplyWagon.price)
-            discord:sendMessage(Config.Language.BoughtTitle, Config.Language.bought_desc .. tostring(Character.charIdentifier))
+            discord:sendMessage(T.BoughtTitle, T.bought_desc .. tostring(Character.charIdentifier))
             exports.oxmysql:execute("UPDATE oil SET `delivery_wagon`=@oilwagon WHERE charidentifier=@charidentifier AND identifier=@identifier", param)
-            VORPcore.NotifyRightTip(_source, Config.Language.SupplyWagonBought, 4000)
+            VORPcore.NotifyRightTip(_source, T.SupplyWagonBought, 4000)
           else
-            VORPcore.NotifyRightTip(_source, Config.Language.NotEnoughCash, 4000)
+            VORPcore.NotifyRightTip(_source, T.NotEnoughCash, 4000)
           end
         else
-          VORPcore.NotifyRightTip(_source, Config.Language.SupplyWagonAlreadyBought, 4000)
+          VORPcore.NotifyRightTip(_source, T.SupplyWagonAlreadyBought, 4000)
         end
         ---------Elseif action from menusetup is sell then ---------------------
       elseif action == 'sell' then
         if result[1].delivery_wagon == 'none' then
-          VORPcore.NotifyRightTip(_source, Config.Language.NoWagontoSell, 4000)
+          VORPcore.NotifyRightTip(_source, T.NoWagontoSell, 4000)
         elseif result[1].delivery_wagon == 'armysupplywagon' then
           local param2 = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier, ['oilwagon'] = 'none' }
           exports.oxmysql:execute("UPDATE oil SET `delivery_wagon`=@oilwagon WHERE charidentifier=@charidentifier AND identifier=@identifier", param2)
           Character.addCurrency(0, Config.SupplyWagon.sellprice)
-          discord:sendMessage(Config.Language.SoldTitle, Config.Language.sold_desc2 .. tostring(Character.charIdentifier))
-          VORPcore.NotifyRightTip(_source, Config.Language.WagonSold, 4000)
+          discord:sendMessage(T.SoldTitle, T.sold_desc2 .. tostring(Character.charIdentifier))
+          VORPcore.NotifyRightTip(_source, T.WagonSold, 4000)
         end
         -------------Elseif action from menusetup is spawn then ----------------------
       elseif action == 'spawn' then
         if not wagoninspawn then
           if result[1].delivery_wagon == 'none' then
-            VORPcore.NotifyRightTip(_source, Config.Language.NoWagonOwned, 4000)
+            VORPcore.NotifyRightTip(_source, T.NoWagonOwned, 4000)
           elseif result[1].delivery_wagon == 'armysupplywagon' then
             wagoninspawn = true
-            discord:sendMessage(Config.Language.DeliveryMissionTitle, Config.Language.Delivery_desc2 .. tostring(Character.charIdentifier))
+            discord:sendMessage(T.DeliveryMissionTitle, T.Delivery_desc2 .. tostring(Character.charIdentifier))
             TriggerClientEvent('bcc:oil:PlayerWagonSpawn', _source, 'armysupplywagon')
           end
         else
-          VORPcore.NotifyRightTip(_source, Config.Language.WagonInSpawnLocation, 4000)
+          VORPcore.NotifyRightTip(_source, T.WagonInSpawnLocation, 4000)
         end
       end
     end

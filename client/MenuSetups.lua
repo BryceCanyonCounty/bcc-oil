@@ -1,3 +1,5 @@
+local T = Translation.Langs[Config.Lang]
+
 --[[######################Nui callbacks####################################]]
 --this callback is for when the menu closes giving player control of mouse in game back
 Inmission = false
@@ -13,7 +15,7 @@ RegisterNuiCallback('BuyOilWagon', function(data, cb)
         local type, action = 'oilwagon', 'buy'
         TriggerServerEvent('bcc:oil:WagonManagement', type, action)
     else
-        VORPcore.NotifyRightTip(Config.Language.AlreadyInMission, 4000)
+        VORPcore.NotifyRightTip(T.AlreadyInMission, 4000)
     end
 end)
 
@@ -24,7 +26,7 @@ RegisterNuiCallback('SellOilWagon', function(data, cb)
         local type, action = 'oilwagon', 'sell'
         TriggerServerEvent('bcc:oil:WagonManagement', type, action)
     else
-        VORPcore.NotifyRightTip(Config.Language.AlreadyInMission, 4000)
+        VORPcore.NotifyRightTip(T.AlreadyInMission, 4000)
     end
 end)
 
@@ -35,7 +37,7 @@ RegisterNuiCallback('OilDeliveryMission', function(data, cb)
         local type, action = 'oilwagon', 'spawn'
         TriggerServerEvent('bcc:oil:WagonManagement', type, action)
     else
-        VORPcore.NotifyRightTip(Config.Language.AlreadyInMission, 4000)
+        VORPcore.NotifyRightTip(T.AlreadyInMission, 4000)
     end
 end)
 
@@ -46,7 +48,7 @@ RegisterNuiCallback('BuySupplyWagon', function(data, cb)
         local type, action = 'supplywagon', 'buy'
         TriggerServerEvent('bcc:oil:WagonManagement', type, action)
     else
-        VORPcore.NotifyRightTip(Config.Language.AlreadyInMission, 4000)
+        VORPcore.NotifyRightTip(T.AlreadyInMission, 4000)
     end
 end)
 
@@ -57,7 +59,7 @@ RegisterNuiCallback('SellSupplyWagon', function(data, cb)
         local type, action = 'supplywagon', 'sell'
         TriggerServerEvent('bcc:oil:WagonManagement', type, action)
     else
-        VORPcore.NotifyRightTip(Config.Language.AlreadyInMission, 4000)
+        VORPcore.NotifyRightTip(T.AlreadyInMission, 4000)
     end
 end)
 
@@ -68,7 +70,7 @@ RegisterNuiCallback('SupplyDelivery', function(data, cb)
         local type, action = 'supplywagon', 'spawn'
         TriggerServerEvent('bcc:oil:WagonManagement', type, action)
     else
-        VORPcore.NotifyRightTip(Config.Language.AlreadyInMission, 4000)
+        VORPcore.NotifyRightTip(T.AlreadyInMission, 4000)
     end
 end)
 
@@ -78,7 +80,7 @@ RegisterNuiCallback('RobOilWagon', function(data, cb)
     if not Inmission then
         TriggerServerEvent('bcc-oil:CrimCooldowns', 'wagonrob')
     else
-        VORPcore.NotifyRightTip(Config.Language.AlreadyInMission, 4000)
+        VORPcore.NotifyRightTip(T.AlreadyInMission, 4000)
     end
 end)
 
@@ -87,6 +89,6 @@ RegisterNuiCallback('RobOilCompany', function(data, cb)
     if not Inmission then
         TriggerServerEvent('bcc-oil:CrimCooldowns', 'corob')
     else
-        VORPcore.NotifyRightTip(Config.Language.AlreadyInMission, 4000)
+        VORPcore.NotifyRightTip(T.AlreadyInMission, 4000)
     end
 end)

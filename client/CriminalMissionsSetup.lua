@@ -1,3 +1,5 @@
+local T = Translation.Langs[Config.Lang]
+
 ------- Oil Wagon Robbery Setup -----
 Robableoilwagon, Roboilwagondeadcheck = 0, false
 local fillcoords = nil
@@ -15,7 +17,7 @@ RegisterNetEvent('bcc-oil:RobOilWagon', function()
   TriggerEvent('bcc-oil:roboilwagonhelper')
   Citizen.InvokeNative(0x23f74c2fda6e7c61, 953018525, Robableoilwagon)
   FreezeEntityPosition(Robableoilwagon, true)
-  VORPcore.NotifyRightTip(Config.Language.RobOilWagonOpeningtext, 4000)
+  VORPcore.NotifyRightTip(T.RobOilWagonOpeningtext, 4000)
 
   --Waypoint Setup
   VORPutils.Gps:SetGps(fillcoords.wagonLocation)
@@ -25,10 +27,10 @@ RegisterNetEvent('bcc-oil:RobOilWagon', function()
   distcheck(cw.x, cw.y, cw.z, 30, PlayerPedId())
   ClearGpsMultiRoute()
   if Roboilwagondeadcheck then
-    VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000)
+    VORPcore.NotifyRightTip(T.Missionfailed, 4000)
     DeleteEntity(Robableoilwagon) return
   end
-  VORPcore.NotifyRightTip(Config.Language.RobOilWagonKillGaurds, 4000)
+  VORPcore.NotifyRightTip(T.RobOilWagonKillGaurds, 4000)
 
   --Spawning enemy Peds
   MutltiPedSpawnDeadCheck(fillcoords.pedlocation, 'wagonrob')
@@ -37,17 +39,17 @@ end)
 function roboilwagonreturnwagon()
   --Init Setup
   FreezeEntityPosition(Robableoilwagon, false)
-  VORPcore.NotifyRightTip(Config.Language.RobOilWagonReturnWagon, 4000)
+  VORPcore.NotifyRightTip(T.RobOilWagonReturnWagon, 4000)
 
   --Blip and Waypoint Setup
-  local blip1 = BlipWaypoin(fillcoords.returnlocation.x, fillcoords.returnlocation.y, fillcoords.returnlocation.z, Config.Language.RobOilWagonReturnBlip)
+  local blip1 = BlipWaypoin(fillcoords.returnlocation.x, fillcoords.returnlocation.y, fillcoords.returnlocation.z, T.RobOilWagonReturnBlip)
 
   --Distance Check Setup for returning the wagon
   distcheck(fillcoords.returnlocation.x, fillcoords.returnlocation.y, fillcoords.returnlocation.z, 10, Robableoilwagon)
   ClearGpsMultiRoute()
   if Roboilwagondeadcheck then
     RemoveBlip(blip1)
-    VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000)
+    VORPcore.NotifyRightTip(T.Missionfailed, 4000)
     DeleteEntity(Robableoilwagon) return
   end
 
@@ -58,7 +60,7 @@ function roboilwagonreturnwagon()
   TaskLeaveAnyVehicle(PlayerPedId(), 0, 0)
   Wait(4000)
   DeleteEntity(Robableoilwagon)
-  VORPcore.NotifyRightTip(Config.Language.RobOilWagonSuccess, 4000)
+  VORPcore.NotifyRightTip(T.RobOilWagonSuccess, 4000)
   TriggerServerEvent('bcc-oil:RobberyPayout')
 end
 
@@ -80,7 +82,7 @@ end)
 Roboilcodeadcheck = false
 local fillcoords2, missionoverend3dtext = nil, false
 RegisterNetEvent('bcc-oil:RobOilCo', function()
-  VORPcore.NotifyRightTip(Config.Language.RobOilCoBlip, 4000)
+  VORPcore.NotifyRightTip(T.RobOilCoBlip, 4000)
   Inmission = true
   TriggerEvent('bcc-oil:roboilcohelper')
 
@@ -88,14 +90,14 @@ RegisterNetEvent('bcc-oil:RobOilCo', function()
   fillcoords2 = CoordRandom(Config.RobOilCompany)
 
   --Blip and Waypoint Setup
-  local blip1 = BlipWaypoin(fillcoords2.lootlocation.x, fillcoords2.lootlocation.y, fillcoords2.lootlocation.z, Config.Language.RobOilCoBlip)
+  local blip1 = BlipWaypoin(fillcoords2.lootlocation.x, fillcoords2.lootlocation.y, fillcoords2.lootlocation.z, T.RobOilCoBlip)
 
   --Distance Check Setup for close to lockpick Location
   distcheck(fillcoords2.lootlocation.x, fillcoords2.lootlocation.y, fillcoords2.lootlocation.z, 5, PlayerPedId())
   ClearGpsMultiRoute()
   if Roboilcodeadcheck then
     RemoveBlip(blip1)
-    VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000) return
+    VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
   end
   RemoveBlip(blip1)
   local cfg = {
@@ -127,7 +129,7 @@ RegisterNetEvent('bcc-oil:RobOilCo', function()
             if not Config.RobOilCoEnemyPeds then
               missionoverend3dtext = true --sets var true which is used to disable the 3d text from showing
               Inmission = false
-              VORPcore.NotifyRightTip(Config.Language.RobberySuccess, 4000)
+              VORPcore.NotifyRightTip(T.RobberySuccess, 4000)
               TriggerServerEvent('bcc-oil:OilCoRobberyPayout', fillcoords2)
             else
               MutltiPedSpawnDeadCheck(Config.RobOilCoEnemyPedsLocations, 'oilcorob')
@@ -137,7 +139,7 @@ RegisterNetEvent('bcc-oil:RobOilCo', function()
             if not Config.RobOilCoEnemyPeds then
               missionoverend3dtext = true --sets var true which is used to disable the 3d text from showing
               Inmission = false
-              VORPcore.NotifyRightTip(Config.Language.Missionfailed, 4000)
+              VORPcore.NotifyRightTip(T.Missionfailed, 4000)
             else
               MutltiPedSpawnDeadCheck(Config.RobOilCoEnemyPedsLocations, 'oilcorob')
               Inmission = false
@@ -158,7 +160,7 @@ AddEventHandler('bcc-oil:roboilcohelper', function()
     local dist = GetDistanceBetweenCoords(pl.x, pl.y, pl.z, fillcoords2.lootlocation.x, fillcoords2.lootlocation.y, fillcoords2.lootlocation.z, true)
     if dist < 15 then
       if not missionoverend3dtext then
-        BccUtils.Misc.DrawText3D(fillcoords2.lootlocation.x, fillcoords2.lootlocation.y, fillcoords2.lootlocation.z, Config.Language.PressGToLockPick)
+        BccUtils.Misc.DrawText3D(fillcoords2.lootlocation.x, fillcoords2.lootlocation.y, fillcoords2.lootlocation.z, T.PressGToLockPick)
       else
         missionoverend3dtext = false break
       end
