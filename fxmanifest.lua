@@ -7,7 +7,7 @@ author 'Jake2k4'
 
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
-    'server.lua'
+    'server/server.lua'
 }
 
 shared_scripts {
