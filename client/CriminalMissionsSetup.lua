@@ -64,6 +64,12 @@ function roboilwagonreturnwagon()
   TriggerServerEvent('bcc-oil:RobberyPayout')
 end
 
+function finishOilCompanyRobbery()
+  Inmission = false
+  VORPcore.NotifyRightTip(T.RobberySuccess, 4000)
+  TriggerServerEvent('bcc-oil:RobberyPayout')
+end
+
 --Deadcheck event
 AddEventHandler('bcc-oil:roboilwagonhelper', function()
   Wait(400)

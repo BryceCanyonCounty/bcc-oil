@@ -65,8 +65,11 @@ function MutltiPedSpawnDeadCheck(pedstable, type) --function for spawning multip
                     count[k] = nil
                     if x == 0 then
                         if type == 'wagonrob' then
-                            roboilwagonreturnwagon() break
-                        elseif type == 'oilcorob' then break end
+                            roboilwagonreturnwagon()
+                        elseif type == 'oilcorob' then
+                            finishOilCompanyRobbery()
+                        end
+                        break
                     end
                 end
             end
