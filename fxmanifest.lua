@@ -7,28 +7,31 @@ author 'Jake2k4'
 
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
-    'server.lua'
+    'server/server.lua'
 }
 
 shared_scripts {
+    'shared/translation.lua',
     'config.lua'
 }
 
-
 client_scripts {
-    '/client/MainPedSpawns.lua',
-    '/client/OilMissions.lua',
-    '/client/SupplyMissions.lua',
-    '/client/MainWagonSpawn.lua',
-    '/client/MenuSetups.lua',
-    '/client/CriminalMissionsSetup.lua',
-    '/client/functions.lua'
+    'client/MainPedSpawns.lua',
+    'client/OilMissions.lua',
+    'client/SupplyMissions.lua',
+    'client/MainWagonSpawn.lua',
+    'client/MenuSetups.lua',
+    'client/CriminalMissionsSetup.lua',
+    'client/functions.lua'
 }
 
 files {
-    'ui/*',
-    'ui/assets/*',
-    'ui/vendor/*'
+    'ui/index.html',
+    'ui/app.js',
+    'ui/style.css',
+    'ui/assets/menu_background.png',
+    'ui/assets/RDRLino-Regular.ttf',
+    'ui/vendor/vue.js'
 }
 
 ui_page 'ui/index.html'
