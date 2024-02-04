@@ -6,7 +6,7 @@
 - Custom NUI Menu!
 - Level System!
 - Own a Oil and Supply Wagon!
-- Easy to translate via a Config.Language in the config.lua file!
+- Easy to translate via a the config.lua file!
 - Oil Delivery Missions! (pay varies based on level)
 - Supply Delivery Missions! (pay varies based on level)
 - Steal Oil Wagons! (pay varies based on level)

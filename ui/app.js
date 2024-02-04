@@ -21,10 +21,12 @@ createApp({ //creates an app
     onMessage(event) { //creates an event named on message
       if (event.data.type === 'open') { //if the data passed too it is the string open then
         this.config = event.data.config //sets the config variable in js too equal teh table in config.lua
+        this.language = event.data.language
         this.showing2 = true //sets the variable too true allowing the ui in html too show
       }
       if (event.data.type === 'open2') { //if the type passed is open 2 then
         this.config = event.data.config
+        this.language = event.data.language
         this.crimshowing = true //sets the variable too true allowing the crim menu too show
       }
     },

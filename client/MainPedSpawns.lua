@@ -31,7 +31,8 @@ CreateThread(function()
         SetNuiFocus(true, true)
         SendNUIMessage({
           type = 'open',
-          config = Config
+          config = Config,
+          language = T
         })
         TriggerServerEvent('bcc:oil:DBCheck')
       end
@@ -61,7 +62,8 @@ CreateThread(function()
         SetNuiFocus(true, true) --sets nui focus gives you mouse control
         SendNUIMessage({ --sends a nui message triggering the js script
           type = 'open2', --sends the type var as open2
-          config = Config --sends the config table too the js file
+          config = Config, --sends the config table too the js file
+          language = T
         })
         TriggerServerEvent('bcc:oil:DBCheck')
       end
