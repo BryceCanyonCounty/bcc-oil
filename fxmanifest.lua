@@ -3,7 +3,7 @@ fx_version "adamant"
 rdr3_warning 'I acknowledge that this is a prerelease build of RedM, and I am aware my resources *will* become incompatible once RedM ships.'
 
 lua54 'yes'
-author 'Jake2k4'
+author 'BCC @Jake2k4'
 
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
@@ -36,7 +36,7 @@ files {
 
 ui_page 'ui/index.html'
 
-version '1.2.2'
+version '1.2.3'
 
 dependencies {
     'vorp_core',
