@@ -28,12 +28,7 @@ CreateThread(function()
     if dist < 5 then
       BccUtils.Misc.DrawText3D(OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z, T.ManagerDrawText)
       if IsControlJustReleased(0, 0x760A9C6F) then
-        SetNuiFocus(true, true)
-        SendNUIMessage({
-          type = 'open',
-          config = Config,
-          language = T
-        })
+        OilBusinessMenu()
         TriggerServerEvent('bcc:oil:DBCheck')
       end
     elseif dist > 200 then
@@ -59,12 +54,7 @@ CreateThread(function()
     if dist < 5 then
       BccUtils.Misc.DrawText3D(Config.CriminalPedSpawn.x, Config.CriminalPedSpawn.y, Config.CriminalPedSpawn.z, T.CriminalDrawText) --draws text on the manager
       if IsControlJustReleased(0, 0x760A9C6F) then --if g is pressed then
-        SetNuiFocus(true, true) --sets nui focus gives you mouse control
-        SendNUIMessage({ --sends a nui message triggering the js script
-          type = 'open2', --sends the type var as open2
-          config = Config, --sends the config table too the js file
-          language = T
-        })
+        CriminalOilMenu()
         TriggerServerEvent('bcc:oil:DBCheck')
       end
     elseif dist > 200 then
