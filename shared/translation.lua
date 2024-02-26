@@ -8,6 +8,7 @@ Translation.Langs = {
     BuyWagonMenuName = 'Buy Oil Wagon?',
     OilWagonBought = 'You purchased an Oil Wagon!',
     OilWagonAlreadyBought = 'You already own an Oil Wagon!',
+    SupplyDeliveryMission = "Deliver Supplies?",
     SellOilWagon = 'Sell Your Oil Wagon?',
     NotEnoughCash = 'You do not have enough money!',
     WagonSold = 'Wagon Sold',

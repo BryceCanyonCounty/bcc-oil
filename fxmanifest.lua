@@ -25,17 +25,6 @@ client_scripts {
     'client/functions.lua'
 }
 
-files {
-    'ui/index.html',
-    'ui/app.js',
-    'ui/style.css',
-    'ui/assets/menu_background.png',
-    'ui/assets/RDRLino-Regular.ttf',
-    'ui/vendor/vue.js'
-}
-
-ui_page 'ui/index.html'
-
 version '1.2.3'
 
 dependencies {
