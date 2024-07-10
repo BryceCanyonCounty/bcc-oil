@@ -3,7 +3,6 @@
 > This is an in depth Oil Job Script for RedM!
 
 ## Features
-- Custom NUI Menu!
 - Level System!
 - Own a Oil and Supply Wagon!
 - Easy to translate via a the config.lua file!
@@ -38,8 +37,8 @@
 - VORP Inventory
 - VORP Progressbars
 - bcc-minigames
-- VORP Utils
 - bcc-utils
+- feather-menu
 
 ## Screenshots
 ![image](https://user-images.githubusercontent.com/10902965/229379780-278d10e8-7f8f-447e-a223-19bc98d25cb5.png)
