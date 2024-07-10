@@ -1,94 +1,258 @@
-local T = Translation.Langs[Config.Lang]
-
---[[######################Nui callbacks####################################]]
---this callback is for when the menu closes giving player control of mouse in game back
 Inmission = false
-RegisterNuiCallback('closemenu', function(data, cb)
-    cb('ok')
-    SetNuiFocus(false, false)
-end)
+function OpenOilMenu()
+    local companyoilMainMenu = BCCOilMainMenu:RegisterPage("Company:Oil:Main:Page")
 
---This callback is for purchasing an oil wagon
-RegisterNuiCallback('BuyOilWagon', function(data, cb)
-    cb('ok')
-    if not Inmission then
-        local type, action = 'oilwagon', 'buy'
-        TriggerServerEvent('bcc:oil:WagonManagement', type, action)
-    else
-        VORPcore.NotifyRightTip(T.AlreadyInMission, 4000)
-    end
-end)
+    companyoilMainMenu:RegisterElement('header', {
+        value = _U('OilManagerMainMenuName'),
+        slot = 'header',
+        style = {}
+    })
 
---This callback is for selling an oil wagon
-RegisterNuiCallback('SellOilWagon', function(data, cb)
-    cb('ok')
-    if not Inmission then
-        local type, action = 'oilwagon', 'sell'
-        TriggerServerEvent('bcc:oil:WagonManagement', type, action)
-    else
-        VORPcore.NotifyRightTip(T.AlreadyInMission, 4000)
-    end
-end)
+    companyoilMainMenu:RegisterElement('line', {
+        slot = "header",
+        style = {}
+    })
 
---this callback is for starting an oil delivery mission
-RegisterNuiCallback('OilDeliveryMission', function(data, cb)
-    cb('ok')
-    if not Inmission then
-        local type, action = 'oilwagon', 'spawn'
-        TriggerServerEvent('bcc:oil:WagonManagement', type, action)
-    else
-        VORPcore.NotifyRightTip(T.AlreadyInMission, 4000)
-    end
-end)
+    companyoilMainMenu:RegisterElement('button', {
+        label = _U('NUIOilMenu'),
+        style = {},
+    }, function()
+        OpenOilWagonMenu()
+    end)
 
---this callback is for buying a supply wagon
-RegisterNuiCallback('BuySupplyWagon', function(data, cb)
-    cb('ok')
-    if not Inmission then
-        local type, action = 'supplywagon', 'buy'
-        TriggerServerEvent('bcc:oil:WagonManagement', type, action)
-    else
-        VORPcore.NotifyRightTip(T.AlreadyInMission, 4000)
-    end
-end)
+    companyoilMainMenu:RegisterElement('button', {
+        label = _U('Supplymenuname'),
+        style = {},
+    }, function()
+        OpenSupplyMenu()
+    end)
 
---this callback is for selling a supply wagon
-RegisterNuiCallback('SellSupplyWagon', function(data, cb)
-    cb('ok')
-    if not Inmission then
-        local type, action = 'supplywagon', 'sell'
-        TriggerServerEvent('bcc:oil:WagonManagement', type, action)
-    else
-        VORPcore.NotifyRightTip(T.AlreadyInMission, 4000)
-    end
-end)
+    companyoilMainMenu:RegisterElement('line', {
+        slot = 'footer',
+        style = {}
+    })
 
---this callback is for starting a supply delivery mission
-RegisterNuiCallback('SupplyDelivery', function(data, cb)
-    cb('ok')
-    if not Inmission then
-        local type, action = 'supplywagon', 'spawn'
-        TriggerServerEvent('bcc:oil:WagonManagement', type, action)
-    else
-        VORPcore.NotifyRightTip(T.AlreadyInMission, 4000)
-    end
-end)
+    companyoilMainMenu:RegisterElement('button', {
+        label = _U('NUIExitMenu'),
+        slot = 'footer',
+        style = {},
+    }, function()
+        BCCOilMainMenu:Close()
+    end)
 
------------Criminal Callbacks--------
-RegisterNuiCallback('RobOilWagon', function(data, cb)
-    cb('ok')
-    if not Inmission then
-        TriggerServerEvent('bcc-oil:CrimCooldowns', 'wagonrob')
-    else
-        VORPcore.NotifyRightTip(T.AlreadyInMission, 4000)
-    end
-end)
+    companyoilMainMenu:RegisterElement('bottomline', {
+        slot = 'footer',
+        style = {}
+    })
 
-RegisterNuiCallback('RobOilCompany', function(data, cb)
-    cb('ok')
-    if not Inmission then
-        TriggerServerEvent('bcc-oil:CrimCooldowns', 'corob')
-    else
-        VORPcore.NotifyRightTip(T.AlreadyInMission, 4000)
-    end
-end)
+    BCCOilMainMenu:Open({
+        startupPage = companyoilMainMenu
+    })
+end
+
+function OpenSupplyMenu()
+    local supplyMainMenu = BCCOilMainMenu:RegisterPage("Supply:Main:Page")
+
+    supplyMainMenu:RegisterElement('header', {
+        value = _U('OilManagerMainMenuName'),
+        slot = 'header',
+        style = {}
+    })
+
+    supplyMainMenu:RegisterElement('line', {
+        slot = "header",
+        style = {}
+    })
+
+    supplyMainMenu:RegisterElement('button', {
+        label = _U('NUIBuySupplyWagon') .. Config.SupplyWagon.price,
+        style = {},
+    }, function()
+        if not Inmission then
+            TriggerServerEvent('bcc:oil:WagonManagement', 'supplywagon', 'buy')
+            BCCOilMainMenu:Close()
+        else
+            VORPcore.NotifyRightTip(_U('AlreadyInMission'), 4000)
+        end
+    end)
+
+    supplyMainMenu:RegisterElement('button', {
+        label = _U('NUISellSupplyWagon') .. Config.SupplyWagon.sellprice,
+        style = {},
+    }, function()
+        if not Inmission then
+            TriggerServerEvent('bcc:oil:WagonManagement', 'supplywagon', 'sell')
+            BCCOilMainMenu:Close()
+        else
+            VORPcore.NotifyRightTip(_U('AlreadyInMission'), 4000)
+        end
+    end)
+
+    supplyMainMenu:RegisterElement('button', {
+        label = _U('NUIDeliverMission'),
+        style = {},
+    }, function()
+        if not Inmission then
+            TriggerServerEvent('bcc:oil:WagonManagement', 'supplywagon', 'spawn')
+            BCCOilMainMenu:Close()
+        else
+            VORPcore.NotifyRightTip(_U('AlreadyInMission'), 4000)
+        end
+    end)
+
+    supplyMainMenu:RegisterElement('line', {
+        slot = 'footer',
+        style = {}
+    })
+
+    supplyMainMenu:RegisterElement('button', {
+        label = _U('OilGoBackButton'),
+        slot = 'footer',
+        style = {},
+    }, function()
+        OpenOilMenu()
+    end)
+
+    supplyMainMenu:RegisterElement('bottomline', {
+        slot = 'footer',
+        style = {}
+    })
+
+    BCCOilMainMenu:Open({
+        startupPage = supplyMainMenu
+    })
+end
+
+function OpenOilWagonMenu()
+    local oilMainMenu = BCCOilMainMenu:RegisterPage("Oil:Main:Page")
+
+    oilMainMenu:RegisterElement('header', {
+        value = _U('OilManagerMainMenuName'),
+        slot = 'header',
+        style = {}
+    })
+
+    oilMainMenu:RegisterElement('line', {
+        slot = "header",
+        style = {}
+    })
+
+    oilMainMenu:RegisterElement('button', {
+        label = _U('NUIBuyOilWagon') .. Config.OilWagon.price,
+        style = {},
+    }, function()
+        if not Inmission then
+            TriggerServerEvent('bcc:oil:WagonManagement', 'oilwagon', 'buy')
+            BCCOilMainMenu:Close()
+        else
+            VORPcore.NotifyRightTip(_U('AlreadyInMission'), 4000)
+        end
+    end)
+
+    oilMainMenu:RegisterElement('button', {
+        label = _U('NUISellOilWagon') .. Config.OilWagon.sellprice,
+        style = {},
+    }, function()
+        if not Inmission then
+            TriggerServerEvent('bcc:oil:WagonManagement', 'oilwagon', 'sell')
+            BCCOilMainMenu:Close()
+        else
+            VORPcore.NotifyRightTip(_U('AlreadyInMission'), 4000)
+        end
+    end)
+
+    oilMainMenu:RegisterElement('button', {
+        label = _U('NUIDeliverMission'),
+        style = {},
+    }, function()
+        if not Inmission then
+            TriggerServerEvent('bcc:oil:WagonManagement', 'oilwagon', 'spawn')
+            BCCOilMainMenu:Close()
+        else
+            VORPcore.NotifyRightTip(_U('AlreadyInMission'), 4000)
+        end
+    end)
+
+    oilMainMenu:RegisterElement('line', {
+        slot = 'footer',
+        style = {}
+    })
+
+    oilMainMenu:RegisterElement('button', {
+        label = _U('OilGoBackButton'),
+        slot = 'footer',
+        style = {},
+    }, function()
+        OpenOilMenu()
+    end)
+
+    oilMainMenu:RegisterElement('bottomline', {
+        slot = 'footer',
+        style = {}
+    })
+
+    BCCOilMainMenu:Open({
+        startupPage = oilMainMenu
+    })
+end
+
+function OpenRobberyMenu()
+    local robberyMainMenu = BCCOilMainMenu:RegisterPage("Robbery:Main:Page")
+
+    robberyMainMenu:RegisterElement('header', {
+        value = "Robbery",
+        slot = 'header',
+        style = {}
+    })
+
+    robberyMainMenu:RegisterElement('line', {
+        slot = "header",
+        style = {}
+    })
+
+    robberyMainMenu:RegisterElement('button', {
+        label = _U('NUIRobOilWagon'),
+        style = {},
+    }, function()
+        if not Inmission then
+            TriggerServerEvent('bcc-oil:CrimCooldowns', 'wagonrob')
+            BCCOilMainMenu:Close()
+        else
+            VORPcore.NotifyRightTip(_U('AlreadyInMission'), 4000)
+        end
+    end)
+
+    robberyMainMenu:RegisterElement('button', {
+        label = _U('NUIRobOilCompany'),
+        style = {},
+    }, function()
+        if not Inmission then
+            TriggerServerEvent('bcc-oil:CrimCooldowns', 'corob')
+            BCCOilMainMenu:Close()
+        else
+            VORPcore.NotifyRightTip(_U('AlreadyInMission'), 4000)
+        end
+    end)
+
+    robberyMainMenu:RegisterElement('line', {
+        slot = 'footer',
+        style = {}
+    })
+
+    robberyMainMenu:RegisterElement('button', {
+        label = _U('NUIExitMenu'),
+        slot = 'footer',
+        style = {},
+    }, function()
+        BCCOilMainMenu:Close()
+    end)
+
+    robberyMainMenu:RegisterElement('bottomline', {
+        slot = 'footer',
+        style = {}
+    })
+
+    BCCOilMainMenu:Open({
+        startupPage = robberyMainMenu
+    })
+end

@@ -1,16 +1,32 @@
-local T = Translation.Langs[Config.Lang]
-
 --Pulling Essentials
-VORPcore = {} --Pulls vorp core
-TriggerEvent("getCore", function(core)
-  VORPcore = core
-end)
-VORPutils = {}
-TriggerEvent("getUtils", function(utils)
-  VORPutils = utils
-end)
+VORPcore = exports.vorp_core:GetCore()
 BccUtils = exports['bcc-utils'].initiate()
 MiniGame = exports['bcc-minigames'].initiate()
+FeatherMenu =  exports['feather-menu'].initiate()
+
+BCCOilMainMenu = FeatherMenu:RegisterMenu('bcc-oil:mainmenu', {
+    top = '40%',  -- Adjust top position as needed
+    left = '20%',  -- Position on the right side with 20px from the edge
+    ['720width'] = '500px',
+    ['1080width'] = '600px',
+    ['2kwidth'] = '700px',
+    ['4kwidth'] = '900px',
+    style = {},
+    contentslot = {
+        style = {
+            ['height'] = '350px',
+            ['min-height'] = '250px'
+        }
+    },
+    draggable = true
+}, {
+    opened = function()
+        DisplayRadar(false)
+    end,
+    closed = function()
+        DisplayRadar(true)
+    end,
+  })
 
 function distcheck(x, y, z, dist, entity) --Function used to handle distance checking
     while true do
@@ -80,14 +96,14 @@ function MutltiPedSpawnDeadCheck(pedstable, type) --function for spawning multip
           DeletePed(v)
         end
         DeleteEntity(Robableoilwagon)
-        VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+        VORPcore.NotifyRightTip(_U('Missionfailed'), 4000) return
     end
 end
 
 function BlipWaypoin(x, y, z, blipname) --func to make blip and waypoint and return the blip
     local blip = Citizen.InvokeNative(0x554D9D53F696D002, -1282792512, x, y, z, 5)
     Citizen.InvokeNative(0x9CB1A1623062F402, blip, blipname)
-    VORPutils.Gps:SetGps(x, y, z)
+    BccUtils.Misc.SetGps(x, y, z)
     return blip
 end
 
