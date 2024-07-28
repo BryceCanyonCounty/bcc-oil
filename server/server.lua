@@ -98,7 +98,7 @@ end)
 RegisterServerEvent('bcc-oil:RobberyPayout', function()
     local _source = source
 
-    if not oilRobberies[_source] then
+    if not oilRobberies[_source] or oilRobberies[_source].type ~= 'wagon' or wagonrobcooldown then
       return 
     end
 
@@ -141,7 +141,9 @@ RegisterServerEvent('bcc-oil:CrimCooldowns', function(missiontype)
     if not wagonrobcooldown then
       TriggerClientEvent('bcc-oil:RobOilWagon', _source)
       discord:sendMessage(T.RobberyTitle, T.Robbery_desc2 .. tostring(Character.charIdentifier))
-      oilRobberies[_source] = true
+      oilRobberies[_source] = {
+        type = 'wagon',
+      }
       wagonrobcooldown = true
       Wait(Config.RobOilWagonCooldown)
       wagonrobcooldown = false
@@ -153,7 +155,9 @@ RegisterServerEvent('bcc-oil:CrimCooldowns', function(missiontype)
     if not oilcorobcooldown then
       TriggerClientEvent('bcc-oil:RobOilCo', _source)
       discord:sendMessage(T.RobberyTitle, T.Robbery_desc .. tostring(Character.charIdentifier))
-      oilRobberies[_source] = true
+      oilRobberies[_source] = {
+        type = 'company',
+      }
       oilcorobcooldown = true
       Wait(Config.RobOilCoCooldown)
       oilcorobcooldown = false
@@ -164,24 +168,25 @@ RegisterServerEvent('bcc-oil:CrimCooldowns', function(missiontype)
   end
 end)
 
-RegisterServerEvent('bcc-oil:OilCoRobberyPayout', function(fillcoords2)
-  local _source = source
+RegisterServerEvent('bcc-oil:OilCoRobberyPayout')
+AddEventHandler('bcc-oil:OilCoRobberyPayout', function(fillcoords2)
+    local _source = source
 
-  if not oilRobberies[_source] then
-    return 
-  end
-
-
-  local Character = VORPcore.getUser(_source).getUsedCharacter
-  if fillcoords2.rewards.itemspayout then
-    Character.addCurrency(0, fillcoords2.rewards.cashpayout)
-    for k, v in pairs(fillcoords2.rewards.items) do
-      VORPInv.addItem(_source, v.item, v.count)
+    if not oilRobberies[_source] or oilRobberies[_source].type ~= 'company' or oilcorobcooldown then
+        return 
     end
-  else
-    Character.addCurrency(0, fillcoords2.rewards.cashpayout)
-  end
+
+    local Character = VORPcore.getUser(_source).getUsedCharacter
+    if fillcoords2.rewards.itemspayout then
+        Character.addCurrency(0, fillcoords2.rewards.cashpayout)
+        for k, v in pairs(fillcoords2.rewards.items) do
+            VORPInv.addItem(_source, v.item, v.count)
+        end
+    else
+        Character.addCurrency(0, fillcoords2.rewards.cashpayout)
+    end
 end)
+
 
 
 
