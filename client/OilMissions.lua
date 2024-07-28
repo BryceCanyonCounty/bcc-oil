@@ -152,7 +152,7 @@ function deliveroil()
   DeleteEntity(Createdwagon)
   Notify(0, T.ThankYouHeresYourPayOil, 'success')
   -- VORPcore.NotifyRightTip(T.ThankYouHeresYourPayOil, 4000)
-  TriggerServerEvent('bcc:oil:PayoutOilMission', Wagon)
+  TriggerServerEvent('bcc:oil:PayoutOilMission')
   TriggerServerEvent('bcc-oil:WagonInSpawnHandler', false)
   Inmission = false
 end
