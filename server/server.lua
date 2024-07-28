@@ -1,4 +1,6 @@
 local T = Translation.Langs[Config.Lang]
+local wagoninspawn = false
+
 
 -----------------------------------------Pulling Essentials-------------------------------------------------------------------------
 local VORPcore = {}
@@ -71,6 +73,9 @@ AddEventHandler('playerDropped', function(reason)
     oilMissions[_source] = nil
   end
 
+  print(wagoninspawn)
+
+  print(source)
   if wagoninspawn == _source then
     wagoninspawn = false
   end
@@ -163,7 +168,6 @@ RegisterServerEvent('bcc:oil:DBCheck', function()
 end)
 
 ------------------------------------- Handles the buying, selling, and spawning of wagons ---------------------------------------------
-local wagoninspawn = false
 RegisterServerEvent('bcc:oil:WagonManagement', function(type, action)
   local _source = source
   local Character = VORPcore.getUser(_source).getUsedCharacter
