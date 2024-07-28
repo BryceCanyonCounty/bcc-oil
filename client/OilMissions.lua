@@ -109,6 +109,7 @@ function deliveroil()
   Notify(0, T.OilDelivered, 'success')
   -- VORPcore.NotifyRightTip(T.ReturnOilWagon, 4000)
   Notify(0, T.ReturnOilWagon, 'info')
+  TriggerServerEvent('bcc-oil:ManageStep')
 
   --------------------This will handle the despawning of the ped, and the return wagon mission---------------------------
   --Waypoint and Blip Setup
