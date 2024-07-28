@@ -32,7 +32,7 @@ RegisterServerEvent('bcc:oil:PayoutOilMission', function()
   end
   
   local playerCoords = GetEntityCoords(GetPlayerPed(_source))
-  local managerCoords = vector3(OilWagonTable.ManagerSpawn.xyz)
+  local managerCoords = vector3(OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z)
   local distance = #(playerCoords - managerCoords)
 
   if distance > 5 then
