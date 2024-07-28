@@ -16,6 +16,7 @@ local discord = BccUtils.Discord.setup(Config.WebhookLink, 'BCC Oil', 'https://g
 
 
 local oilMissions = {}
+local oilRobberies = {}
 
 
 
@@ -84,6 +85,10 @@ AddEventHandler('playerDropped', function(reason)
     oilMissions[_source] = nil
   end
 
+  if oilRobberies[_source] then
+    oilRobberies[_source] = nil
+  end
+
   if wagoninspawn == _source then
     wagoninspawn = false
   end
@@ -92,6 +97,13 @@ end)
 -------- Robbery Payout Handler --------
 RegisterServerEvent('bcc-oil:RobberyPayout', function()
     local _source = source
+
+    if not oilRobberies[_source] then
+      return 
+    end
+
+
+
     local Character = VORPcore.getUser(_source).getUsedCharacter
     local result = MySQL.query.await('SELECT manager_trust, enemy_trust FROM oil WHERE charidentifier = ? AND identifier = ?',
         { Character.charIdentifier, Character.identifier })
@@ -129,6 +141,7 @@ RegisterServerEvent('bcc-oil:CrimCooldowns', function(missiontype)
     if not wagonrobcooldown then
       TriggerClientEvent('bcc-oil:RobOilWagon', _source)
       discord:sendMessage(T.RobberyTitle, T.Robbery_desc2 .. tostring(Character.charIdentifier))
+      oilRobberies[_source] = true
       wagonrobcooldown = true
       Wait(Config.RobOilWagonCooldown)
       wagonrobcooldown = false
@@ -140,6 +153,7 @@ RegisterServerEvent('bcc-oil:CrimCooldowns', function(missiontype)
     if not oilcorobcooldown then
       TriggerClientEvent('bcc-oil:RobOilCo', _source)
       discord:sendMessage(T.RobberyTitle, T.Robbery_desc .. tostring(Character.charIdentifier))
+      oilRobberies[_source] = true
       oilcorobcooldown = true
       Wait(Config.RobOilCoCooldown)
       oilcorobcooldown = false
@@ -152,6 +166,12 @@ end)
 
 RegisterServerEvent('bcc-oil:OilCoRobberyPayout', function(fillcoords2)
   local _source = source
+
+  if not oilRobberies[_source] then
+    return 
+  end
+
+
   local Character = VORPcore.getUser(_source).getUsedCharacter
   if fillcoords2.rewards.itemspayout then
     Character.addCurrency(0, fillcoords2.rewards.cashpayout)
