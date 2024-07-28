@@ -1,200 +1,363 @@
 local T = Translation.Langs[Config.Lang]
+local wagoninspawn = false
 
---------------------------------------- Pulling Essentials -------------------------------------------
-progressbar = exports.vorp_progressbar:initiate() --Allows use of progressbar in code
 
------ Oil Delivery Setup -----
-function beginningstage()
-  Wait(1000)
-  Notify(0, T.FillYourOilWagon, 'info')
-  -- VORPcore.NotifyRightTip(T.FillYourOilWagon, 4000)
-  local fillcoords = CoordRandom(OilWagonTable.FillPoints)
+-----------------------------------------Pulling Essentials-------------------------------------------------------------------------
+local VORPcore = {}
+TriggerEvent("getCore", function(core)
+  VORPcore = core
+end)
+local VORPInv = {}
+VORPInv = exports.vorp_inventory:vorp_inventoryApi()
+local BccUtils = exports['bcc-utils'].initiate()
+local discord = BccUtils.Discord.setup(Config.WebhookLink, 'BCC Oil', 'https://gamespot.com/a/uploads/original/1179/11799911/3383938-duck.jpg')
 
-  --Blip and Waypoint setup
-  local blip1 = BlipWaypoin(fillcoords.fillpoint.x, fillcoords.fillpoint.y, fillcoords.fillpoint.z, T.FillBlipName)
 
-  -------------Dist Check for fill Setup-----------------
-  distcheck(fillcoords.fillpoint.x, fillcoords.fillpoint.y, fillcoords.fillpoint.z, 3, Createdwagon)
-  ClearGpsMultiRoute()
-  if Playerdead or WagonDestroyed then
-    RemoveBlip(blip1)
-    TriggerServerEvent('bcc-oil:cancelMission')
-    Notify(0, T.Missionfailed, 'fail') return
-    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+
+
+local oilMissions = {}
+
+
+
+
+
+--------- Oil Mission Payout Handler -------------
+RegisterServerEvent('bcc:oil:PayoutOilMission', function()
+  local _source = source
+  local Character = VORPcore.getUser(_source).getUsedCharacter
+
+
+  if not oilMissions[_source] then
+    return
   end
-  FreezeEntityPosition(Createdwagon, true)
-  RemoveBlip(blip1)
-
-  -------Progress bar / Fill Wagon Setup----------
-  TaskLeaveAnyVehicle(PlayerPedId(), 0, 0)
-  Notify(0, T.FillingOilwagon, 'info')
-  -- VORPcore.NotifyRightTip(T.FillingOilwagon, 4000)
-  Wait(3000)
-  SetEntityHeading(PlayerPedId(), GetEntityHeading(Createdwagon))
-  Wait(500)
-  TaskStartScenarioInPlace(PlayerPedId(), joaat('WORLD_CAMP_JACK_ES_BUCKET_POUR'), Config.OilWagonFillTime, true, false, false, false)
-  progressbar.start(T.FillingOilwagon, Config.OilWagonFillTime, function()
-  end, 'circle')
-  Wait(Config.OilWagonFillTime)
-  if Progressbardeadcheck then
-    Progressbardeadcheck = false
-    ClearPedTasksImmediately(PlayerPedId())
-    TriggerServerEvent('bcc-oil:cancelMission')
-    Notify(0, T.Missionfailed, 'fail')
-    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000)
-    DeleteEntity(Createdwagon) return
-  end
-  ClearPedTasksImmediately(PlayerPedId())
-  TaskEnterVehicle(PlayerPedId(), Createdwagon, 4000, -1, 0)
-  deliveroil()
-end
-
------------------------Deliver oil Mission&return wagon included here------------------------------
-function deliveroil()
-  FreezeEntityPosition(Createdwagon, false)
-  Wait(200)
-  Notify(0, T.GoDeliver, 'info')
-  -- VORPcore.NotifyRightTip(T.GoDeliver, 4000)
-
-  --Coord Randomization
-  local fillcoords = CoordRandom(Config.OilDeliveryPoints)
-
-  --Blip and Waypoint Setup
-  local blip2 = BlipWaypoin(fillcoords.DeliveryPoint.x, fillcoords.DeliveryPoint.y, fillcoords.DeliveryPoint.z, T.DeliverBlipName)
-
-  --Spawning Ped Setup
-  local model = joaat('rcsp_dutch3_males_01')
-  modelload(model)
-  local createdped = CreatePed(model, fillcoords.NpcSpawn.x, fillcoords.NpcSpawn.y, fillcoords.NpcSpawn.z - 1, fillcoords.NpcSpawn.h, true, true, true, true)
-  Citizen.InvokeNative(0x283978A15512B2FE, createdped, true)
-  SetEntityInvincible(createdped, true)
-  FreezeEntityPosition(createdped, true)
-
-  --Distance Check Setup wagon to delivery point
-  distcheck(fillcoords.DeliveryPoint.x, fillcoords.DeliveryPoint.y, fillcoords.DeliveryPoint.z, 3, Createdwagon)
-  ClearGpsMultiRoute()
-  if Playerdead or WagonDestroyed then
-    DeletePed(createdped)
-    RemoveBlip(blip2)
-    TriggerServerEvent('bcc-oil:cancelMission')
-    Notify(0, T.Missionfailed, 'fail') return
-    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
-  end
-  FreezeEntityPosition(createdped, false)
-  FreezeEntityPosition(Createdwagon, true)
-  RemoveBlip(blip2)
-
-  --Distance Check Setup Ped To Wagon
-  TaskGoToEntity(createdped, Createdwagon, -1, 1.0, 5.0, 1073741824, 1) --(pulled from legacy_medic)
-  local cw = GetEntityCoords(Createdwagon)
-  distcheck(cw.x, cw.y, cw.z, 5, createdped)
-
-  --Filling Up Setup
-  TaskStartScenarioInPlace(createdped, joaat('WORLD_PLAYER_CHORES_BUCKET_PUT_DOWN_FULL'), Config.OilWagonFillTime, true, false, false, false)
-  progressbar.start(T.UnloadingOil, Config.OilWagonFillTime, function()
-  end, 'circle')
-  Wait(Config.OilWagonFillTime)
-  if Progressbardeadcheck then
-    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000)
-    Notify(0, T.Missionfailed, 'fail')
-    TriggerServerEvent('bcc-oil:cancelMission')
-    Progressbardeadcheck = false
-    ClearPedTasksImmediately(createdped)
-    DeletePed(createdped)
-    DeleteEntity(Createdwagon) return
-  end
-  ClearPedTasksImmediately(createdped)
-  FreezeEntityPosition(Createdwagon, false)
-  -- VORPcore.NotifyRightTip(T.OilDelivered, 4000)
-  Notify(0, T.OilDelivered, 'success')
-  -- VORPcore.NotifyRightTip(T.ReturnOilWagon, 4000)
-  Notify(0, T.ReturnOilWagon, 'info')
-
-  --------------------This will handle the despawning of the ped, and the return wagon mission---------------------------
-  --Waypoint and Blip Setup
-  local oilbl = BlipWaypoin(OilWagonTable.WagonSpawnCoords.x, OilWagonTable.WagonSpawnCoords.y, OilWagonTable.WagonSpawnCoords.z, T.ReturnBlip)
-
-  --Distance Check setup for deleting ped
-  local pedcoord = GetEntityCoords(createdped)
-  distcheck(pedcoord.x, pedcoord.y, pedcoord.z, 70, Createdwagon)
-  if Playerdead or WagonDestroyed then
-    RemoveBlip(oilbl)
-    ClearGpsMultiRoute()
-    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
-    TriggerServerEvent('bcc-oil:cancelMission')
-    Notify(0, T.Missionfailed, 'fail') return
+  
+  
+  local missionType = oilMissions[_source].type
+  if oilMissions[_source].step ~= 2 then
+    return
   end
 
-
-  --Dist Check for returning wagon
-  distcheck(OilWagonTable.WagonSpawnCoords.x, OilWagonTable.WagonSpawnCoords.y, OilWagonTable.WagonSpawnCoords.z, 5, Createdwagon)
-  ClearGpsMultiRoute()
-  if Playerdead or WagonDestroyed then
-    RemoveBlip(oilbl)
-    TriggerServerEvent('bcc-oil:cancelMission')
-    Notify(0, T.Missionfailed, 'fail') return
-    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
-  end
-  TaskLeaveAnyVehicle(PlayerPedId(), 0, 0)
-  FreezeEntityPosition(Createdwagon, true)
-  RemoveBlip(oilbl)
-  -- VORPcore.NotifyRightTip(T.CollectOilDeliveryPay, 4000)
-  Notify(0, T.CollectOilDeliveryPay, 'info')
-
-  --Distance Check for Player To Manager Ped
-  distcheck(OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z, 3, PlayerPedId())
-  if Playerdead or WagonDestroyed then
-    DeleteEntity(Createdwagon)
-    TriggerServerEvent('bcc-oil:cancelMission')
-    Notify(0, T.Missionfailed, 'fail') return
-    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
-  end
-  DeleteEntity(Createdwagon)
-  Notify(0, T.ThankYouHeresYourPayOil, 'success')
-  -- VORPcore.NotifyRightTip(T.ThankYouHeresYourPayOil, 4000)
-  TriggerServerEvent('bcc:oil:PayoutOilMission')
-  TriggerServerEvent('bcc-oil:WagonInSpawnHandler', false)
-  Inmission = false
-end
-
----------- Sniffing Oil Setup ---------------
-CreateThread(function()
-  if Config.SniffOil.enable then
-    while true do
-      Wait(5)
-      local plc = GetEntityCoords(PlayerPedId())
-      local dist = GetDistanceBetweenCoords(plc.x, plc.y, plc.z, Config.SniffOil.Coords.x, Config.SniffOil.Coords.y, Config.SniffOil.Coords.z, true)
-      if dist < 3 then
-        BccUtils.Misc.DrawText3D(Config.SniffOil.Coords.x, Config.SniffOil.Coords.y, Config.SniffOil.Coords.z, T.SniffOil)
-        if IsControlJustReleased(0, 0x760A9C6F) then
-          AnimpostfxPlay('MP_BountyLagrasSwamp')
-          Wait(Config.SniffOil.EffectTime)
-          AnimpostfxStopAll()
+  local param = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier, ['levelincrease'] = Config.LevelIncreasePerDelivery }
+  MySQL.query.await('UPDATE oil SET `manager_trust`=manager_trust+@levelincrease WHERE charidentifier=@charidentifier AND identifier=@identifier', param)
+  local result = MySQL.query.await("SELECT manager_trust FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param)
+  if #result > 0 then
+    for k, v in pairs(Config.OilCompanyLevels) do
+      if result[1].manager_trust >= v.level and result[1].manager_trust < v.nextlevel then
+        if missionType == 'delivery' then
+          Character.addCurrency(0, Config.BasicOilDeliveryPay + v.payoutbonus) break
+        elseif missionType == 'supply' then
+          Character.addCurrency(0, Config.SupplyDeliveryBasePay + v.payoutbonus) break
         end
-      elseif dist > 200 then
-        Wait(2000)
+      elseif result[1].manager_trust < v.level then
+        if missionType == 'delivery' then
+          Character.addCurrency(0, Config.BasicOilDeliveryPay) break
+        elseif missionType == 'supply' then
+          Character.addCurrency(0, Config.SupplyDeliveryBasePay) break
+        end
+      end
+    end
+  end
+
+  oilMissions[_source] = nil
+end)
+
+
+RegisterServerEvent('bcc-oil:cancelMission', function()
+  local _source = source
+  oilMissions[_source] = nil
+
+end)
+
+AddEventHandler('playerDropped', function(reason)
+  local _source = source
+
+  if oilMissions[_source] then
+    oilMissions[_source] = nil
+  end
+
+  print(wagoninspawn)
+
+  print(source)
+  if wagoninspawn == _source then
+    wagoninspawn = false
+  end
+end)
+
+-------- Robbery Payout Handler --------
+RegisterServerEvent('bcc-oil:RobberyPayout', function()
+    local _source = source
+    local Character = VORPcore.getUser(_source).getUsedCharacter
+    local result = MySQL.query.await('SELECT manager_trust, enemy_trust FROM oil WHERE charidentifier = ? AND identifier = ?',
+        { Character.charIdentifier, Character.identifier })
+
+    if result then
+        local managerTrust = result[1].manager_trust
+        local enemyTrust = result[1].enemy_trust
+        local levelDecrease = Config.OilCompanyLevelDecrease
+        local newManagerTrust = managerTrust
+        if managerTrust >= levelDecrease then
+            newManagerTrust = managerTrust - levelDecrease
+        end
+        local newEnemyTrust = enemyTrust + Config.LevelIncreasePerDelivery
+        MySQL.query.await('UPDATE oil SET manager_trust = ?, enemy_trust = ? WHERE charidentifier = ? AND identifier = ?',
+            { newManagerTrust, newEnemyTrust, Character.charIdentifier, Character.identifier })
+
+        for _, v in pairs(Config.CriminalLevels) do
+            if enemyTrust >= v.level and enemyTrust < v.nextlevel then
+                Character.addCurrency(0, Config.StealOilWagonBasePay + v.payoutbonus)
+                break
+            elseif enemyTrust < v.level then
+                Character.addCurrency(0, Config.StealOilWagonBasePay)
+                break
+            end
+        end
+    end
+end)
+
+--Cooldown Event
+local wagonrobcooldown, oilcorobcooldown = false, false
+RegisterServerEvent('bcc-oil:CrimCooldowns', function(missiontype)
+  local _source = source
+  local Character = VORPcore.getUser(_source).getUsedCharacter
+  if missiontype == 'wagonrob' then
+    if not wagonrobcooldown then
+      TriggerClientEvent('bcc-oil:RobOilWagon', _source)
+      discord:sendMessage(T.RobberyTitle, T.Robbery_desc2 .. tostring(Character.charIdentifier))
+      wagonrobcooldown = true
+      Wait(Config.RobOilWagonCooldown)
+      wagonrobcooldown = false
+    else
+      Notify(_source, T.Cooldown, 'fail')
+      -- VORPcore.NotifyRightTip(_source, T.Cooldown, 4000)
+    end
+  elseif missiontype == 'corob' then
+    if not oilcorobcooldown then
+      TriggerClientEvent('bcc-oil:RobOilCo', _source)
+      discord:sendMessage(T.RobberyTitle, T.Robbery_desc .. tostring(Character.charIdentifier))
+      oilcorobcooldown = true
+      Wait(Config.RobOilCoCooldown)
+      oilcorobcooldown = false
+    else
+      Notify(_source, T.Cooldown, 'fail')
+      -- VORPcore.NotifyRightTip(_source, T.Cooldown, 4000)
+    end
+  end
+end)
+
+RegisterServerEvent('bcc-oil:OilCoRobberyPayout', function(fillcoords2)
+  local _source = source
+  local Character = VORPcore.getUser(_source).getUsedCharacter
+  if fillcoords2.rewards.itemspayout then
+    Character.addCurrency(0, fillcoords2.rewards.cashpayout)
+    for k, v in pairs(fillcoords2.rewards.items) do
+      VORPInv.addItem(_source, v.item, v.count)
+    end
+  else
+    Character.addCurrency(0, fillcoords2.rewards.cashpayout)
+  end
+end)
+
+
+RegisterServerEvent('bcc-oil:ManageStep')
+AddEventHandler('bcc-oil:ManageStep', function()
+  local _source = source
+  if not oilMissions[_source] then 
+    return
+  end
+
+  local info = oilMissions[_source]
+  local step = info.step
+
+  local playerCoords = GetEntityCoords(GetPlayerPed(_source))
+
+  if info.type == 'delivery' then
+    if step == 1 then
+      for _, data in pairs(Config.OilDeliveryPoints) do
+        local distance = #(playerCoords - vector3(data.x, data.y, data.z))
+        if distance < 10 then
+          info.step = info.step + 1
+          break
+        end
+      end
+    end
+  elseif info.type == 'supply' then
+    for _, data in pairs(Config.SupplyDeliveryLocations) do
+      local distance = #(playerCoords - vector3(data.x, data.y, data.z))
+      if distance < 10 then
+        info.step = info.step + 1
+        break
       end
     end
   end
 end)
 
-----------------------------Oil Mission Tables----------------------
-OilWagonTable = {} --creates the table
-OilWagonTable.ManagerSpawn = {x = 498.05, y = 672.98, z = 121.04, h = 73.92} --This is where the manager npc will spawn(Do not change!!)
-OilWagonTable.WagonSpawnCoords = Config.OilandSupplyWagonSpawn --this is the x y z and heaing where the wagons will spawn
 
---This is the table that the initial wagon fill spot will be
-OilWagonTable.FillPoints = {
-  {
-    fillpoint = {x = 589.99, y = 635.94, z = 112.96},
-    objectspawn = {x = 595.82, y = 628.48, z = 110.81},
-  },
-  {
-    fillpoint = {x = 480.53, y = 701.24, z = 116.32},
-    objectspawn = {x = 478.51, y = 693.82, z = 116.16},
-  },
-  {
-    fillpoint = {x = 546.13, y = 578.9, z = 111.07},
-    objectspawn = {x = 553.94, y = 579.91, z = 111.15},
-  },
-}
+------- Checks if player exists in db if not it adds ------
+RegisterServerEvent('bcc:oil:DBCheck', function()
+  local _source = source
+  local Character = VORPcore.getUser(_source).getUsedCharacter
+  local param = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier }
+  --------The if you exist in db code was pulled from vorp_banking and modified ----------------
+  local result = MySQL.query.await("SELECT identifier, charidentifier FROM oil WHERE identifier = @identifier AND charidentifier = @charidentifier", param)
+  if #result <= 0 then
+    exports.oxmysql:execute("INSERT INTO oil ( `charidentifier`,`identifier` ) VALUES ( @charidentifier,@identifier )", param)
+  end
+end)
+
+------------------------------------- Handles the buying, selling, and spawning of wagons ---------------------------------------------
+RegisterServerEvent('bcc:oil:WagonManagement', function(type, action)
+  local _source = source
+  local Character = VORPcore.getUser(_source).getUsedCharacter
+
+
+  if Character.job ~= Config.Job and Config.Job then
+    Notify(_source, T.NoJob, 'fail')
+
+    return
+  end
+
+
+  --------- If wagon type set in menusetup is oilwagon then-----------
+  if type == 'oilwagon' then
+    local param = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier, ['oilwagon'] = 'oilwagon02x' }
+    local result = MySQL.query.await("SELECT oil_wagon FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param)
+    if #result > 0 then
+      if action == 'buy' then
+        if result[1].oil_wagon == 'none' then
+          if Character.money >= Config.OilWagon.price then
+            Character.removeCurrency(0, Config.OilWagon.price)
+            discord:sendMessage(T.BoughtTitle, T.bought_desc2 .. tostring(Character.charIdentifier))
+            exports.oxmysql:execute("UPDATE oil SET `oil_wagon`=@oilwagon WHERE charidentifier=@charidentifier AND identifier=@identifier", param)
+            -- VORPcore.NotifyRightTip(_source, T.OilWagonBought, 4000)
+            Notify(_source, T.OilWagonBought, 'success')
+          else
+            -- VORPcore.NotifyRightTip(_source, T.NotEnoughCash, 4000)
+            Notify(_source, T.NotEnoughCash, 'fail')
+          end
+        else
+          Notify(_source, T.OilWagonAlreadyBought, 'fail')
+          -- VORPcore.NotifyRightTip(_source, T.OilWagonAlreadyBought, 4000)
+        end
+        ---------Elseif action from menusetup is sell then ---------------------
+      elseif action == 'sell' then
+        if result[1].oil_wagon == 'none' then
+          Notify(_source, T.NoWagontoSell, 'fail')
+          -- VORPcore.NotifyRightTip(_source, T.NoWagontoSell, 4000)
+        elseif result[1].oil_wagon == 'oilwagon02x' then
+          local param2 = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier, ['oilwagon'] = 'none' }
+          exports.oxmysql:execute("UPDATE oil SET `oil_wagon`=@oilwagon WHERE charidentifier=@charidentifier AND identifier=@identifier", param2)
+          Character.addCurrency(0, Config.OilWagon.sellprice)
+          discord:sendMessage(T.SoldTitle, T.sold_desc .. tostring(Character.charIdentifier))
+          -- VORPcore.NotifyRightTip(_source, T.WagonSold, 4000)
+          Notify(_source, T.WagonSold, 'success')
+        end
+        -------------Elseif action from menusetup is spawn then ----------------------
+      elseif action == 'spawn' then
+
+        if oilMissions[_source] then 
+          Notify(_source, T.AlreadyInMission, 'fail')
+          return 
+        end
+
+        if not wagoninspawn then
+          if result[1].oil_wagon == 'none' then
+            Notify(_source, T.NoWagonOwned, 'fail')
+            -- VORPcore.NotifyRightTip(_source, T.NoWagonOwned, 4000)
+          elseif result[1].oil_wagon == 'oilwagon02x' then
+            discord:sendMessage(T.DeliveryMissionTitle, T.Delivery_desc .. tostring(Character.charIdentifier))
+            wagoninspawn = _source
+
+            oilMissions[_source] = {
+              type = 'delivery',
+              step = 1
+            }
+
+
+            TriggerClientEvent('bcc:oil:PlayerWagonSpawn', _source, 'oilwagon02x')
+          end
+        else
+          Notify(_source, T.WagonInSpawnLocation, 'fail')
+          -- VORPcore.NotifyRightTip(_source, T.WagonInSpawnLocation, 4000)
+        end
+      end
+    end
+  elseif type == 'supplywagon' then
+    local param = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier, ['oilwagon'] = 'armysupplywagon' }
+    local result = MySQL.query.await("SELECT delivery_wagon FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param)
+    if #result > 0 then
+      ---------If action from menusetup is buy then
+      if action == 'buy' then
+        if result[1].delivery_wagon == 'none' then
+          if Character.money >= Config.SupplyWagon.price then
+            Character.removeCurrency(0, Config.SupplyWagon.price)
+            discord:sendMessage(T.BoughtTitle, T.bought_desc .. tostring(Character.charIdentifier))
+            exports.oxmysql:execute("UPDATE oil SET `delivery_wagon`=@oilwagon WHERE charidentifier=@charidentifier AND identifier=@identifier", param)
+            -- VORPcore.NotifyRightTip(_source, T.SupplyWagonBought, 4000)
+            Notify(_source, T.SupplyWagonBought, 'success')
+          else
+            Notify(_source, T.NotEnoughCash, 'fail')
+            -- VORPcore.NotifyRightTip(_source, T.NotEnoughCash, 4000)
+          end
+        else
+          Notify(_source, T.SupplyWagonAlreadyBought, 'fail')
+          -- VORPcore.NotifyRightTip(_source, T.SupplyWagonAlreadyBought, 4000)
+        end
+        ---------Elseif action from menusetup is sell then ---------------------
+      elseif action == 'sell' then
+        if result[1].delivery_wagon == 'none' then
+
+          Notify(_source, T.NoWagontoSell, 'fail')
+          -- VORPcore.NotifyRightTip(_source, T.NoWagontoSell, 4000)
+        elseif result[1].delivery_wagon == 'armysupplywagon' then
+          local param2 = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier, ['oilwagon'] = 'none' }
+          exports.oxmysql:execute("UPDATE oil SET `delivery_wagon`=@oilwagon WHERE charidentifier=@charidentifier AND identifier=@identifier", param2)
+          Character.addCurrency(0, Config.SupplyWagon.sellprice)
+          discord:sendMessage(T.SoldTitle, T.sold_desc2 .. tostring(Character.charIdentifier))
+          -- VORPcore.NotifyRightTip(_source, T.WagonSold, 4000)
+          Notify(_source, T.WagonSold, 'success')
+        end
+        -------------Elseif action from menusetup is spawn then ----------------------
+      elseif action == 'spawn' then
+
+
+        if oilMissions[_source] then 
+          Notify(_source, T.AlreadyInMission, 'fail')
+          return 
+        end
+
+
+        if not wagoninspawn then
+          if result[1].delivery_wagon == 'none' then
+            -- VORPcore.NotifyRightTip(_source, T.NoWagonOwned, 4000)
+            Notify(_source, T.NoWagonOwned, 'fail')
+          elseif result[1].delivery_wagon == 'armysupplywagon' then
+            wagoninspawn = _source
+
+            oilMissions[_source] = {
+              type = 'supply',
+              step = 1
+            }
+
+            discord:sendMessage(T.DeliveryMissionTitle, T.Delivery_desc2 .. tostring(Character.charIdentifier))
+            TriggerClientEvent('bcc:oil:PlayerWagonSpawn', _source, 'armysupplywagon')
+          end
+        else
+          Notify(_source, T.WagonInSpawnLocation, 'fail')
+          -- VORPcore.NotifyRightTip(_source, T.WagonInSpawnLocation, 4000)
+        end
+      end
+    end
+  end
+end)
+
+--------------Handles making sure the wagon has left the spawn location before allowing a new one to spawn/returend too -------------
+RegisterServerEvent('bcc-oil:WagonInSpawnHandler', function(inspawn)
+  if inspawn then
+    wagoninspawn = source
+  else
+    wagoninspawn = false
+  end
+end)
+
+--This handles the version check
+BccUtils.Versioner.checkRelease(GetCurrentResourceName(), 'https://github.com/BryceCanyonCounty/bcc-oil')
