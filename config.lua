@@ -4,7 +4,7 @@ Config.WebhookLink = '' --insert your webhook link here (leave empty for no webh
 
 Config.Lang = "English"
 
-Config.Job = "OilMan"
+Config.Job = "OilMan" -- You can put Config.Job = false if you don't want a job requirement
 ------------------------------------------ Oil Job Setup ---------------------------------------------------
 ---------Oil Part of the job -------------
 Config.OilandSupplyWagonSpawn = {x = 526.83, y = 703.01, z = 117.0, h = 263.92} --Coords your oil and supply wagons will spawn at
