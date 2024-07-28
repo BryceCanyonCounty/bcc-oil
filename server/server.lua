@@ -31,7 +31,16 @@ RegisterServerEvent('bcc:oil:PayoutOilMission', function()
     return
   end
   
-  
+  local playerCoords = GetEntityCoords(GetPlayerPed(_source))
+  local managerCoords = vector3(OilWagonTable.ManagerSpawn.xyz)
+  local distance = #(playerCoords - managerCoords)
+
+  if distance > 5 then
+    return
+  end
+
+
+
   local missionType = oilMissions[_source].type
   if oilMissions[_source].step ~= 2 then
     return
@@ -75,9 +84,6 @@ AddEventHandler('playerDropped', function(reason)
     oilMissions[_source] = nil
   end
 
-  print(wagoninspawn)
-
-  print(source)
   if wagoninspawn == _source then
     wagoninspawn = false
   end
@@ -158,37 +164,39 @@ RegisterServerEvent('bcc-oil:OilCoRobberyPayout', function(fillcoords2)
 end)
 
 
+
 RegisterServerEvent('bcc-oil:ManageStep')
 AddEventHandler('bcc-oil:ManageStep', function()
-  local _source = source
-  if not oilMissions[_source] then 
-    return
-  end
+    local _source = source
+    if not oilMissions[_source] then 
+        return
+    end
 
-  local info = oilMissions[_source]
-  local step = info.step
+    local info = oilMissions[_source]
+    local step = info.step
 
-  local playerCoords = GetEntityCoords(GetPlayerPed(_source))
+    local playerCoords = GetEntityCoords(GetPlayerPed(_source))
 
-  if info.type == 'delivery' then
-    if step == 1 then
-      for _, data in pairs(Config.OilDeliveryPoints) do
-        local distance = #(playerCoords - vector3(data.x, data.y, data.z))
-        if distance < 10 then
-          info.step = info.step + 1
-          break
+    if info.type == 'delivery' then
+        if step == 1 then
+            for _, data in pairs(Config.OilDeliveryPoints) do
+                local deliveryPoint = data.DeliveryPoint
+                local distance = #(playerCoords - vector3(deliveryPoint.x, deliveryPoint.y, deliveryPoint.z))
+                if distance < 10 then
+                    info.step = info.step + 1
+                    break
+                end
+            end
         end
-      end
+    elseif info.type == 'supply' then
+        for _, data in pairs(Config.SupplyDeliveryLocations) do
+            local distance = #(playerCoords - vector3(data.x, data.y, data.z))
+            if distance < 5 then
+                info.step = info.step + 1
+                break
+            end
+        end
     end
-  elseif info.type == 'supply' then
-    for _, data in pairs(Config.SupplyDeliveryLocations) do
-      local distance = #(playerCoords - vector3(data.x, data.y, data.z))
-      if distance < 10 then
-        info.step = info.step + 1
-        break
-      end
-    end
-  end
 end)
 
 
