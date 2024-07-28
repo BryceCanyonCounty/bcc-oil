@@ -229,3 +229,20 @@ OilWagonTable.FillPoints = {
     objectspawn = {x = 553.94, y = 579.91, z = 111.15},
   },
 }
+
+
+-----------------Tables-------------------------------
+SupplyMission = {}
+
+--THis is the table that will be used for setting the pickup / filling wagon part of the mission the script will randomly choose one of the locations set
+SupplyMission.SupplyMisisonPickupLocation = {
+    {
+        location = {x = 505.56, y = 710.05, z = 116.39}, --pickup coords
+    },
+    {
+        location = {x = 492.16, y = 706.42, z = 117.36},
+    },
+    {
+        location = {x = 474.7, y = 696.03, z = 116.12},
+    },
+}
