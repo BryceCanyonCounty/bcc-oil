@@ -125,6 +125,7 @@ end
 function supplymissionend()
     -- VORPcore.NotifyRightTip(T.ReturnSupplyWagon, 4000)
     Notify(0, T.ReturnSupplyWagon, 'info')
+    TriggerServerEvent('bcc-oil:ManageStep')
 
     --Blip and Waypoint Setup
     local blip1 = BlipWaypoin(OilWagonTable.WagonSpawnCoords.x, OilWagonTable.WagonSpawnCoords.y, OilWagonTable.WagonSpawnCoords.z, T.ManagerBlip)
