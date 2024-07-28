@@ -182,7 +182,7 @@ AddEventHandler('bcc-oil:ManageStep', function()
             for _, data in pairs(OilWagonTable.FillPoints) do
                 local coords = data.fillpoint
                 local distance = #(playerCoords - vector3(coords.x, coords.y, coords.z))
-                if distance < 5 then
+                if distance < 10 then
                     info.step = info.step + 1
                     break
                 end
@@ -199,19 +199,10 @@ AddEventHandler('bcc-oil:ManageStep', function()
         end
     elseif info.type == 'supply' then
         if step == 1 then
-            for _, data in pairs(SupplyMission.SupplyMisisonPickupLocation) do
-                local coords = data.location
-                local distance = #(playerCoords - vector3(coords.x, coords.y, coords.z))
-                if distance < 5 then
-                    info.step = info.step + 1
-                    break
-                end
-            end
-        elseif step == 2 then
             for _, data in pairs(Config.SupplyDeliveryLocations) do
                 local distance = #(playerCoords - vector3(data.x, data.y, data.z))
-                if distance < 5 then
-                    info.step = info.step + 1
+                if distance < 10 then
+                    info.step = info.step + 2
                     break
                 end
             end
