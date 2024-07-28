@@ -17,7 +17,8 @@ RegisterNetEvent('bcc-oil:RobOilWagon', function()
   TriggerEvent('bcc-oil:roboilwagonhelper')
   Citizen.InvokeNative(0x23f74c2fda6e7c61, 953018525, Robableoilwagon)
   FreezeEntityPosition(Robableoilwagon, true)
-  VORPcore.NotifyRightTip(T.RobOilWagonOpeningtext, 4000)
+  Notify(0, T.RobOilWagonOpeningtext, 'info')
+  -- VORPcore.NotifyRightTip(T.RobOilWagonOpeningtext, 4000)
 
   --Waypoint Setup
   VORPutils.Gps:SetGps(fillcoords.wagonLocation)
@@ -27,10 +28,13 @@ RegisterNetEvent('bcc-oil:RobOilWagon', function()
   distcheck(cw.x, cw.y, cw.z, 30, PlayerPedId())
   ClearGpsMultiRoute()
   if Roboilwagondeadcheck then
-    VORPcore.NotifyRightTip(T.Missionfailed, 4000)
+    Notify(0, T.Missionfailed, 'fail')
+    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000)
     DeleteEntity(Robableoilwagon) return
   end
-  VORPcore.NotifyRightTip(T.RobOilWagonKillGaurds, 4000)
+  Notify(0, T.RobOilWagonKillGaurds, 'info')
+
+  -- VORPcore.NotifyRightTip(T.RobOilWagonKillGaurds, 4000)
 
   --Spawning enemy Peds
   MutltiPedSpawnDeadCheck(fillcoords.pedlocation, 'wagonrob')
@@ -39,7 +43,8 @@ end)
 function roboilwagonreturnwagon()
   --Init Setup
   FreezeEntityPosition(Robableoilwagon, false)
-  VORPcore.NotifyRightTip(T.RobOilWagonReturnWagon, 4000)
+  Notify(0, T.RobOilWagonReturnWagon, 'info')
+  -- VORPcore.NotifyRightTip(T.RobOilWagonReturnWagon, 4000)
 
   --Blip and Waypoint Setup
   local blip1 = BlipWaypoin(fillcoords.returnlocation.x, fillcoords.returnlocation.y, fillcoords.returnlocation.z, T.RobOilWagonReturnBlip)
@@ -49,7 +54,8 @@ function roboilwagonreturnwagon()
   ClearGpsMultiRoute()
   if Roboilwagondeadcheck then
     RemoveBlip(blip1)
-    VORPcore.NotifyRightTip(T.Missionfailed, 4000)
+    Notify(0, T.Missionfailed, 'fail')
+    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000)
     DeleteEntity(Robableoilwagon) return
   end
 
@@ -60,13 +66,15 @@ function roboilwagonreturnwagon()
   TaskLeaveAnyVehicle(PlayerPedId(), 0, 0)
   Wait(4000)
   DeleteEntity(Robableoilwagon)
-  VORPcore.NotifyRightTip(T.RobOilWagonSuccess, 4000)
+  -- VORPcore.NotifyRightTip(T.RobOilWagonSuccess, 4000)
+  Notify(0, T.RobOilWagonSuccess, 'success')
   TriggerServerEvent('bcc-oil:RobberyPayout')
 end
 
 function finishOilCompanyRobbery()
   Inmission = false
-  VORPcore.NotifyRightTip(T.RobberySuccess, 4000)
+  Notify(0, T.RobberySuccess, 'success')
+  -- VORPcore.NotifyRightTip(T.RobberySuccess, 4000)
   TriggerServerEvent('bcc-oil:RobberyPayout')
 end
 
@@ -88,7 +96,8 @@ end)
 Roboilcodeadcheck = false
 local fillcoords2, missionoverend3dtext = nil, false
 RegisterNetEvent('bcc-oil:RobOilCo', function()
-  VORPcore.NotifyRightTip(T.RobOilCoBlip, 4000)
+  Notify(0, T.RobOilCo, 'info')
+  -- VORPcore.NotifyRightTip(T.RobOilCoBlip, 4000)
   Inmission = true
   TriggerEvent('bcc-oil:roboilcohelper')
 
@@ -103,7 +112,8 @@ RegisterNetEvent('bcc-oil:RobOilCo', function()
   ClearGpsMultiRoute()
   if Roboilcodeadcheck then
     RemoveBlip(blip1)
-    VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+    Notify(0, T.Missionfailed, 'fail') return
+    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
   end
   RemoveBlip(blip1)
   local cfg = {
@@ -135,7 +145,8 @@ RegisterNetEvent('bcc-oil:RobOilCo', function()
             if not Config.RobOilCoEnemyPeds then
               missionoverend3dtext = true --sets var true which is used to disable the 3d text from showing
               Inmission = false
-              VORPcore.NotifyRightTip(T.RobberySuccess, 4000)
+              Notify(0, T.RobberySuccess, 'success')
+              -- VORPcore.NotifyRightTip(T.RobberySuccess, 4000)
               TriggerServerEvent('bcc-oil:OilCoRobberyPayout', fillcoords2)
             else
               MutltiPedSpawnDeadCheck(Config.RobOilCoEnemyPedsLocations, 'oilcorob')
@@ -145,7 +156,8 @@ RegisterNetEvent('bcc-oil:RobOilCo', function()
             if not Config.RobOilCoEnemyPeds then
               missionoverend3dtext = true --sets var true which is used to disable the 3d text from showing
               Inmission = false
-              VORPcore.NotifyRightTip(T.Missionfailed, 4000)
+              Notify(0, T.Missionfailed, 'fail')
+              -- VORPcore.NotifyRightTip(T.Missionfailed, 4000)
             else
               MutltiPedSpawnDeadCheck(Config.RobOilCoEnemyPedsLocations, 'oilcorob')
               Inmission = false
