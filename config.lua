@@ -4,6 +4,7 @@ Config.WebhookLink = '' --insert your webhook link here (leave empty for no webh
 
 Config.Lang = "English"
 
+Config.Job = "OilMan"
 ------------------------------------------ Oil Job Setup ---------------------------------------------------
 ---------Oil Part of the job -------------
 Config.OilandSupplyWagonSpawn = {x = 526.83, y = 703.01, z = 117.0, h = 263.92} --Coords your oil and supply wagons will spawn at
@@ -153,6 +154,22 @@ Config.RobOilCompany = {
         },
     }, --you can add more locations to this, the script will randomly choose one table each robbery too add more just copy paste table change what you need
 }
+
+
+local isServer = IsDuplicityVersion()
+
+function Notify(source, text, type) -- Type can be fail, success, info
+   
+    local VORPcore = exports.vorp_core:GetCore()
+
+    if isServer then
+        VORPcore.NotifyRightTip(source, text, 4000)
+    else
+        VORPcore.NotifyRightTip(text, 4000)
+    end
+    
+end
+
 
 --[[--------BLIP_COLORS----------
 LIGHT_BLUE    = 'BLIP_MODIFIER_MP_COLOR_1',
