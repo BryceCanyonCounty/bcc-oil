@@ -7,7 +7,8 @@ RegisterNetEvent('bcc:oil:PlayerWagonSpawn', function(wagon)
   Inmission = true
   Wagon = wagon
   modelload(Wagon)
-  VORPcore.NotifyRightTip(T.WagonSpawned, 4000)
+  Notify(0, T.WagonSpawned, 'info')
+  -- VORPcore.NotifyRightTip(T.WagonSpawned, 4000)
   Createdwagon = CreateVehicle(wagon, sw.x, sw.y, sw.z, sw.h, true, true)
   Citizen.InvokeNative(0x77FF8D35EEC6BBC4, Createdwagon, 1, 0)
   TriggerEvent('bcc:oil:PlayerWagonDistFromSpawnCheck')
