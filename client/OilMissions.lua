@@ -6,7 +6,8 @@ progressbar = exports.vorp_progressbar:initiate() --Allows use of progressbar in
 ----- Oil Delivery Setup -----
 function beginningstage()
   Wait(1000)
-  VORPcore.NotifyRightTip(T.FillYourOilWagon, 4000)
+  Notify(0, T.FillYourOilWagon, 'info')
+  -- VORPcore.NotifyRightTip(T.FillYourOilWagon, 4000)
   local fillcoords = CoordRandom(OilWagonTable.FillPoints)
 
   --Blip and Waypoint setup
@@ -17,14 +18,17 @@ function beginningstage()
   ClearGpsMultiRoute()
   if Playerdead or WagonDestroyed then
     RemoveBlip(blip1)
-    VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+
+    Notify(0, T.Missionfailed, 'fail') return
+    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
   end
   FreezeEntityPosition(Createdwagon, true)
   RemoveBlip(blip1)
 
   -------Progress bar / Fill Wagon Setup----------
   TaskLeaveAnyVehicle(PlayerPedId(), 0, 0)
-  VORPcore.NotifyRightTip(T.FillingOilwagon, 4000)
+  Notify(0, T.FillingOilwagon, 'info')
+  -- VORPcore.NotifyRightTip(T.FillingOilwagon, 4000)
   Wait(3000)
   SetEntityHeading(PlayerPedId(), GetEntityHeading(Createdwagon))
   Wait(500)
@@ -35,7 +39,8 @@ function beginningstage()
   if Progressbardeadcheck then
     Progressbardeadcheck = false
     ClearPedTasksImmediately(PlayerPedId())
-    VORPcore.NotifyRightTip(T.Missionfailed, 4000)
+    Notify(0, T.Missionfailed, 'fail')
+    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000)
     DeleteEntity(Createdwagon) return
   end
   ClearPedTasksImmediately(PlayerPedId())
@@ -47,7 +52,8 @@ end
 function deliveroil()
   FreezeEntityPosition(Createdwagon, false)
   Wait(200)
-  VORPcore.NotifyRightTip(T.GoDeliver, 4000)
+  Notify(0, T.GoDeliver, 'info')
+  -- VORPcore.NotifyRightTip(T.GoDeliver, 4000)
 
   --Coord Randomization
   local fillcoords = CoordRandom(Config.OilDeliveryPoints)
@@ -69,7 +75,8 @@ function deliveroil()
   if Playerdead or WagonDestroyed then
     DeletePed(createdped)
     RemoveBlip(blip2)
-    VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+    Notify(0, T.Missionfailed, 'fail') return
+    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
   end
   FreezeEntityPosition(createdped, false)
   FreezeEntityPosition(Createdwagon, true)
@@ -86,7 +93,8 @@ function deliveroil()
   end, 'circle')
   Wait(Config.OilWagonFillTime)
   if Progressbardeadcheck then
-    VORPcore.NotifyRightTip(T.Missionfailed, 4000)
+    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000)
+    Notify(0, T.Missionfailed, 'fail')
     Progressbardeadcheck = false
     ClearPedTasksImmediately(createdped)
     DeletePed(createdped)
@@ -94,8 +102,10 @@ function deliveroil()
   end
   ClearPedTasksImmediately(createdped)
   FreezeEntityPosition(Createdwagon, false)
-  VORPcore.NotifyRightTip(T.OilDelivered, 4000)
-  VORPcore.NotifyRightTip(T.ReturnOilWagon, 4000)
+  -- VORPcore.NotifyRightTip(T.OilDelivered, 4000)
+  Notify(0, T.OilDelivered, 'success')
+  -- VORPcore.NotifyRightTip(T.ReturnOilWagon, 4000)
+  Notify(0, T.ReturnOilWagon, 'info')
 
   --------------------This will handle the despawning of the ped, and the return wagon mission---------------------------
   --Waypoint and Blip Setup
@@ -107,7 +117,8 @@ function deliveroil()
   if Playerdead or WagonDestroyed then
     RemoveBlip(oilbl)
     ClearGpsMultiRoute()
-    VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+    Notify(0, T.Missionfailed, 'fail') return
   end
 
 
@@ -116,21 +127,25 @@ function deliveroil()
   ClearGpsMultiRoute()
   if Playerdead or WagonDestroyed then
     RemoveBlip(oilbl)
-    VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+    Notify(0, T.Missionfailed, 'fail') return
+    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
   end
   TaskLeaveAnyVehicle(PlayerPedId(), 0, 0)
   FreezeEntityPosition(Createdwagon, true)
   RemoveBlip(oilbl)
-  VORPcore.NotifyRightTip(T.CollectOilDeliveryPay, 4000)
+  -- VORPcore.NotifyRightTip(T.CollectOilDeliveryPay, 4000)
+  Notify(0, T.CollectOilDeliveryPay, 'info')
 
   --Distance Check for Player To Manager Ped
   distcheck(OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z, 3, PlayerPedId())
   if Playerdead or WagonDestroyed then
     DeleteEntity(Createdwagon)
-    VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+    Notify(0, T.Missionfailed, 'fail') return
+    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
   end
   DeleteEntity(Createdwagon)
-  VORPcore.NotifyRightTip(T.ThankYouHeresYourPayOil, 4000)
+  Notify(0, T.ThankYouHeresYourPayOil, 'success')
+  -- VORPcore.NotifyRightTip(T.ThankYouHeresYourPayOil, 4000)
   TriggerServerEvent('bcc:oil:PayoutOilMission', Wagon)
   TriggerServerEvent('bcc-oil:WagonInSpawnHandler', false)
   Inmission = false
