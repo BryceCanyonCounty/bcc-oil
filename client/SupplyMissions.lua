@@ -21,6 +21,7 @@ function supplymissionbeginstage()
         if Playerdead or WagonDestroyed then
             RemoveBlip(blip1)
             repeatamount = 3
+            TriggerServerEvent('bcc-oil:cancelMission')
             Notify(0, T.Missionfailed, 'fail') return
             -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
         end
@@ -48,6 +49,7 @@ function supplymissionbeginstage()
             repeatamount = 3
             DeleteEntity(props)
             ClearPedTasksImmediately(pl)
+            TriggerServerEvent('bcc-oil:cancelMission')
             Notify(0, T.Missionfailed, 'fail') return
             -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
         end
@@ -78,6 +80,7 @@ function deliversupplies()
             ClearGpsMultiRoute()
             -- VORPcore.NotifyRightTip(T.Missionfailed, 4000)
             Notify(0, T.Missionfailed, 'fail')
+            TriggerServerEvent('bcc-oil:cancelMission')
             repeatamount = 3 return
         end
         FreezeEntityPosition(Createdwagon, true)
@@ -91,6 +94,7 @@ function deliversupplies()
             repeatamount = 3
             RemoveBlip(blip1)
             ClearGpsMultiRoute()
+            TriggerServerEvent('bcc-oil:cancelMission')
             Notify(0, T.Missionfailed, 'fail') return
             -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
         end
@@ -110,6 +114,7 @@ function deliversupplies()
     ClearGpsMultiRoute()
     if Playerdead or WagonDestroyed then
         RemoveBlip(blip1)
+        TriggerServerEvent('bcc-oil:cancelMission')
         Notify(0, T.Missionfailed, 'fail') return
         -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
     end
@@ -129,7 +134,9 @@ function supplymissionend()
     ClearGpsMultiRoute()
     if Playerdead or WagonDestroyed then
         RemoveBlip(blip1)
-        Notify(0, T.Missionfailed, 'fail')
+        TriggerServerEvent('bcc-oil:cancelMission')
+        Notify(0, T.Missionfailed, 'fail') return
+
         -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
     end
     TaskLeaveAnyVehicle(PlayerPedId(), 0, 0)
@@ -142,6 +149,7 @@ function supplymissionend()
     --Distance check player to manager setup
     distcheck(OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z, 3, PlayerPedId())
     if Playerdead or WagonDestroyed then
+        TriggerServerEvent('bcc-oil:cancelMission')
         Notify(0, T.Missionfailed, 'fail') return
         -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
     end
