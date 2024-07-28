@@ -4,10 +4,10 @@ Config.WebhookLink = '' --insert your webhook link here (leave empty for no webh
 
 Config.Lang = "English"
 
-Config.Job = "OilMan" -- You can put Config.Job = false if you don't want a job requirement
+Config.Job = "petrolist" -- You can put Config.Job = false if you don't want a job requirement
 
 
-Config.DisableCinematicCamera = true
+Config.DisableCinematicCamera = false
 ------------------------------------------ Oil Job Setup ---------------------------------------------------
 ---------Oil Part of the job -------------
 Config.OilandSupplyWagonSpawn = {x = 526.83, y = 703.01, z = 117.0, h = 263.92} --Coords your oil and supply wagons will spawn at
@@ -207,3 +207,25 @@ LIGHT_PINK    = 'BLIP_MODIFIER_MP_COLOR_29',
 LIGHT_RED     = 'BLIP_MODIFIER_MP_COLOR_30',
 LIGHT_YELLOW3 = 'BLIP_MODIFIER_MP_COLOR_31',
 WHITE         = 'BLIP_MODIFIER_MP_COLOR_32']]
+
+
+----------------------------Oil Mission Tables----------------------
+OilWagonTable = {} --creates the table
+OilWagonTable.ManagerSpawn = {x = 498.05, y = 672.98, z = 121.04, h = 73.92} --This is where the manager npc will spawn(Do not change!!)
+OilWagonTable.WagonSpawnCoords = Config.OilandSupplyWagonSpawn --this is the x y z and heaing where the wagons will spawn
+
+--This is the table that the initial wagon fill spot will be
+OilWagonTable.FillPoints = {
+  {
+    fillpoint = {x = 589.99, y = 635.94, z = 112.96},
+    objectspawn = {x = 595.82, y = 628.48, z = 110.81},
+  },
+  {
+    fillpoint = {x = 480.53, y = 701.24, z = 116.32},
+    objectspawn = {x = 478.51, y = 693.82, z = 116.16},
+  },
+  {
+    fillpoint = {x = 546.13, y = 578.9, z = 111.07},
+    objectspawn = {x = 553.94, y = 579.91, z = 111.15},
+  },
+}
