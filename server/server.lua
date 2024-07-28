@@ -42,7 +42,7 @@ RegisterServerEvent('bcc:oil:PayoutOilMission', function()
 
 
   local missionType = oilMissions[_source].type
-  if oilMissions[_source].step ~= 2 then
+  if oilMissions[_source].step ~= 3 then
     return
   end
 
@@ -179,6 +179,15 @@ AddEventHandler('bcc-oil:ManageStep', function()
 
     if info.type == 'delivery' then
         if step == 1 then
+            for _, data in pairs(OilWagonTable.FillPoints) do
+                local coords = data.fillpoint
+                local distance = #(playerCoords - vector3(coords.x, coords.y, coords.z))
+                if distance < 5 then
+                    info.step = info.step + 1
+                    break
+                end
+            end
+        elseif step == 2 then
             for _, data in pairs(Config.OilDeliveryPoints) do
                 local deliveryPoint = data.DeliveryPoint
                 local distance = #(playerCoords - vector3(deliveryPoint.x, deliveryPoint.y, deliveryPoint.z))
@@ -189,11 +198,22 @@ AddEventHandler('bcc-oil:ManageStep', function()
             end
         end
     elseif info.type == 'supply' then
-        for _, data in pairs(Config.SupplyDeliveryLocations) do
-            local distance = #(playerCoords - vector3(data.x, data.y, data.z))
-            if distance < 5 then
-                info.step = info.step + 1
-                break
+        if step == 1 then
+            for _, data in pairs(SupplyMission.SupplyMisisonPickupLocation) do
+                local coords = data.location
+                local distance = #(playerCoords - vector3(coords.x, coords.y, coords.z))
+                if distance < 5 then
+                    info.step = info.step + 1
+                    break
+                end
+            end
+        elseif step == 2 then
+            for _, data in pairs(Config.SupplyDeliveryLocations) do
+                local distance = #(playerCoords - vector3(data.x, data.y, data.z))
+                if distance < 5 then
+                    info.step = info.step + 1
+                    break
+                end
             end
         end
     end
