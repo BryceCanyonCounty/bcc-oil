@@ -6,7 +6,8 @@ progressbar = exports.vorp_progressbar:initiate() --Allows use of progressbar in
 ----- Oil Delivery Setup -----
 function beginningstage()
   Wait(1000)
-  VORPcore.NotifyRightTip(T.FillYourOilWagon, 4000)
+  Notify(0, T.FillYourOilWagon, 'info')
+  -- VORPcore.NotifyRightTip(T.FillYourOilWagon, 4000)
   local fillcoords = CoordRandom(OilWagonTable.FillPoints)
 
   --Blip and Waypoint setup
@@ -17,14 +18,17 @@ function beginningstage()
   ClearGpsMultiRoute()
   if Playerdead or WagonDestroyed then
     RemoveBlip(blip1)
-    VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+    TriggerServerEvent('bcc-oil:cancelMission')
+    Notify(0, T.Missionfailed, 'fail') return
+    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
   end
   FreezeEntityPosition(Createdwagon, true)
   RemoveBlip(blip1)
 
   -------Progress bar / Fill Wagon Setup----------
   TaskLeaveAnyVehicle(PlayerPedId(), 0, 0)
-  VORPcore.NotifyRightTip(T.FillingOilwagon, 4000)
+  Notify(0, T.FillingOilwagon, 'info')
+  -- VORPcore.NotifyRightTip(T.FillingOilwagon, 4000)
   Wait(3000)
   SetEntityHeading(PlayerPedId(), GetEntityHeading(Createdwagon))
   Wait(500)
@@ -35,7 +39,9 @@ function beginningstage()
   if Progressbardeadcheck then
     Progressbardeadcheck = false
     ClearPedTasksImmediately(PlayerPedId())
-    VORPcore.NotifyRightTip(T.Missionfailed, 4000)
+    TriggerServerEvent('bcc-oil:cancelMission')
+    Notify(0, T.Missionfailed, 'fail')
+    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000)
     DeleteEntity(Createdwagon) return
   end
   ClearPedTasksImmediately(PlayerPedId())
@@ -46,8 +52,10 @@ end
 -----------------------Deliver oil Mission&return wagon included here------------------------------
 function deliveroil()
   FreezeEntityPosition(Createdwagon, false)
+  TriggerServerEvent('bcc-oil:ManageStep')
   Wait(200)
-  VORPcore.NotifyRightTip(T.GoDeliver, 4000)
+  Notify(0, T.GoDeliver, 'info')
+  -- VORPcore.NotifyRightTip(T.GoDeliver, 4000)
 
   --Coord Randomization
   local fillcoords = CoordRandom(Config.OilDeliveryPoints)
@@ -69,7 +77,9 @@ function deliveroil()
   if Playerdead or WagonDestroyed then
     DeletePed(createdped)
     RemoveBlip(blip2)
-    VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+    TriggerServerEvent('bcc-oil:cancelMission')
+    Notify(0, T.Missionfailed, 'fail') return
+    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
   end
   FreezeEntityPosition(createdped, false)
   FreezeEntityPosition(Createdwagon, true)
@@ -86,7 +96,9 @@ function deliveroil()
   end, 'circle')
   Wait(Config.OilWagonFillTime)
   if Progressbardeadcheck then
-    VORPcore.NotifyRightTip(T.Missionfailed, 4000)
+    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000)
+    Notify(0, T.Missionfailed, 'fail')
+    TriggerServerEvent('bcc-oil:cancelMission')
     Progressbardeadcheck = false
     ClearPedTasksImmediately(createdped)
     DeletePed(createdped)
@@ -94,8 +106,11 @@ function deliveroil()
   end
   ClearPedTasksImmediately(createdped)
   FreezeEntityPosition(Createdwagon, false)
-  VORPcore.NotifyRightTip(T.OilDelivered, 4000)
-  VORPcore.NotifyRightTip(T.ReturnOilWagon, 4000)
+  -- VORPcore.NotifyRightTip(T.OilDelivered, 4000)
+  Notify(0, T.OilDelivered, 'success')
+  -- VORPcore.NotifyRightTip(T.ReturnOilWagon, 4000)
+  Notify(0, T.ReturnOilWagon, 'info')
+  TriggerServerEvent('bcc-oil:ManageStep')
 
   --------------------This will handle the despawning of the ped, and the return wagon mission---------------------------
   --Waypoint and Blip Setup
@@ -107,7 +122,9 @@ function deliveroil()
   if Playerdead or WagonDestroyed then
     RemoveBlip(oilbl)
     ClearGpsMultiRoute()
-    VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+    TriggerServerEvent('bcc-oil:cancelMission')
+    Notify(0, T.Missionfailed, 'fail') return
   end
 
 
@@ -116,22 +133,28 @@ function deliveroil()
   ClearGpsMultiRoute()
   if Playerdead or WagonDestroyed then
     RemoveBlip(oilbl)
-    VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+    TriggerServerEvent('bcc-oil:cancelMission')
+    Notify(0, T.Missionfailed, 'fail') return
+    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
   end
   TaskLeaveAnyVehicle(PlayerPedId(), 0, 0)
   FreezeEntityPosition(Createdwagon, true)
   RemoveBlip(oilbl)
-  VORPcore.NotifyRightTip(T.CollectOilDeliveryPay, 4000)
+  -- VORPcore.NotifyRightTip(T.CollectOilDeliveryPay, 4000)
+  Notify(0, T.CollectOilDeliveryPay, 'info')
 
   --Distance Check for Player To Manager Ped
   distcheck(OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z, 3, PlayerPedId())
   if Playerdead or WagonDestroyed then
     DeleteEntity(Createdwagon)
-    VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+    TriggerServerEvent('bcc-oil:cancelMission')
+    Notify(0, T.Missionfailed, 'fail') return
+    -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
   end
   DeleteEntity(Createdwagon)
-  VORPcore.NotifyRightTip(T.ThankYouHeresYourPayOil, 4000)
-  TriggerServerEvent('bcc:oil:PayoutOilMission', Wagon)
+  Notify(0, T.ThankYouHeresYourPayOil, 'success')
+  -- VORPcore.NotifyRightTip(T.ThankYouHeresYourPayOil, 4000)
+  TriggerServerEvent('bcc:oil:PayoutOilMission')
   TriggerServerEvent('bcc-oil:WagonInSpawnHandler', false)
   Inmission = false
 end
@@ -156,24 +179,3 @@ CreateThread(function()
     end
   end
 end)
-
-----------------------------Oil Mission Tables----------------------
-OilWagonTable = {} --creates the table
-OilWagonTable.ManagerSpawn = {x = 498.05, y = 672.98, z = 121.04, h = 73.92} --This is where the manager npc will spawn(Do not change!!)
-OilWagonTable.WagonSpawnCoords = Config.OilandSupplyWagonSpawn --this is the x y z and heaing where the wagons will spawn
-
---This is the table that the initial wagon fill spot will be
-OilWagonTable.FillPoints = {
-  {
-    fillpoint = {x = 589.99, y = 635.94, z = 112.96},
-    objectspawn = {x = 595.82, y = 628.48, z = 110.81},
-  },
-  {
-    fillpoint = {x = 480.53, y = 701.24, z = 116.32},
-    objectspawn = {x = 478.51, y = 693.82, z = 116.16},
-  },
-  {
-    fillpoint = {x = 546.13, y = 578.9, z = 111.07},
-    objectspawn = {x = 553.94, y = 579.91, z = 111.15},
-  },
-}

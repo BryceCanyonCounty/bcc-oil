@@ -80,7 +80,8 @@ function MutltiPedSpawnDeadCheck(pedstable, type) --function for spawning multip
           DeletePed(v)
         end
         DeleteEntity(Robableoilwagon)
-        VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+        Notify(0, T.Missionfailed, 'fail') return
+        -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
     end
 end
 
@@ -94,4 +95,25 @@ end
 function CoordRandom(coordstable) --funct to pick random coords from table
     local mathr1 = math.random(1, #coordstable)
     return coordstable[mathr1]
+end
+
+
+
+if Config.DisableCinematicCamera then
+    Citizen.CreateThread(function()
+        local sleep = 2000
+        while true do
+            if Inmission then
+                print(IsInCinematicMode())
+                if IsInCinematicMode() then
+                    DisableCinematicModeThisFrame()
+                end
+                sleep = 0
+            else
+                sleep = 2000
+            end
+            Wait(sleep)
+        end
+    end)
+
 end

@@ -2,6 +2,7 @@ Translation = {}
 
 Translation.Langs = {
   English = {
+    NoJob = "You don't have the required job to do that !",
     ManagerBlip = 'Oil Company Manager',
     ManagerDrawText = 'Company Manager press "G" to open menu',
     OilManagerMainMenuName = 'Oil Company',
@@ -85,6 +86,7 @@ Translation.Langs = {
     OilWagonBlipName = 'Oil Wagon'
   },
   Portuguese_BR = {
+    NoJob = "Você não tem o trabalho necessário para fazer isso!",
     ManagerBlip = 'Gerente da Companhia de Petróleo',
     ManagerDrawText = 'Pressione "G" para abrir o menu do Gerente da Companhia',
     OilManagerMainMenuName = 'Companhia de Petróleo',
@@ -168,6 +170,7 @@ Translation.Langs = {
     OilWagonBlipName = 'Vagão de Petróleo'
   },
   Romanian = {
+    NoJob = "Nu ai jobul necesar pentru a face asta!",
     ManagerBlip = 'Manager Companie Petrol',
     ManagerDrawText = 'Manager Companie apasa "G" pentru a deschide meniul',
     OilManagerMainMenuName = 'Companie Petrol',

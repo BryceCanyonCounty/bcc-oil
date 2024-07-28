@@ -5,7 +5,8 @@ function supplymissionbeginstage()
     local repeatamount, pl = 0, PlayerPedId()
     repeat
         repeatamount = repeatamount + 1
-        VORPcore.NotifyRightTip(T.SupplyWagonMisisonBegin, 4000)
+        -- VORPcore.NotifyRightTip(T.SupplyWagonMisisonBegin, 4000)
+        Notify(0, T.SupplyWagonMisisonBegin, 'info')
 
         --Coord Randomization
         local fillcoords = CoordRandom(SupplyMission.SupplyMisisonPickupLocation)
@@ -20,12 +21,15 @@ function supplymissionbeginstage()
         if Playerdead or WagonDestroyed then
             RemoveBlip(blip1)
             repeatamount = 3
-            VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+            TriggerServerEvent('bcc-oil:cancelMission')
+            Notify(0, T.Missionfailed, 'fail') return
+            -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
         end
         RemoveBlip(blip1)
 
         --pulled from syn construction, carrying box setup
-        VORPcore.NotifyRightTip(T.Grabbingsupplies, 3000)
+        Notify(0, T.Grabbingsupplies, 'info')
+        -- VORPcore.NotifyRightTip(T.Grabbingsupplies, 3000)
         FreezeEntityPosition(pl, true)
         TaskStartScenarioInPlace(pl, joaat('WORLD_HUMAN_FARMER_WEEDING'), 4000, true, false, false, false)
         Wait(4000)
@@ -33,7 +37,8 @@ function supplymissionbeginstage()
         FreezeEntityPosition(pl, false)
         local props = CreateObject(joaat("p_crate03x"), 0, 0, 0, 1, 0, 1)
         PlayerCarryBox(props)
-        VORPcore.NotifyRightTip(T.Putsuppliesonwagon, 4000)
+        -- VORPcore.NotifyRightTip(T.Putsuppliesonwagon, 4000)
+        Notify(0, T.Putsuppliesonwagon, 'info')
 
         --Dist Check Setup for player to wagon loading boxes onto wagon
         local wc = GetEntityCoords(Createdwagon)
@@ -44,7 +49,9 @@ function supplymissionbeginstage()
             repeatamount = 3
             DeleteEntity(props)
             ClearPedTasksImmediately(pl)
-            VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+            TriggerServerEvent('bcc-oil:cancelMission')
+            Notify(0, T.Missionfailed, 'fail') return
+            -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
         end
     until repeatamount == 3
     FreezeEntityPosition(Createdwagon, false)
@@ -56,7 +63,8 @@ function deliversupplies()
 
     --Coords Randomization
     local fillcoords = CoordRandom(Config.SupplyDeliveryLocations)
-    VORPcore.NotifyRightTip(T.DeliverSupplies, 4000)
+    Notify(0, T.DeliverSupplies, 'info')
+    -- VORPcore.NotifyRightTip(T.DeliverSupplies, 4000)
 
     --Mission Start
     repeat
@@ -70,11 +78,14 @@ function deliversupplies()
         if Playerdead or WagonDestroyed then
             RemoveBlip(blip1)
             ClearGpsMultiRoute()
-            VORPcore.NotifyRightTip(T.Missionfailed, 4000)
+            -- VORPcore.NotifyRightTip(T.Missionfailed, 4000)
+            Notify(0, T.Missionfailed, 'fail')
+            TriggerServerEvent('bcc-oil:cancelMission')
             repeatamount = 3 return
         end
         FreezeEntityPosition(Createdwagon, true)
-        VORPcore.NotifyRightTip(T.GetSuppliesFromWagon, 4000)
+        -- VORPcore.NotifyRightTip(T.GetSuppliesFromWagon, 4000)
+        Notify(0, T.GetSuppliesFromWagon, 'info')
 
         --Dist Check Player to pick up supplies from wagon
         local wc = GetEntityCoords(Createdwagon)
@@ -83,9 +94,12 @@ function deliversupplies()
             repeatamount = 3
             RemoveBlip(blip1)
             ClearGpsMultiRoute()
-            VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+            TriggerServerEvent('bcc-oil:cancelMission')
+            Notify(0, T.Missionfailed, 'fail') return
+            -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
         end
-        VORPcore.NotifyRightTip(T.DeliverSupplies, 4000)
+        Notify(0, T.DeliverSupplies, 'info')
+        -- VORPcore.NotifyRightTip(T.DeliverSupplies, 4000)
 
         --Picking up/ Holding Supplies animation setup
         local props = CreateObject(joaat("p_crate03x"), 0, 0, 0, 1, 0, 1)
@@ -100,14 +114,18 @@ function deliversupplies()
     ClearGpsMultiRoute()
     if Playerdead or WagonDestroyed then
         RemoveBlip(blip1)
-        VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+        TriggerServerEvent('bcc-oil:cancelMission')
+        Notify(0, T.Missionfailed, 'fail') return
+        -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
     end
     FreezeEntityPosition(Createdwagon, false)
     supplymissionend()
 end
 
 function supplymissionend()
-    VORPcore.NotifyRightTip(T.ReturnSupplyWagon, 4000)
+    -- VORPcore.NotifyRightTip(T.ReturnSupplyWagon, 4000)
+    Notify(0, T.ReturnSupplyWagon, 'info')
+    TriggerServerEvent('bcc-oil:ManageStep')
 
     --Blip and Waypoint Setup
     local blip1 = BlipWaypoin(OilWagonTable.WagonSpawnCoords.x, OilWagonTable.WagonSpawnCoords.y, OilWagonTable.WagonSpawnCoords.z, T.ManagerBlip)
@@ -117,39 +135,31 @@ function supplymissionend()
     ClearGpsMultiRoute()
     if Playerdead or WagonDestroyed then
         RemoveBlip(blip1)
-        VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+        TriggerServerEvent('bcc-oil:cancelMission')
+        Notify(0, T.Missionfailed, 'fail') return
+
+        -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
     end
     TaskLeaveAnyVehicle(PlayerPedId(), 0, 0)
     FreezeEntityPosition(Createdwagon, true)
     RemoveBlip(blip1)
-    VORPcore.NotifyRightTip(T.CollectOilDeliveryPay, 4000)
+
+    Notify(0, T.CollectOilDeliveryPay, 'info')
+    -- VORPcore.NotifyRightTip(T.CollectOilDeliveryPay, 4000)
 
     --Distance check player to manager setup
     distcheck(OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z, 3, PlayerPedId())
     if Playerdead or WagonDestroyed then
-        VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+        TriggerServerEvent('bcc-oil:cancelMission')
+        Notify(0, T.Missionfailed, 'fail') return
+        -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
     end
 
     --Mission end setup
-    VORPcore.NotifyRightTip(T.ThankYouHeresYourPayOil, 4000)
+    Notify(0, T.ThankYouHeresYourPayOil, 'success')
+    -- VORPcore.NotifyRightTip(T.ThankYouHeresYourPayOil, 4000)
     DeleteEntity(Createdwagon)
     TriggerServerEvent('bcc-oil:WagonInSpawnHandler', false)
-    TriggerServerEvent('bcc:oil:PayoutOilMission', Wagon)
+    TriggerServerEvent('bcc:oil:PayoutOilMission')
     Inmission = false
 end
-
------------------Tables-------------------------------
-SupplyMission = {}
-
---THis is the table that will be used for setting the pickup / filling wagon part of the mission the script will randomly choose one of the locations set
-SupplyMission.SupplyMisisonPickupLocation = {
-    {
-        location = {x = 505.56, y = 710.05, z = 116.39}, --pickup coords
-    },
-    {
-        location = {x = 492.16, y = 706.42, z = 117.36},
-    },
-    {
-        location = {x = 474.7, y = 696.03, z = 116.12},
-    },
-}
