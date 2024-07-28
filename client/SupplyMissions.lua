@@ -63,7 +63,6 @@ function deliversupplies()
 
     --Coords Randomization
     local fillcoords = CoordRandom(Config.SupplyDeliveryLocations)
-    TriggerServerEvent('bcc-oil:ManageStep')
     Notify(0, T.DeliverSupplies, 'info')
     -- VORPcore.NotifyRightTip(T.DeliverSupplies, 4000)
 
