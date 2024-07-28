@@ -10,29 +10,65 @@ VORPInv = exports.vorp_inventory:vorp_inventoryApi()
 local BccUtils = exports['bcc-utils'].initiate()
 local discord = BccUtils.Discord.setup(Config.WebhookLink, 'BCC Oil', 'https://gamespot.com/a/uploads/original/1179/11799911/3383938-duck.jpg')
 
+
+
+
+local oilMissions = {}
+
+
+
+
+
 --------- Oil Mission Payout Handler -------------
 RegisterServerEvent('bcc:oil:PayoutOilMission', function(Wagon)
   local _source = source
   local Character = VORPcore.getUser(_source).getUsedCharacter
+
+
+  if not oilMissions[_source] then
+    return
+  end
+  
+  
+  local missionType = oilMissions[_source].type
+
+
   local param = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier, ['levelincrease'] = Config.LevelIncreasePerDelivery }
   MySQL.query.await('UPDATE oil SET `manager_trust`=manager_trust+@levelincrease WHERE charidentifier=@charidentifier AND identifier=@identifier', param)
   local result = MySQL.query.await("SELECT manager_trust FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param)
   if #result > 0 then
     for k, v in pairs(Config.OilCompanyLevels) do
       if result[1].manager_trust >= v.level and result[1].manager_trust < v.nextlevel then
-        if Wagon == 'oilwagon02x' then
+        if missionType == 'delivery' then
           Character.addCurrency(0, Config.BasicOilDeliveryPay + v.payoutbonus) break
-        elseif Wagon == 'armysupplywagon' then
+        elseif missionType == 'supply' then
           Character.addCurrency(0, Config.SupplyDeliveryBasePay + v.payoutbonus) break
         end
       elseif result[1].manager_trust < v.level then
-        if Wagon == 'oilwagon02x' then
+        if missionType == 'delivery' then
           Character.addCurrency(0, Config.BasicOilDeliveryPay) break
-        elseif Wagon == 'armysupplywagon' then
+        elseif missionType == 'supply' then
           Character.addCurrency(0, Config.SupplyDeliveryBasePay) break
         end
       end
     end
+  end
+
+  oilMissions[_source] = nil
+end)
+
+
+RegisterServerEvent('bcc-oil:cancelMission', function()
+  local _source = source
+  oilMissions[_source] = nil
+
+end)
+
+AddEventHandler('playerDropped', function(reason)
+  local _source = source
+
+  if oilMissions[_source] then
+    oilMissions[_source] = nil
   end
 end)
 
@@ -136,7 +172,6 @@ RegisterServerEvent('bcc:oil:WagonManagement', function(type, action)
   end
 
 
-
   --------- If wagon type set in menusetup is oilwagon then-----------
   if type == 'oilwagon' then
     local param = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier, ['oilwagon'] = 'oilwagon02x' }
@@ -173,6 +208,12 @@ RegisterServerEvent('bcc:oil:WagonManagement', function(type, action)
         end
         -------------Elseif action from menusetup is spawn then ----------------------
       elseif action == 'spawn' then
+
+        if oilMissions[_source] then 
+          Notify(_source, T.AlreadyInMission, 'fail')
+          return 
+        end
+
         if not wagoninspawn then
           if result[1].oil_wagon == 'none' then
             Notify(_source, T.NoWagonOwned, 'fail')
@@ -180,6 +221,12 @@ RegisterServerEvent('bcc:oil:WagonManagement', function(type, action)
           elseif result[1].oil_wagon == 'oilwagon02x' then
             discord:sendMessage(T.DeliveryMissionTitle, T.Delivery_desc .. tostring(Character.charIdentifier))
             wagoninspawn = true
+
+            oilMissions[_source] = {
+              type = 'delivery'
+            }
+
+
             TriggerClientEvent('bcc:oil:PlayerWagonSpawn', _source, 'oilwagon02x')
           end
         else
@@ -225,12 +272,25 @@ RegisterServerEvent('bcc:oil:WagonManagement', function(type, action)
         end
         -------------Elseif action from menusetup is spawn then ----------------------
       elseif action == 'spawn' then
+
+
+        if oilMissions[_source] then 
+          Notify(_source, T.AlreadyInMission, 'fail')
+          return 
+        end
+
+
         if not wagoninspawn then
           if result[1].delivery_wagon == 'none' then
             -- VORPcore.NotifyRightTip(_source, T.NoWagonOwned, 4000)
             Notify(_source, T.NoWagonOwned, 'fail')
           elseif result[1].delivery_wagon == 'armysupplywagon' then
             wagoninspawn = true
+
+            oilMissions[_source] = {
+              type = 'supply'
+            }
+
             discord:sendMessage(T.DeliveryMissionTitle, T.Delivery_desc2 .. tostring(Character.charIdentifier))
             TriggerClientEvent('bcc:oil:PlayerWagonSpawn', _source, 'armysupplywagon')
           end
