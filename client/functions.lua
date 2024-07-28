@@ -80,7 +80,8 @@ function MutltiPedSpawnDeadCheck(pedstable, type) --function for spawning multip
           DeletePed(v)
         end
         DeleteEntity(Robableoilwagon)
-        VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+        Notify(0, T.Missionfailed, 'fail') return
+        -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
     end
 end
 
