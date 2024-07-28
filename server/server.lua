@@ -70,6 +70,10 @@ AddEventHandler('playerDropped', function(reason)
   if oilMissions[_source] then
     oilMissions[_source] = nil
   end
+
+  if wagoninspawn == _source then
+    wagoninspawn = false
+  end
 end)
 
 -------- Robbery Payout Handler --------
@@ -220,7 +224,7 @@ RegisterServerEvent('bcc:oil:WagonManagement', function(type, action)
             -- VORPcore.NotifyRightTip(_source, T.NoWagonOwned, 4000)
           elseif result[1].oil_wagon == 'oilwagon02x' then
             discord:sendMessage(T.DeliveryMissionTitle, T.Delivery_desc .. tostring(Character.charIdentifier))
-            wagoninspawn = true
+            wagoninspawn = _source
 
             oilMissions[_source] = {
               type = 'delivery'
@@ -285,7 +289,7 @@ RegisterServerEvent('bcc:oil:WagonManagement', function(type, action)
             -- VORPcore.NotifyRightTip(_source, T.NoWagonOwned, 4000)
             Notify(_source, T.NoWagonOwned, 'fail')
           elseif result[1].delivery_wagon == 'armysupplywagon' then
-            wagoninspawn = true
+            wagoninspawn = _source
 
             oilMissions[_source] = {
               type = 'supply'
@@ -306,7 +310,7 @@ end)
 --------------Handles making sure the wagon has left the spawn location before allowing a new one to spawn/returend too -------------
 RegisterServerEvent('bcc-oil:WagonInSpawnHandler', function(inspawn)
   if inspawn then
-    wagoninspawn = true
+    wagoninspawn = source
   else
     wagoninspawn = false
   end
