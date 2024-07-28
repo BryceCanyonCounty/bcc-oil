@@ -52,6 +52,7 @@ end
 -----------------------Deliver oil Mission&return wagon included here------------------------------
 function deliveroil()
   FreezeEntityPosition(Createdwagon, false)
+  TriggerServerEvent('bcc-oil:ManageStep')
   Wait(200)
   Notify(0, T.GoDeliver, 'info')
   -- VORPcore.NotifyRightTip(T.GoDeliver, 4000)
