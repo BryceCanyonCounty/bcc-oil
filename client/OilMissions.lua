@@ -18,7 +18,7 @@ function beginningstage()
   ClearGpsMultiRoute()
   if Playerdead or WagonDestroyed then
     RemoveBlip(blip1)
-
+    TriggerServerEvent('bcc-oil:cancelMission')
     Notify(0, T.Missionfailed, 'fail') return
     -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
   end
@@ -39,6 +39,7 @@ function beginningstage()
   if Progressbardeadcheck then
     Progressbardeadcheck = false
     ClearPedTasksImmediately(PlayerPedId())
+    TriggerServerEvent('bcc-oil:cancelMission')
     Notify(0, T.Missionfailed, 'fail')
     -- VORPcore.NotifyRightTip(T.Missionfailed, 4000)
     DeleteEntity(Createdwagon) return
@@ -75,6 +76,7 @@ function deliveroil()
   if Playerdead or WagonDestroyed then
     DeletePed(createdped)
     RemoveBlip(blip2)
+    TriggerServerEvent('bcc-oil:cancelMission')
     Notify(0, T.Missionfailed, 'fail') return
     -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
   end
@@ -95,6 +97,7 @@ function deliveroil()
   if Progressbardeadcheck then
     -- VORPcore.NotifyRightTip(T.Missionfailed, 4000)
     Notify(0, T.Missionfailed, 'fail')
+    TriggerServerEvent('bcc-oil:cancelMission')
     Progressbardeadcheck = false
     ClearPedTasksImmediately(createdped)
     DeletePed(createdped)
@@ -118,6 +121,7 @@ function deliveroil()
     RemoveBlip(oilbl)
     ClearGpsMultiRoute()
     -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
+    TriggerServerEvent('bcc-oil:cancelMission')
     Notify(0, T.Missionfailed, 'fail') return
   end
 
@@ -127,6 +131,7 @@ function deliveroil()
   ClearGpsMultiRoute()
   if Playerdead or WagonDestroyed then
     RemoveBlip(oilbl)
+    TriggerServerEvent('bcc-oil:cancelMission')
     Notify(0, T.Missionfailed, 'fail') return
     -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
   end
@@ -140,6 +145,7 @@ function deliveroil()
   distcheck(OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z, 3, PlayerPedId())
   if Playerdead or WagonDestroyed then
     DeleteEntity(Createdwagon)
+    TriggerServerEvent('bcc-oil:cancelMission')
     Notify(0, T.Missionfailed, 'fail') return
     -- VORPcore.NotifyRightTip(T.Missionfailed, 4000) return
   end
