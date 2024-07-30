@@ -4,24 +4,26 @@ local BccUtils = exports['bcc-utils'].initiate()
 local discord = BccUtils.Discord.setup(Config.WebhookLink, 'BCC Oil', 'https://gamespot.com/a/uploads/original/1179/11799911/3383938-duck.jpg')
 
 --------- Oil Mission Payout Handler -------------
-RegisterServerEvent('bcc:oil:PayoutOilMission', function(Wagon)
+RegisterServerEvent('bcc:oil:PayoutOilMission', function(wagonModel)
   local _source = source
-  local Character = VORPcore.getUser(_source).getUsedCharacter
+  local user = VORPcore.getUser(_source)
+  if not user then return end
+  local Character = user.getUsedCharacter
   local param = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier, ['levelincrease'] = Config.LevelIncreasePerDelivery }
   MySQL.query.await('UPDATE oil SET `manager_trust`=manager_trust+@levelincrease WHERE charidentifier=@charidentifier AND identifier=@identifier', param)
   local result = MySQL.query.await("SELECT manager_trust FROM oil WHERE charidentifier=@charidentifier AND identifier=@identifier", param)
   if #result > 0 then
     for k, v in pairs(Config.OilCompanyLevels) do
       if result[1].manager_trust >= v.level and result[1].manager_trust < v.nextlevel then
-        if Wagon == 'oilwagon02x' then
+        if wagonModel == 'oilwagon02x' then
           Character.addCurrency(0, Config.BasicOilDeliveryPay + v.payoutbonus) break
-        elseif Wagon == 'armysupplywagon' then
+        elseif wagonModel == 'armysupplywagon' then
           Character.addCurrency(0, Config.SupplyDeliveryBasePay + v.payoutbonus) break
         end
       elseif result[1].manager_trust < v.level then
-        if Wagon == 'oilwagon02x' then
+        if wagonModel == 'oilwagon02x' then
           Character.addCurrency(0, Config.BasicOilDeliveryPay) break
-        elseif Wagon == 'armysupplywagon' then
+        elseif wagonModel == 'armysupplywagon' then
           Character.addCurrency(0, Config.SupplyDeliveryBasePay) break
         end
       end
@@ -32,7 +34,9 @@ end)
 -------- Robbery Payout Handler --------
 RegisterServerEvent('bcc-oil:RobberyPayout', function()
     local _source = source
-    local Character = VORPcore.getUser(_source).getUsedCharacter
+    local user = VORPcore.getUser(_source)
+    if not user then return end
+    local Character = user.getUsedCharacter
     local result = MySQL.query.await('SELECT manager_trust, enemy_trust FROM oil WHERE charidentifier = ? AND identifier = ?',
         { Character.charIdentifier, Character.identifier })
 
@@ -64,7 +68,9 @@ end)
 local wagonrobcooldown, oilcorobcooldown = false, false
 RegisterServerEvent('bcc-oil:CrimCooldowns', function(missiontype)
   local _source = source
-  local Character = VORPcore.getUser(_source).getUsedCharacter
+  local user = VORPcore.getUser(_source)
+  if not user then return end
+  local Character = user.getUsedCharacter
   if missiontype == 'wagonrob' then
     if not wagonrobcooldown then
       TriggerClientEvent('bcc-oil:RobOilWagon', _source)
@@ -90,7 +96,9 @@ end)
 
 RegisterServerEvent('bcc-oil:OilCoRobberyPayout', function(fillcoords2)
   local _source = source
-  local Character = VORPcore.getUser(_source).getUsedCharacter
+  local user = VORPcore.getUser(_source)
+  if not user then return end
+  local Character = user.getUsedCharacter
   if fillcoords2.rewards.itemspayout then
     for k, v in pairs(fillcoords2.rewards.items) do
       exports.vorp_inventory:addItem(_source, v.item, v.count)
@@ -103,7 +111,9 @@ end)
 ------- Checks if player exists in db if not it adds ------
 RegisterServerEvent('bcc:oil:DBCheck', function()
   local _source = source
-  local Character = VORPcore.getUser(_source).getUsedCharacter
+  local user = VORPcore.getUser(_source)
+  if not user then return end
+  local Character = user.getUsedCharacter
   local param = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier }
   --------The if you exist in db code was pulled from vorp_banking and modified ----------------
   local result = MySQL.query.await("SELECT identifier, charidentifier FROM oil WHERE identifier = @identifier AND charidentifier = @charidentifier", param)
@@ -116,7 +126,9 @@ end)
 local wagoninspawn = false
 RegisterServerEvent('bcc:oil:WagonManagement', function(type, action)
   local _source = source
-  local Character = VORPcore.getUser(_source).getUsedCharacter
+  local user = VORPcore.getUser(_source)
+  if not user then return end
+  local Character = user.getUsedCharacter
 
   if type == 'oilwagon' then
     local param = { ['charidentifier'] = Character.charIdentifier, ['identifier'] = Character.identifier, ['oilwagon'] = 'oilwagon02x' }
@@ -213,4 +225,4 @@ RegisterServerEvent('bcc-oil:WagonInSpawnHandler', function(inspawn)
 end)
 
 --This handles the version check
-BccUtils.Versioner.checkRelease(GetCurrentResourceName(), 'https://github.com/BryceCanyonCounty/bcc-oil')
+BccUtils.Versioner.checkFile(GetCurrentResourceName(), 'https://github.com/BryceCanyonCounty/bcc-oil')
