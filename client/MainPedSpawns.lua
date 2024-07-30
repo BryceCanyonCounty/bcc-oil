@@ -11,12 +11,13 @@ local createBlip = function(x, y, z, color, blipHash, blipName)
 end
 
 CreateThread(function()
-    local model = joaat(Config.ManagerPedModel)
     if Config.ManagerBlip then
         createBlip(OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y, OilWagonTable.ManagerSpawn.z,
             Config.ManagerBlipColor, Config.ManagerBlipHash, _U('ManagerBlip'))
     end
-    modelload(model)
+    local modelName = Config.ManagerPedModel
+    local model = joaat(modelName)
+    LoadModel(model, modelName)
     local createdped = CreatePed(model, OilWagonTable.ManagerSpawn.x, OilWagonTable.ManagerSpawn.y,
         OilWagonTable.ManagerSpawn.z - 1, OilWagonTable.ManagerSpawn.h, false, true, true, true)
     Citizen.InvokeNative(0x283978A15512B2FE, createdped, true)
@@ -44,14 +45,15 @@ end)
 
 -- Criminal Ped Spawn Setup
 CreateThread(function()
-    local model = joaat(Config.CriminalPedModel)
     if Config.CriminalPedBlip then
         createBlip(Config.CriminalPedSpawn.x, Config.CriminalPedSpawn.y, Config.CriminalPedSpawn.z,
             Config.CriminalBlipColor, Config.CriminalBlipHash, _U('CriminalPedBlip'))
     end
-    modelload(model)
+    local modelName = Config.CriminalPedModel
+    local model = joaat(modelName)
+    LoadModel(model, modelName)
     local createdped = CreatePed(model, Config.CriminalPedSpawn.x, Config.CriminalPedSpawn.y,
-        Config.CriminalPedSpawn.z - 1, Config.CriminalPedSpawn.h, false, true, true, true)
+        Config.CriminalPedSpawn.z - 1, Config.CriminalPedSpawn.w, false, true, true, true)
     Citizen.InvokeNative(0x283978A15512B2FE, createdped, true)
     BccUtils.Ped.SetStatic(createdped)
     local RobOilMenuPrompt = BccUtils.Prompts:SetupPromptGroup()
