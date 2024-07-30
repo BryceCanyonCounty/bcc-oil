@@ -132,7 +132,7 @@ function supplymissionend()
     VORPcore.NotifyRightTip(_U('ThankYouHeresYourPayOil'), 4000)
     DeleteEntity(Createdwagon)
     TriggerServerEvent('bcc-oil:WagonInSpawnHandler', false)
-    TriggerServerEvent('bcc:oil:PayoutOilMission', Wagon)
+    TriggerServerEvent('bcc:oil:PayoutOilMission', WagonModel)
     Inmission = false
 end
 
