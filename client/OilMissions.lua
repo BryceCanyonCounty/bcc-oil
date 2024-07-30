@@ -54,10 +54,11 @@ function deliveroil()
   local blip2 = BlipWaypoin(fillcoords.DeliveryPoint.x, fillcoords.DeliveryPoint.y, fillcoords.DeliveryPoint.z, _U('DeliverBlipName'))
 
   --Spawning Ped Setup
-  local model = joaat('rcsp_dutch3_males_01')
-  modelload(model)
-  local createdped = CreatePed(model, fillcoords.NpcSpawn.x, fillcoords.NpcSpawn.y, fillcoords.NpcSpawn.z - 1, fillcoords.NpcSpawn.h, true, true, true, true)
-  Citizen.InvokeNative(0x283978A15512B2FE, createdped, true)
+  local modelName = 'rcsp_dutch3_males_01'
+  local model = joaat(modelName)
+  LoadModel(model, modelName)
+  local createdped = CreatePed(model, fillcoords.NpcSpawn.x, fillcoords.NpcSpawn.y, fillcoords.NpcSpawn.z - 1, fillcoords.NpcSpawn.w, true, true, true, true)
+  Citizen.InvokeNative(0x283978A15512B2FE, createdped, true) -- SetRandomOutfitVariation
   SetEntityInvincible(createdped, true)
   FreezeEntityPosition(createdped, true)
 
@@ -129,7 +130,7 @@ function deliveroil()
   end
   DeleteEntity(Createdwagon)
   VORPcore.NotifyRightTip(_U('ThankYouHeresYourPayOil'), 4000)
-  TriggerServerEvent('bcc:oil:PayoutOilMission', Wagon)
+  TriggerServerEvent('bcc:oil:PayoutOilMission', WagonModel)
   TriggerServerEvent('bcc-oil:WagonInSpawnHandler', false)
   Inmission = false
 end
@@ -137,10 +138,10 @@ end
 ---------- Sniffing Oil Setup ---------------
 CreateThread(function()
   if Config.SniffOil.enable then
+    local location = Config.SniffOil.Coords
     while true do
       Wait(5)
-      local plc = GetEntityCoords(PlayerPedId())
-      local dist = GetDistanceBetweenCoords(plc.x, plc.y, plc.z, Config.SniffOil.Coords.x, Config.SniffOil.Coords.y, Config.SniffOil.Coords.z, true)
+      local dist = #(GetEntityCoords(PlayerPedId()) - location)
       if dist < 3 then
         BccUtils.Misc.DrawText3D(Config.SniffOil.Coords.x, Config.SniffOil.Coords.y, Config.SniffOil.Coords.z, _U('SniffOil'))
         if IsControlJustReleased(0, 0x760A9C6F) then
