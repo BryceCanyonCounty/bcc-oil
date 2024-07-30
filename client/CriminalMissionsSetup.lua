@@ -4,16 +4,18 @@ local fillcoords = nil
 RegisterNetEvent('bcc-oil:RobOilWagon', function()
   Inmission = true
 
-  Robableoilwagon = joaat('oilwagon02x')
-  modelload(Robableoilwagon)
+  local modelName = 'oilwagon02x'
+  local model = joaat(modelName)
+  LoadModel(model, modelName)
 
   --Coord Randomization
   fillcoords = CoordRandom(Config.OilWagonrobberyLocations)
 
   --Wagon Spawn
-  Robableoilwagon = CreateVehicle(Robableoilwagon, fillcoords.wagonLocation, fillcoords.wagonHeading, true, true)
+  Robableoilwagon = CreateVehicle(model, fillcoords.wagonLocation.x, fillcoords.wagonLocation.y,
+    fillcoords.wagonLocation.z, fillcoords.wagonHeading, true, true, false, false)
   TriggerEvent('bcc-oil:roboilwagonhelper')
-  Citizen.InvokeNative(0x23f74c2fda6e7c61, 953018525, Robableoilwagon)
+  Citizen.InvokeNative(0x23f74c2fda6e7c61, 953018525, Robableoilwagon) -- BlipAddForEntity
   FreezeEntityPosition(Robableoilwagon, true)
   VORPcore.NotifyRightTip(_U('RobOilWagonOpeningtext'), 4000)
 
@@ -36,6 +38,7 @@ RegisterNetEvent('bcc-oil:RobOilWagon', function()
 end)
 
 function roboilwagonreturnwagon()
+    if not fillcoords then return end
   --Init Setup
   FreezeEntityPosition(Robableoilwagon, false)
   VORPcore.NotifyRightTip(_U('RobOilWagonReturnWagon'), 4000)
@@ -130,9 +133,7 @@ RegisterNetEvent('bcc-oil:RobOilCo', function()
   }
   while true do
     Wait(5)
-    local pl = GetEntityCoords(PlayerPedId())
-    local dist = GetDistanceBetweenCoords(fillcoords2.lootlocation.x, fillcoords2.lootlocation.y,
-      fillcoords2.lootlocation.z, pl.x, pl.y, pl.z, true)
+    local dist = #(GetEntityCoords(PlayerPedId()) - fillcoords2.lootlocation)
     if dist < 3 then
       if IsControlJustReleased(0, 0x760A9C6F) then
         MiniGame.Start('lockpick', cfg, function(result)
@@ -168,9 +169,8 @@ end)
 AddEventHandler('bcc-oil:roboilcohelper', function()
   while Inmission do
     Wait(5)
-    local pl = GetEntityCoords(PlayerPedId())
-    local dist = GetDistanceBetweenCoords(pl.x, pl.y, pl.z, fillcoords2.lootlocation.x, fillcoords2.lootlocation.y,
-      fillcoords2.lootlocation.z, true)
+    if not fillcoords2 then break end
+    local dist = #(GetEntityCoords(PlayerPedId()) - fillcoords2.lootlocation)
     if dist < 15 then
       if not missionoverend3dtext then
         BccUtils.Misc.DrawText3D(fillcoords2.lootlocation.x, fillcoords2.lootlocation.y, fillcoords2.lootlocation.z,
