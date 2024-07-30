@@ -1,24 +1,25 @@
 ------ Handles spawning the wagons -----
-Createdwagon, Wagon = 0, 0
+Createdwagon = 0
+WagonModel = nil
 local sw = OilWagonTable.WagonSpawnCoords
-RegisterNetEvent('bcc:oil:PlayerWagonSpawn', function(wagon)
+RegisterNetEvent('bcc:oil:PlayerWagonSpawn', function(wagonModel)
   Inmission = true
-  Wagon = wagon
-  modelload(Wagon)
+  WagonModel = wagonModel
+  local modelName = wagonModel
+  local model = joaat(modelName)
+  LoadModel(model, modelName)
   VORPcore.NotifyRightTip(_U('WagonSpawned'), 4000)
-  Createdwagon = CreateVehicle(wagon, sw.x, sw.y, sw.z, sw.h, true, true)
-  Citizen.InvokeNative(0x77FF8D35EEC6BBC4, Createdwagon, 1, 0)
+  Createdwagon = CreateVehicle(model, sw.x, sw.y, sw.z, sw.w, true, true)
   TriggerEvent('bcc:oil:PlayerWagonDistFromSpawnCheck')
   local wagonBlip = Citizen.InvokeNative(0x23F74C2FDA6E7C61, -1749618580, Createdwagon)
-  SetBlipScale(wagonBlip, 0.8)
-  if wagon == 'oilwagon02x' then
-    SetBlipSprite(wagonBlip, Config.OilWagonBilpHash, 1)
+  if wagonModel == 'oilwagon02x' then
+    SetBlipSprite(wagonBlip, Config.OilWagonBilpHash, true)
     Citizen.InvokeNative(0x662D364ABF16DE2F, wagonBlip, joaat(Config.OilWagonBlipColor))
     Citizen.InvokeNative(0x9CB1A1623062F402, wagonBlip, _U('OilWagonBlipName'))
     TriggerEvent('bcc-oil:WagonDeliveriesDeadCheck')
     beginningstage()
-  elseif wagon == 'armysupplywagon' then
-    SetBlipSprite(wagonBlip, Config.SupplyWagonBilpHash, 1)
+  elseif wagonModel == 'armysupplywagon' then
+    SetBlipSprite(wagonBlip, Config.SupplyWagonBilpHash, true)
     Citizen.InvokeNative(0x662D364ABF16DE2F, wagonBlip, joaat(Config.SupplyWagonBlipColor))
     Citizen.InvokeNative(0x9CB1A1623062F402, wagonBlip, _U('SupplyWagonBlipName'))
     TriggerEvent('bcc-oil:WagonDeliveriesDeadCheck')
