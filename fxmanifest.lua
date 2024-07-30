@@ -1,5 +1,5 @@
 game 'rdr3'
-fx_version "adamant"
+fx_version "cerulean"
 rdr3_warning 'I acknowledge that this is a prerelease build of RedM, and I am aware my resources *will* become incompatible once RedM ships.'
 
 lua54 'yes'
@@ -9,8 +9,8 @@ author 'BCC @Jake2k4'
 description 'This is an in depth Oil Job Script for RedM!'
 
 shared_scripts {
-    'config.lua',
-    'shared/locale.lua',
+    'configs/config.lua',
+    'locale.lua',
     'languages/*.lua'
 }
 
@@ -30,7 +30,7 @@ client_scripts {
     'client/functions.lua'
 }
 
-version '1.2.3'
+version '1.3.0'
 
 dependencies {
     'vorp_core',
