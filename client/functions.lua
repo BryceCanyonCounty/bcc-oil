@@ -53,21 +53,25 @@ function PlayerCarryBox(props) --Function for making player carry a box
     Citizen.InvokeNative(0x6B9BBD38AB0796DF, props, pl ,GetEntityBoneIndexByName(pl,"SKEL_R_Finger12"), 0.20, 0.028, -0.15, 100.0, 205.0, 20.0, true, true, false, true, 1, true)
 end
 
-function modelload(model) --Function to load model
-    RequestModel(model)
+function LoadModel(model, modelName)
+    if not IsModelValid(model) then
+        return print('Invalid model:', modelName)
+    end
+    RequestModel(model, false)
     while not HasModelLoaded(model) do
-      Wait(100)
+        Wait(10)
     end
 end
 
 function MutltiPedSpawnDeadCheck(pedstable, type) --function for spawning multiple peds and checking if they are dead
-    local model = joaat('a_m_m_huntertravelers_cool_01')
-    modelload(model)
+    local modelName = 'oilwa_m_m_huntertravelers_cool_01agon02x'
+    local model = joaat(modelName)
+    LoadModel(model, modelName)
     local count, roboilwagonpeds = {}, {}
     for k, v in pairs(pedstable) do
-        roboilwagonpeds[k] = CreatePed(model, v.x, v.y, v.z, true, true, true, true)
+        roboilwagonpeds[k] = CreatePed(model, v.x, v.y, v.z, 0, true, true, true, true)
         Citizen.InvokeNative(0x283978A15512B2FE, roboilwagonpeds[k], true)
-        TaskCombatPed(roboilwagonpeds[k], PlayerPedId())
+        TaskCombatPed(roboilwagonpeds[k], PlayerPedId(), 0, 0)
         Citizen.InvokeNative(0x23f74c2fda6e7c61, 953018525, roboilwagonpeds[k])
         count[k] = roboilwagonpeds[k]
     end
