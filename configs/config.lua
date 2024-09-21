@@ -3,6 +3,7 @@ Config = {
     defaultlang = "en_lang",
     ------------------------------------------ Oil Job Setup ---------------------------------------------------
     ---------Oil Part of the job -------------
+    OilManagerNPC = {x = 496.91, y = 704.15, z = 117.35, h = 174.79}, --Coords of your Manager-NPC
     OilandSupplyWagonSpawn = vector4(526.83, 703.01, 117.0, 263.92), -- Coords your oil and supply wagons will spawn at
     ManagerBlip = true, -- If true will create a blip on the Manager, if false it will not
     ManagerPedModel = 'u_m_m_cktmanager_01', -- This is the model the manager will spawn as
