@@ -24,7 +24,7 @@ RegisterNetEvent('bcc-oil:RobOilWagon', function()
 
   --Distance Check Setup
   local cw = GetEntityCoords(Robableoilwagon)
-  distcheck(cw.x, cw.y, cw.z, 30, PlayerPedId())
+  distcheck(cw.x, cw.y, cw.z, 150, PlayerPedId())
   ClearGpsMultiRoute()
   if Roboilwagondeadcheck then
     VORPcore.NotifyRightTip(_U('Missionfailed'), 4000)
@@ -34,7 +34,7 @@ RegisterNetEvent('bcc-oil:RobOilWagon', function()
   VORPcore.NotifyRightTip(_U('RobOilWagonKillGaurds'), 4000)
 
   --Spawning enemy Peds
-  MutltiPedSpawnDeadCheck(fillcoords.pedlocation, 'wagonrob')
+  MutltiPedSpawnDeadCheck(fillcoords.pedlocation, 'wagonrob', fillcoords.pedweapons)
 end)
 
 function roboilwagonreturnwagon()
@@ -144,7 +144,8 @@ RegisterNetEvent('bcc-oil:RobOilCo', function()
               VORPcore.NotifyRightTip(_U('RobberySuccess'), 4000)
               TriggerServerEvent('bcc-oil:OilCoRobberyPayout', fillcoords2)
             else
-              MutltiPedSpawnDeadCheck(Config.RobOilCoEnemyPedsLocations, 'oilcorob')
+              TriggerServerEvent('bcc-oil:OilCoRobberyPayout', fillcoords2)
+              MutltiPedSpawnDeadCheck(Config.RobOilCoEnemyPedsLocations, 'oilcorob', Config.RobOilpedweapons)
               Inmission = false
             end
           else
@@ -153,7 +154,7 @@ RegisterNetEvent('bcc-oil:RobOilCo', function()
               Inmission = false
               VORPcore.NotifyRightTip(_U('Missionfailed'), 4000)
             else
-              MutltiPedSpawnDeadCheck(Config.RobOilCoEnemyPedsLocations, 'oilcorob')
+              MutltiPedSpawnDeadCheck(Config.RobOilCoEnemyPedsLocations, 'oilcorob', Config.RobOilpedweapons)
               Inmission = false
             end
           end

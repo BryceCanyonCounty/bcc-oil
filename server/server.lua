@@ -102,6 +102,8 @@ RegisterServerEvent('bcc-oil:OilCoRobberyPayout', function(fillcoords2)
   if fillcoords2.rewards.itemspayout then
     for k, v in pairs(fillcoords2.rewards.items) do
       exports.vorp_inventory:addItem(_source, v.item, v.count)
+      VORPcore.NotifyRightTip(_source, _U('You have Stolen Items'), 4000)
+      Character.addCurrency(0, fillcoords2.rewards.cashpayout)
     end
   else
     Character.addCurrency(0, fillcoords2.rewards.cashpayout)

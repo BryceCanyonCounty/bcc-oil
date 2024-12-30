@@ -63,46 +63,50 @@ function LoadModel(model, modelName)
     end
 end
 
-function MutltiPedSpawnDeadCheck(pedstable, type) --function for spawning multiple peds and checking if they are dead
-    local modelName = 'oilwa_m_m_huntertravelers_cool_01agon02x'
+function MutltiPedSpawnDeadCheck(pedstable, type, weapon)
+    local modelName = 'a_m_m_huntertravelers_cool_01'
     local model = joaat(modelName)
     LoadModel(model, modelName)
-    local count, roboilwagonpeds = {}, {}
-    for k, v in pairs(pedstable) do
-        roboilwagonpeds[k] = CreatePed(model, v.x, v.y, v.z, 0, true, true, true, true)
-        Citizen.InvokeNative(0x283978A15512B2FE, roboilwagonpeds[k], true)
-        TaskCombatPed(roboilwagonpeds[k], PlayerPedId(), 0, 0)
-        Citizen.InvokeNative(0x23f74c2fda6e7c61, 953018525, roboilwagonpeds[k])
-        count[k] = roboilwagonpeds[k]
+
+    local roboilwagonpeds = {}
+    for _, coords in ipairs(pedstable) do
+        local ped = CreatePed(model, coords.x, coords.y, coords.z, 0, true, true, true, true)
+        Citizen.InvokeNative(0x283978A15512B2FE, ped, true)
+        TaskCombatPed(ped, PlayerPedId(), 0, 16)
+        Citizen.InvokeNative(0x23f74c2fda6e7c61, 953018525, ped)
+        GiveWeaponToPed_2(ped, weapon, 100, true, false, 0, false, 0.5, 1.0, 752097756, false, 0.0,
+        false)
+        table.insert(roboilwagonpeds, ped)
     end
-    local x = #pedstable
-    while not Roboilwagondeadcheck and not Roboilcodeadcheck do
+
+    -- Monitor the death status of NPCs
+    local aliveCount = #roboilwagonpeds
+    while aliveCount > 0 and not Roboilwagondeadcheck and not Roboilcodeadcheck do
         Wait(60)
-        for k, v in pairs(roboilwagonpeds) do
-            if IsEntityDead(v) then
-                if count[k] ~= nil then
-                    x = x - 1
-                    count[k] = nil
-                    if x == 0 then
-                        if type == 'wagonrob' then
-                            roboilwagonreturnwagon()
-                        elseif type == 'oilcorob' then
-                            finishOilCompanyRobbery()
-                        end
-                        break
-                    end
-                end
+        for i = #roboilwagonpeds, 1, -1 do
+            if IsEntityDead(roboilwagonpeds[i]) then
+                table.remove(roboilwagonpeds, i)
+                aliveCount = aliveCount - 1
             end
         end
     end
+
     if Roboilwagondeadcheck or Roboilcodeadcheck then
-        for k, v in pairs(roboilwagonpeds) do
-          DeletePed(v)
+        -- Mission failed
+        for _, ped in ipairs(roboilwagonpeds) do
+            DeletePed(ped)
         end
         DeleteEntity(Robableoilwagon)
-        VORPcore.NotifyRightTip(_U('Missionfailed'), 4000) return
+        VORPcore.NotifyRightTip(_U('Missionfailed'), 4000)
+    elseif aliveCount == 0 then
+        if type == 'wagonrob' then
+            roboilwagonreturnwagon()
+        elseif type == 'oilcorob' then
+            finishOilCompanyRobbery()
+        end
     end
 end
+
 
 function BlipWaypoin(x, y, z, blipname) --func to make blip and waypoint and return the blip
     local blip = Citizen.InvokeNative(0x554D9D53F696D002, -1282792512, x, y, z, 5)
