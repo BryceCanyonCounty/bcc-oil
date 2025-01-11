@@ -30,7 +30,7 @@ client_scripts {
     'client/functions.lua'
 }
 
-version '1.3.1'
+version '1.3.2'
 
 dependencies {
     'vorp_core',

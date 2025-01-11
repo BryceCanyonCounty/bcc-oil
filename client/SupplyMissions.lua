@@ -12,7 +12,7 @@ function supplymissionbeginstage()
         local blip1 = BlipWaypoin(fillcoords.location.x, fillcoords.location.y, fillcoords.location.z, _U('Pickupsupplyblip'))
 
         --Distance Check Setup for picking up boxes
-        FreezeEntityPosition(Createdwagon, true)
+        FreezeEntityPosition(Createdwagon, false)
         distcheck(fillcoords.location.x, fillcoords.location.y, fillcoords.location.z, 3, pl)
         ClearGpsMultiRoute()
         if Playerdead or WagonDestroyed then

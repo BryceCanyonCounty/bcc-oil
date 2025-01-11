@@ -4,7 +4,7 @@ Config = {
     ------------------------------------------ Oil Job Setup ---------------------------------------------------
     ---------Oil Part of the job -------------
     OilManagerNPC = {x = 496.91, y = 704.15, z = 117.35, h = 174.79}, --Coords of your Manager-NPC
-    OilandSupplyWagonSpawn = vector4(526.83, 703.01, 117.0, 263.92), -- Coords your oil and supply wagons will spawn at
+    OilandSupplyWagonSpawn = vector4(505.06, 704.62, 116.07, 176.31), -- Coords your oil and supply wagons will spawn at
     ManagerBlip = true, -- If true will create a blip on the Manager, if false it will not
     ManagerPedModel = 'u_m_m_cktmanager_01', -- This is the model the manager will spawn as
     OilWagon = {
@@ -12,7 +12,7 @@ Config = {
         sellprice = 80
     }, -- Oil wagon model hash theres 2 but there the same(making this easily changeable incase you do want to change the model)
     OilWagonFillTime = 10000, -- time in ms it takes to fill the oil wagon aswell as unload when delivering oil
-    BasicOilDeliveryPay = 50, -- This is the base pay rate for doing an oil mission (the payoutbonus in the OilCompanyLevels will be added to this amount)
+    BasicOilDeliveryPay = 60, -- This is the base pay rate for doing an oil mission (the payoutbonus in the OilCompanyLevels will be added to this amount)
     LevelIncreasePerDelivery = 1, -- sets the amount your level increases per delivery mission
     --------------------- config player's wagon blip---------------------------
     OilWagonBilpHash = 1612913921, -- Set Oil Wagon blip icon using blip hashes (https://redlookup.com/blips)
@@ -101,7 +101,7 @@ Config = {
     CriminalLevels = {
         {
             level = 10, -- this is the level you have to be at or above to get the bonus
-            payoutbonus = 2000, -- this is how much extra you will get when finishing a delivery mission
+            payoutbonus = 20, -- this is how much extra you will get when finishing a delivery mission
             nextlevel = 20 -- this has to be the next level so since the next level is 20 this has to be 20
         },
         {
@@ -119,28 +119,108 @@ Config = {
     ----Steal Oil Wagon Setup-----
     OilWagonrobberyLocations = {
         {
+            pedweapons= `WEAPON_REPEATER_CARBINE`,
             wagonLocation = vector3(381.15, -21.5, 109.09),
             wagonHeading = 360,
             pedlocation = {
-                {vector3(384.9, -23.37, 109.06)},
-                {vector3(383.09, -19.78, 108.91)},
-                {vector3(381.08, -13.82, 108.57)}
+                vector3(384.9, -23.37, 109.06),
+                vector3(383.09, -19.78, 108.91),
+                vector3(381.08, -13.82, 108.57),
+                vector3(375.3, -14.91, 108.17),
+            },
+            returnlocation = vector3(1479.15, 804.79, 100.28)
+        },
+        {
+            pedweapons= `WEAPON_REPEATER_HENRY`,
+            wagonLocation = vector3(-4694.46, -3723.12, 12.98),
+            wagonHeading = 303.74,
+            pedlocation = {
+                vector3(-4684.33, -3730.38, 13.08),
+                vector3(-4679.84, -3738.61, 13.61),
+                vector3(-4683.74, -3752.86, 13.36),
+                vector3(-4699.91, -3752.19, 12.95),
+                vector3(-4703.97, -3742.73, 12.62),
+                vector3(-4701.82, -3736.54, 12.7),
+                vector3(-4706.01, -3717.2, 11.97),
+                vector3(-4699.23, -3706.16, 11.88),
+                vector3(-4688.21, -3703.34, 12.64),
+                vector3(-4674.68, -3705.58, 13.3)
+            },
+            returnlocation = vector3(1479.15, 804.79, 100.28)
+        },
+        {
+            pedweapons= `WEAPON_REPEATER_CARBINE`,
+            wagonLocation = vector3(-3010.99, -2317.49, 38.7),
+            wagonHeading = 212.74,
+            pedlocation = {
+                vector3(-3004.78, -2332.43, 39.28),
+                vector3(-3003.08, -2311.18, 39.36),
+                vector3(-2995.0, -2325.41, 39.23),
+                vector3(-3018.54, -2338.29, 45.37),
+                vector3(-3028.35, -2304.07, 46.17),
+                vector3(-3020.79, -2286.19, 47.12),
+                vector3(-3006.47, -2272.46, 48.41)
+            },
+            returnlocation = vector3(1479.15, 804.79, 100.28)
+        },
+        {
+            pedweapons= `WEAPON_SHOTGUN_REPEATING`,
+            wagonLocation = vector3(-2312.85, -14.12, 255.22),
+            wagonHeading = 295.21,
+            pedlocation = {
+                vector3(-2308.61, -16.38, 254.84),
+                vector3(-2297.6, -6.81, 256.31),
+                vector3(-2296.29, 2.73, 257.33),
+                vector3(-2305.65, 7.28, 254.02),
+                vector3(-2307.42, 18.92, 251.33)
+            },
+            returnlocation = vector3(1479.15, 804.79, 100.28)
+        },
+        {
+            pedweapons= `WEAPON_RIFLE_VARMINT`,
+            wagonLocation = vector3(-1349.34, 2418.56, 307.07),
+            wagonHeading = 153.59,
+            pedlocation = {
+                vector3(-1345.91, 2405.99, 307.07),
+                vector3(-1345.07, 2403.42, 307.07),
+                vector3(-1357.91, 2417.65, 307.49),
+                vector3(-1353.4, 2430.75, 307.83),
+                vector3(-1339.34, 2444.65, 308.6),
+                vector3(-1331.2, 2442.4, 308.83)
+            },
+            returnlocation = vector3(1479.15, 804.79, 100.28)
+        },
+        {
+            pedweapons = `WEAPON_REVOLVER_SCHOFIELD`,
+            wagonLocation = vector3(2269.9, 1258.41, 96.75),
+            wagonHeading = 50.1,
+            pedlocation = {
+                vector3(2259.96, 1255.05, 100.72),
+                vector3(2260.04, 1267.11, 97.75),
+                vector3(2266.26, 1274.16, 95.15),
+                vector3(2273.79, 1272.54, 94.58),
+                vector3(2288.33, 1274.08, 86.71),
+                vector3(2327.15, 1286.78, 85.59),
+                vector3(2333.6, 1289.28, 88.68)
             },
             returnlocation = vector3(1479.15, 804.79, 100.28)
         }
     },
 
     ---Rob Oil Company Setup----
-    RobOilCoEnemyPeds = false, -- if true enemy peds will spawn when you are done lockpicking to fight you
+    RobOilpedweapons = `WEAPON_REPEATER_CARBINE`,
+    RobOilCoEnemyPeds = true, -- if true enemy peds will spawn when you are done lockpicking to fight you
     RobOilCoEnemyPedsLocations = {
-        {vector3(505.34, 700.74, 116.05)},
-        {vector3(503.61, 689.27, 117.48)},
-        {vector3(507.35, 682.53, 117.39)},
-        {vector3(512.52, 686.54, 117.4)}
+        vector3(505.34, 700.74, 116.05),
+        vector3(503.61, 689.27, 117.48),
+        vector3(507.35, 682.53, 117.39),
+        vector3(512.52, 686.54, 117.4) ,
+        
+
     },
 
     LockPick = {
-        MaxAttemptsPerLock = 3,
+        MaxAttemptsPerLock = 5,
         lockpickitem = 'lockpick',
         difficulty = 10,
         hintdelay = 500
@@ -154,10 +234,10 @@ Config = {
                 cashpayout = 300, -- this is the amount of cash it will give you
                 items = { -- this will handle the items
                     {
-                        item = 'trainoil', -- name of the item in DB
-                        count = 10 -- count you want it too give
+                        item = 'goldbar', -- name of the item in DB
+                        count = 3 -- count you want it too give
                     }, {
-                        item = 'bagofcoal',
+                        item = 'coal',
                         count = 10
                     } -- you can set more items use this as an example to add more
                 }
